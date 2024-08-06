@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3 uid="uid://bi1qnoqelk4hy"]
+
+[ext_resource type="PackedScene" uid="uid://c6tu3gnbhp0td" path="res://assets/3d/weapons/silent_hill_key.glb" id="1_62acx"]
+[ext_resource type="Script" path="res://assets/scripts/keyArea.gd" id="2_iv0h3"]
+
+[sub_resource type="Animation" id="Animation_1chdg"]
+resource_name = "default"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_model:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-1.5708, 0, 0), Vector3(-1.5708, 3.14159, 0), Vector3(-1.5708, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wvqme"]
+_data = {
+"default": SubResource("Animation_1chdg")
+}
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6vy54"]
+radius = 0.823274
+
+[node name="key" instance=ExtResource("1_62acx")]
+
+[node name="Sketchfab_model" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, -3.61999e-06, 1, 0, -1, -3.61999e-06, 0, 0, 0)
+
+[node name="key 15_VRAM page #14_038_0" parent="Sketchfab_model/76971ca8744145a1a251cc471ebd2057_fbx/RootNode/key 15" index="0"]
+transform = Transform3D(0.707761, -0.000604575, 0.706452, -0.706452, -0.00121253, 0.70776, 0.000428679, -0.999999, -0.00128529, 0, 4.99159, -7.53709e-07)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_wvqme")
+}
+autoplay = "default"
+
+[node name="Area3D" type="Area3D" parent="." index="2"]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("2_iv0h3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_6vy54")

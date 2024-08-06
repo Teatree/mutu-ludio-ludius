@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://k87tn2pov0w"]
+
+[ext_resource type="PackedScene" uid="uid://7ewq3bckgrwj" path="res://assets/3d/weapons/knife_clean.glb" id="1_4rfrr"]
+[ext_resource type="Texture2D" uid="uid://7x0cprsowx5i" path="res://assets/3d/weapons/KitchenKnife_MAT_diffuse.png" id="2_8ogyf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nxk5q"]
+albedo_texture = ExtResource("2_8ogyf")
+
+[sub_resource type="Animation" id="Animation_jul1u"]
+resource_name = "default"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gbqss"]
+_data = {
+"default": SubResource("Animation_jul1u")
+}
+
+[node name="knife_clean" instance=ExtResource("1_4rfrr")]
+
+[node name="kitchenKnife_KitchenKnife_MAT_0_001" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_nxk5q")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_gbqss")
+}

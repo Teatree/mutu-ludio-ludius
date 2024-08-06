@@ -6,7 +6,7 @@ extends Node
 @onready var health_bar = $CanvasLayer/HUD/HealthBar
 @onready var spawn_manager: SpawnManager = $SpawnManager
 
-const Player = preload("res://assets/scenes/player.tscn")
+const Player = preload("res://assets/fpc/character.tscn")
 const PORT = 9999
 var enet_peer = ENetMultiplayerPeer.new()
 

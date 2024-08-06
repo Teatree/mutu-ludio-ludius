@@ -1,0 +1,114 @@
+[gd_scene load_steps=9 format=3 uid="uid://k1a675rcue17"]
+
+[ext_resource type="PackedScene" uid="uid://cgmitpr37fcp0" path="res://assets/3d/environment/door.glb" id="1_y3p2v"]
+[ext_resource type="PackedScene" uid="uid://c0dogmcn3m0p" path="res://assets/3d/environment/silent_hill_key.glb" id="2_quo1j"]
+[ext_resource type="Script" path="res://assets/scripts/doorArea.gd" id="3_85aty"]
+
+[sub_resource type="Animation" id="Animation_21skl"]
+resource_name = "open"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("keyanim/key:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.2, 1.6, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -1.5708), Vector3(0, 0, -1.5708), Vector3(0, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("keyanim/keyHole:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.6, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("keyanim/key:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.899741, 0.59284, 0.314284), Vector3(-0.899741, 0.59284, 0.136259)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PSX Abandoned Church_Door_0_001:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(2, 2.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-1.5708, 0, 0), Vector3(-1.5708, -0.261799, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("keyanim/key:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.1, 1.9, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5631s"]
+_data = {
+"open": SubResource("Animation_21skl")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqe14"]
+albedo_color = Color(0.125911, 0.125911, 0.125911, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cjgi8"]
+material = SubResource("StandardMaterial3D_wqe14")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kffhi"]
+size = Vector3(1.00119, 1.79492, 0.206055)
+
+[node name="door" instance=ExtResource("1_y3p2v")]
+
+[node name="PSX Abandoned Church_Door_0_001" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+
+[node name="keyanim" type="Node3D" parent="." index="1"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="keyanim" index="0"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_5631s")
+}
+
+[node name="keyHole" type="MeshInstance3D" parent="keyanim" index="1"]
+transform = Transform3D(0.0729991, 0, 0, 0, 0.109595, 0, 0, 0, 0.0966063, -0.897964, 0.593456, 0.0609249)
+mesh = SubResource("BoxMesh_cjgi8")
+skeleton = NodePath("../..")
+
+[node name="key" parent="keyanim" index="2" instance=ExtResource("2_quo1j")]
+transform = Transform3D(-6.55671e-09, 0.15, 0, -0.15, -6.55671e-09, 0, 0, 0, 0.15, -0.899741, 0.59284, 0.314284)
+visible = false
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="2"]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("3_85aty")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+transform = Transform3D(1, 0, -4.77671e-16, 0, 1, -3.55271e-15, -4.77671e-16, 3.55271e-15, 1, -0.511112, 0.87264, -0.00573893)
+shape = SubResource("BoxShape3D_kffhi")
