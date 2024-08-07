@@ -12,7 +12,9 @@ var shooter_id: int = 0
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var mesh_instance: MeshInstance3D = $arrow
-@onready var collide_effect: GPUParticles3D = $GPUParticles3D
+@onready var collide_effect: GPUParticles3D = $expolde_particles
+@onready var trail_effect: GPUParticles3D = $trail_particles
+@onready var light_spot: SpotLight3D = $SpotLight3D
 
 func _ready():
 	set_physics_process(true)
@@ -39,6 +41,9 @@ func _physics_process(delta):
 	var collision = move_and_collide(movement)
 
 	if collision:
+		collide_effect.emitting = true
+		trail_effect.emitting = false
+		light_spot.visible = false
 		var collider = collision.get_collider()
 		if collider is CharacterBody3D and collider.name != str(shooter_id):
 			collider.receive_damage.rpc_id(collider.get_multiplayer_authority())

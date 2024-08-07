@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dqjgpd5h2vx3q"]
+[gd_scene load_steps=13 format=3 uid="uid://dqjgpd5h2vx3q"]
 
 [ext_resource type="Script" path="res://assets/scripts/arrow.gd" id="1_d68qs"]
 
@@ -75,13 +75,36 @@ shadow_mesh = SubResource("ArrayMesh_hxss0")
 height = 4.0
 radius = 0.301425
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sklqt"]
-spread = 109.898
-initial_velocity_min = 34.01
-initial_velocity_max = 129.25
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tw2v0"]
+emission_shape = 1
+emission_sphere_radius = 3.0
+radial_velocity_min = 1.0
+radial_velocity_max = 2.0
+gravity = Vector3(0, -0.5, 0)
 
-[sub_resource type="QuadMesh" id="QuadMesh_r1emy"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ahckm"]
+albedo_color = Color(1, 1, 0, 1)
+emission_enabled = true
+emission = Color(0.690196, 0.690196, 0, 1)
+emission_energy_multiplier = 3.79
+
+[sub_resource type="QuadMesh" id="QuadMesh_yosx3"]
+material = SubResource("StandardMaterial3D_ahckm")
 size = Vector2(0.05, 0.05)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rak02"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, -0.5, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oki3s"]
+albedo_color = Color(1, 1, 0.415686, 1)
+emission_enabled = true
+emission = Color(0.458168, 0.454519, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_xe46a"]
+material = SubResource("StandardMaterial3D_oki3s")
+size = Vector2(0.02, 0.02)
 
 [node name="arrow" type="CharacterBody3D"]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -0.000332445, -0.00076877, 0.00137603)
@@ -96,11 +119,21 @@ skeleton = NodePath("")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00588253, 2.00929, -2.10194e-07)
 shape = SubResource("CylinderShape3D_iagi5")
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.63879, 0)
+[node name="expolde_particles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00680246, 0)
 emitting = false
 amount = 16
 one_shot = true
 explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_sklqt")
-draw_pass_1 = SubResource("QuadMesh_r1emy")
+process_material = SubResource("ParticleProcessMaterial_tw2v0")
+draw_pass_1 = SubResource("QuadMesh_yosx3")
+
+[node name="trail_particles" type="GPUParticles3D" parent="."]
+amount = 20
+trail_lifetime = 0.2
+process_material = SubResource("ParticleProcessMaterial_rak02")
+draw_pass_1 = SubResource("QuadMesh_xe46a")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+light_color = Color(1, 1, 0, 1)
+light_energy = 0.5
