@@ -53,7 +53,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(2, 2.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(-1.5708, 0, 0), Vector3(-1.5708, -0.261799, 0)]
+"values": [Vector3(-1.5708, 0, 0), Vector3(-1.5708, 0.261799, 0)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -85,7 +85,7 @@ size = Vector3(1.00119, 1.79492, 0.206055)
 [node name="door" instance=ExtResource("1_y3p2v")]
 
 [node name="PSX Abandoned Church_Door_0_001" parent="." index="0"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -3.61999e-06, 1, 0, -1, -3.61999e-06, 0, 0, 0)
 
 [node name="keyanim" type="Node3D" parent="." index="1"]
 
@@ -101,7 +101,7 @@ mesh = SubResource("BoxMesh_cjgi8")
 skeleton = NodePath("../..")
 
 [node name="key" parent="keyanim" index="2" instance=ExtResource("2_quo1j")]
-transform = Transform3D(-6.55671e-09, 0.15, 0, -0.15, -6.55671e-09, 0, 0, 0, 0.15, -0.899741, 0.59284, 0.314284)
+transform = Transform3D(-5.42999e-07, 0.15, 0, -0.15, -5.42999e-07, 0, 0, 0, 0.15, -0.899741, 0.59284, 0.314284)
 visible = false
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." index="2"]

@@ -72,7 +72,6 @@ var can_attack := true
 
 @onready var crossBow_AnimPlayer = $Head/crossbow/crossbowAnimation
 @onready var arrow_AnimPlayer = $Head/crossbow/arrowAnimation
-@onready var blood_splat = $blood
 @onready var raycast = $Head/Camera/RayCast3D
 @onready var PlayerModel = $PlayerModel
 @onready var PlayerSkeleton = $PlayerModel/Armature/Skeleton3D
@@ -93,6 +92,7 @@ var is_flashing: bool = false
 @onready var arrow_fps = $Head/crossbow/arrow
 @onready var crossbow_local = $PlayerModel/Armature/Skeleton3D/BoneAttachment3D/crossbow
 @onready var step_sounds = [$stepSound1, $stepSound2, $stepSound3, $stepSound4]
+@onready var splat_sound: AudioStreamPlayer3D = $splat
 @onready var crossbowReload_sounds = $crossbowReload
 @onready var crossbowShoot_sounds = $crossbowShoot
 var current_step_sound = 0
@@ -642,12 +642,6 @@ func reset_weapon_animations():
 	arrow_AnimPlayer.stop()
 	arrow_AnimPlayer.play("RESET")
 
-@rpc("call_local") 
-func play_blood_splat_effects():
-	blood_splat.restart()
-	#blood_splat.position = pos
-	blood_splat.emitting = true
-
 @rpc("call_local")
 func play_step_sound():
 	step_sounds[current_step_sound].play()
@@ -689,6 +683,7 @@ func update_animation(input_dir):
 @rpc("any_peer")
 func receive_damage():
 	health -= 1
+	splat_sound.play()
 	if health <= 0:
 		die()
 	else:
