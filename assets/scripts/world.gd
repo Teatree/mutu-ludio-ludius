@@ -5,6 +5,7 @@ extends Node
 @onready var hud = $CanvasLayer/HUD
 @onready var health_bar = $CanvasLayer/HUD/HealthBar
 @onready var spawn_manager: SpawnManager = $SpawnManager
+@onready var key_spawn_manager: KeySpawnManager = $KeySpawnManager
 
 const Player = preload("res://assets/fpc/character.tscn")
 const PORT = 9999
@@ -24,6 +25,13 @@ func _on_host_button_pressed():
 	multiplayer.peer_disconnected.connect(removePlayer)
 	
 	addPlayer(multiplayer.get_unique_id())
+	
+	# Spawn keys when the game starts
+	spawn_keys.rpc()
+
+@rpc("call_local")
+func spawn_keys():
+	key_spawn_manager.spawn_keys()
 
 func _on_join_button_pressed():
 	main_menu.hide()
@@ -31,15 +39,18 @@ func _on_join_button_pressed():
 	
 	enet_peer.create_client("localhost", PORT)
 	multiplayer.multiplayer_peer = enet_peer
+	
+	addPlayer(multiplayer.get_unique_id())
 
 func addPlayer(peer_id):
-	var spawn_position = spawn_manager.get_random_spawn_point()
+	var spawn_data = spawn_manager.get_random_spawn_point()
 	var player = Player.instantiate()
 	player.name = str(peer_id)
 	add_child(player)
-	player.global_position = spawn_position
+	player.global_position = spawn_data.position
+	# player.global_rotation = spawn_data.rotation # rotation breaks shit
 	if player.is_multiplayer_authority():
-		player.tree_exiting.connect(func(): spawn_manager.release_spawn_point(spawn_position))
+		player.tree_exiting.connect(func(): spawn_manager.release_spawn_point(spawn_data.position))
 		player.health_changed.connect(update_health_bar)
 		
 func removePlayer(peer_id):

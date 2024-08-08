@@ -31,7 +31,7 @@ radius = 0.823274
 [node name="key" instance=ExtResource("1_62acx")]
 
 [node name="Sketchfab_model" parent="." index="0"]
-transform = Transform3D(1, 0, 0, 0, -3.61999e-06, 1, 0, -1, -3.61999e-06, 0, 0, 0)
+transform = Transform3D(0.5, 0, 0, 0, -1.81e-06, 0.5, 0, -0.5, -1.81e-06, 0, 0, 0)
 
 [node name="key 15_VRAM page #14_038_0" parent="Sketchfab_model/76971ca8744145a1a251cc471ebd2057_fbx/RootNode/key 15" index="0"]
 transform = Transform3D(0.707761, -0.000604575, 0.706452, -0.706452, -0.00121253, 0.70776, 0.000428679, -0.999999, -0.00128529, 0, 4.99159, -7.53709e-07)
@@ -43,6 +43,7 @@ libraries = {
 autoplay = "default"
 
 [node name="Area3D" type="Area3D" parent="." index="2"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -0.00449038, -0.0718358, 0)
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("2_iv0h3")

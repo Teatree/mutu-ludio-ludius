@@ -11,7 +11,7 @@ func _ready():
 		if child is Node3D and child.name.begins_with("SpawnPoint"):
 			spawn_points.append(child)
 
-func get_random_spawn_point() -> Vector3:
+func get_random_spawn_point() -> Dictionary:
 	if spawn_points.is_empty():
 		# If all spawn points are used, reset the list
 		spawn_points = used_spawn_points.duplicate()
@@ -21,7 +21,10 @@ func get_random_spawn_point() -> Vector3:
 	spawn_points.erase(spawn_point)
 	used_spawn_points.append(spawn_point)
 	
-	return spawn_point.global_position
+	return {
+		"position": spawn_point.global_position,
+		"rotation": spawn_point.global_rotation
+	}
 
 func release_spawn_point(position: Vector3):
 	for point in used_spawn_points:

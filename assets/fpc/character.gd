@@ -92,6 +92,8 @@ var is_flashing: bool = false
 @onready var arrow_fps = $Head/crossbow/arrow
 @onready var crossbow_local = $PlayerModel/Armature/Skeleton3D/BoneAttachment3D/crossbow
 @onready var step_sounds = [$stepSound1, $stepSound2, $stepSound3, $stepSound4]
+@onready var w_step_sounds = [$w_stepSound1, $w_stepSound2, $w_stepSound3, $w_stepSound4]
+@onready var surface_detector: RayCast3D = $SurfaceDetector
 @onready var splat_sound: AudioStreamPlayer3D = $splat
 @onready var crossbowReload_sounds = $crossbowReload
 @onready var crossbowShoot_sounds = $crossbowShoot
@@ -275,8 +277,6 @@ func _physics_process(delta):
 	if !immobile: # Immobility works by interrupting user input, so other forces can still be applied to the player
 		input_dir = Input.get_vector(LEFT, RIGHT, FORWARD, BACKWARD)
 	handle_movement(delta, input_dir)
-
-	
 	
 	if is_on_floor() and (velocity.x != 0 or velocity.z != 0) and Input.is_action_pressed("sprint") != true:
 		distance_since_last_step += velocity.length() * delta
@@ -644,9 +644,20 @@ func reset_weapon_animations():
 
 @rpc("call_local")
 func play_step_sound():
-	step_sounds[current_step_sound].play()
-	current_step_sound = (current_step_sound + 1) % step_sounds.size()
-	
+	var sound_array = w_step_sounds if is_on_water() else step_sounds
+	var random_sound_index = randi() % sound_array.size()
+	sound_array[random_sound_index].play()
+
+func is_on_water() -> bool:
+	if surface_detector.is_colliding():
+		var collider = surface_detector.get_collider()
+		if collider is StaticBody3D:
+			#print("")
+			var parent = collider.get_parent()
+			if parent is MeshInstance3D and parent.name.to_lower() == "water":
+				return true
+	return false
+
 @rpc("call_local")
 func play_shoot_sound():
 	crossbowShoot_sounds.play()
