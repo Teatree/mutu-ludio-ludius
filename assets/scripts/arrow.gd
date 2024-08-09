@@ -99,10 +99,15 @@ func add_debug_point():
 		old_point.queue_free()
 
 func _on_area_3d_body_entered(body):
-	if body is CharacterBody3D and body.name != str(shooter_id):
+	if body is CharacterBody3D and body.get_instance_id() != shooter_id:
 		collide_effect.emitting = true
 		spawn_blood_effect.rpc(global_position)
-		body.receive_damage.rpc_id(body.get_multiplayer_authority())
+		
+		if body.has_method("receive_damage"):
+			if body.name.is_valid_int():  # Player
+				body.receive_damage.rpc_id(body.get_multiplayer_authority())
+			else:  # Enemy
+				body.receive_damage.rpc()
 		queue_free()
 	else:
 		print("Invalid target or shooter hit themselves")

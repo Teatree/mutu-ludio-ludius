@@ -1,9 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://dqjgpd5h2vx3q"]
+[gd_scene load_steps=15 format=3 uid="uid://blt4k0tex241u"]
 
-[ext_resource type="Script" path="res://assets/scripts/arrow.gd" id="1_d68qs"]
-[ext_resource type="PackedScene" uid="uid://dw8en7ecjcevv" path="res://assets/scenes/blood2.tscn" id="2_a7e0k"]
-[ext_resource type="AudioStream" uid="uid://72yq47c877nx" path="res://assets/sounds/bolt_smack.mp3" id="2_yc4vx"]
-[ext_resource type="AudioStream" uid="uid://0rrthnhqay78" path="res://assets/sounds/bolt_flying.mp3" id="3_m4v7g"]
+[ext_resource type="Script" path="res://assets/scripts/enemyArrow.gd" id="1_6rj0j"]
+[ext_resource type="AudioStream" uid="uid://72yq47c877nx" path="res://assets/sounds/bolt_smack.mp3" id="1_633hj"]
+[ext_resource type="AudioStream" uid="uid://0rrthnhqay78" path="res://assets/sounds/bolt_flying.mp3" id="2_6t0ti"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5sian"]
 resource_name = "metal"
@@ -20,7 +19,7 @@ vertex_color_use_as_albedo = true
 albedo_color = Color(0.544248, 0.314715, 0.115592, 1)
 roughness = 0.892971
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_8yi8y"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_hxss0"]
 _surfaces = [{
 "aabb": AABB(38.5092, -3.12107, -2.70294, 7.98776, 6.24215, 5.40586),
 "format": 34359742465,
@@ -44,7 +43,7 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_pp4yo"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_a0jmd"]
 resource_name = "crossbow_Weapon_Arrow03_metal_0"
 _surfaces = [{
 "aabb": AABB(38.5092, -3.12107, -2.70294, 7.98776, 6.24215, 5.40586),
@@ -72,58 +71,57 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 72, 157, 180, 74, 60, 102, 191, 201, 99, 199, 191, 47, 84, 157, 52, 74, 60, 230, 191, 112, 144, 117, 51, 24, 78, 29, 53, 73, 60, 102, 191, 202, 99, 199, 63, 24, 78, 29, 53, 73, 60, 102, 191, 202, 99, 199, 63, 0, 72, 157, 52, 76, 60, 102, 63, 201, 99, 199, 63, 49, 84, 157, 180, 74, 60, 230, 63, 74, 60, 102, 180, 0, 72, 157, 180, 74, 60, 102, 191, 201, 99, 199, 191, 24, 78, 29, 53, 73, 60, 102, 191, 202, 99, 199, 63, 49, 84, 157, 180, 74, 60, 230, 63, 74, 60, 102, 180, 24, 78, 29, 181, 68, 60, 102, 63, 203, 99, 199, 191, 0, 72, 157, 180, 74, 60, 102, 191, 201, 99, 199, 191, 49, 84, 157, 180, 74, 60, 230, 63, 74, 60, 102, 180, 49, 84, 157, 180, 74, 60, 230, 63, 74, 60, 102, 180, 0, 72, 157, 52, 76, 60, 102, 63, 201, 99, 199, 63, 97, 9, 26, 66, 196, 60, 102, 63, 99, 99, 199, 63, 97, 9, 26, 66, 196, 60, 102, 63, 99, 99, 199, 63, 97, 9, 26, 66, 134, 60, 230, 63, 175, 64, 81, 183, 49, 84, 157, 180, 74, 60, 230, 63, 74, 60, 102, 180, 0, 72, 157, 52, 76, 60, 102, 63, 201, 99, 199, 63, 24, 78, 29, 53, 73, 60, 102, 191, 202, 99, 199, 63, 97, 9, 26, 66, 210, 59, 102, 191, 99, 99, 199, 63, 97, 9, 26, 66, 210, 59, 102, 191, 99, 99, 199, 63, 97, 9, 26, 66, 196, 60, 102, 63, 99, 99, 199, 63, 0, 72, 157, 52, 76, 60, 102, 63, 201, 99, 199, 63, 24, 78, 29, 53, 73, 60, 102, 191, 202, 99, 199, 63, 47, 84, 157, 52, 74, 60, 230, 191, 112, 144, 117, 51, 97, 9, 26, 66, 15, 60, 230, 191, 45, 178, 76, 183, 97, 9, 26, 66, 15, 60, 230, 191, 45, 178, 76, 183, 97, 9, 26, 66, 210, 59, 102, 191, 99, 99, 199, 63, 24, 78, 29, 53, 73, 60, 102, 191, 202, 99, 199, 63, 47, 84, 157, 52, 74, 60, 230, 191, 112, 144, 117, 51, 0, 72, 157, 180, 74, 60, 102, 191, 201, 99, 199, 191, 97, 9, 26, 66, 211, 59, 102, 191, 49, 100, 199, 191, 97, 9, 26, 66, 211, 59, 102, 191, 49, 100, 199, 191, 97, 9, 26, 66, 15, 60, 230, 191, 45, 178, 76, 183, 47, 84, 157, 52, 74, 60, 230, 191, 112, 144, 117, 51, 0, 72, 157, 180, 74, 60, 102, 191, 201, 99, 199, 191, 24, 78, 29, 181, 68, 60, 102, 63, 203, 99, 199, 191, 97, 9, 26, 66, 187, 60, 102, 63, 50, 100, 199, 191, 97, 9, 26, 66, 187, 60, 102, 63, 50, 100, 199, 191, 97, 9, 26, 66, 211, 59, 102, 191, 49, 100, 199, 191, 0, 72, 157, 180, 74, 60, 102, 191, 201, 99, 199, 191, 24, 78, 29, 181, 68, 60, 102, 63, 203, 99, 199, 191, 49, 84, 157, 180, 74, 60, 230, 63, 74, 60, 102, 180, 97, 9, 26, 66, 134, 60, 230, 63, 175, 64, 81, 183, 97, 9, 26, 66, 134, 60, 230, 63, 175, 64, 81, 183, 97, 9, 26, 66, 187, 60, 102, 63, 50, 100, 199, 191, 24, 78, 29, 181, 68, 60, 102, 63, 203, 99, 199, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 0, 0, 255, 127, 255, 255, 255, 191, 255, 127, 37, 209, 255, 127, 108, 87, 255, 127, 37, 209, 255, 127, 108, 87, 255, 127, 37, 209, 255, 127, 108, 87, 255, 127, 37, 209, 255, 127, 108, 87, 255, 127, 37, 209, 255, 127, 108, 87, 255, 127, 37, 209, 255, 127, 108, 87, 255, 127, 255, 127, 255, 127, 254, 127, 255, 127, 255, 127, 255, 127, 254, 127, 255, 127, 255, 127, 255, 127, 254, 127, 255, 127, 255, 127, 255, 127, 254, 127, 255, 127, 255, 127, 255, 127, 254, 127, 255, 127, 255, 127, 255, 127, 254, 127, 255, 127, 217, 46, 217, 46, 254, 127, 255, 127, 217, 46, 217, 46, 254, 127, 255, 127, 217, 46, 217, 46, 254, 127, 255, 127, 217, 46, 217, 46, 254, 127, 255, 127, 217, 46, 37, 209, 254, 127, 255, 127, 217, 46, 217, 46, 254, 127, 217, 174, 0, 0, 217, 46, 0, 0, 217, 174, 0, 0, 217, 46, 0, 0, 217, 174, 0, 0, 217, 46, 0, 0, 217, 174, 0, 0, 217, 46, 0, 0, 217, 174, 0, 0, 37, 209, 0, 0, 217, 174, 0, 0, 217, 46, 0, 0, 255, 255, 255, 255, 255, 127, 0, 0, 255, 255, 255, 255, 255, 127, 0, 0, 255, 255, 255, 255, 255, 127, 0, 0, 255, 255, 255, 255, 255, 127, 0, 0, 255, 255, 255, 255, 255, 127, 0, 0, 255, 255, 255, 255, 255, 127, 0, 0, 217, 174, 255, 255, 255, 127, 146, 40, 217, 174, 255, 255, 255, 127, 146, 40, 217, 174, 255, 255, 255, 127, 146, 40, 217, 174, 255, 255, 255, 127, 146, 40, 217, 174, 255, 255, 255, 127, 146, 40, 217, 174, 255, 255, 255, 127, 146, 40)
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_8yi8y")
+shadow_mesh = SubResource("ArrayMesh_hxss0")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_iagi5"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_13glv"]
 height = 4.0
 radius = 0.301425
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tw2v0"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_flb65"]
 emission_shape = 1
 emission_sphere_radius = 3.0
 radial_velocity_min = 1.0
 radial_velocity_max = 2.0
 gravity = Vector3(0, -0.5, 0)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1k3jk"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ajk0q"]
 albedo_color = Color(1, 1, 0, 1)
 emission_enabled = true
 emission = Color(0.690196, 0.690196, 0, 1)
 emission_energy_multiplier = 3.79
 billboard_mode = 2
 
-[sub_resource type="QuadMesh" id="QuadMesh_yosx3"]
-material = SubResource("StandardMaterial3D_1k3jk")
+[sub_resource type="QuadMesh" id="QuadMesh_7bqn1"]
+material = SubResource("StandardMaterial3D_ajk0q")
 size = Vector2(0.05, 0.05)
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rak02"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jjuxq"]
 emission_shape = 1
 emission_sphere_radius = 1.0
 gravity = Vector3(0, -0.5, 0)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jcq5c"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ookob"]
 albedo_color = Color(0.352143, 0.360497, 0.367612, 1)
 emission_enabled = true
 emission = Color(0.352941, 0.360784, 0.368627, 1)
 billboard_mode = 2
 
-[sub_resource type="QuadMesh" id="QuadMesh_xe46a"]
-material = SubResource("StandardMaterial3D_jcq5c")
+[sub_resource type="QuadMesh" id="QuadMesh_fq6g8"]
+material = SubResource("StandardMaterial3D_ookob")
 size = Vector2(0.02, 0.02)
 
-[node name="arrow" type="CharacterBody3D"]
-transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -0.000332445, -0.00076877, 0.00137603)
-script = ExtResource("1_d68qs")
-blood_effect_scene = ExtResource("2_a7e0k")
+[node name="enemyArrow" type="CharacterBody3D"]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+script = ExtResource("1_6rj0j")
 
 [node name="arrow" type="MeshInstance3D" parent="."]
 transform = Transform3D(0, -0.0934494, 0, 0.0934494, 0, 8.88178e-16, -4.44089e-16, 0, 0.0934494, 0.00961844, -0.017918, 8.41474e-09)
-mesh = SubResource("ArrayMesh_pp4yo")
+mesh = SubResource("ArrayMesh_a0jmd")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00588253, 2.00929, -2.10194e-07)
-shape = SubResource("CylinderShape3D_iagi5")
+shape = SubResource("CylinderShape3D_13glv")
 
 [node name="expolde_particles" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00680246, 0)
@@ -132,26 +130,26 @@ amount = 16
 one_shot = true
 explosiveness = 1.0
 visibility_aabb = AABB(-1320, -62.8674, -1591.88, 2640, 125.735, 3183.75)
-process_material = SubResource("ParticleProcessMaterial_tw2v0")
-draw_pass_1 = SubResource("QuadMesh_yosx3")
+process_material = SubResource("ParticleProcessMaterial_flb65")
+draw_pass_1 = SubResource("QuadMesh_7bqn1")
 
 [node name="trail_particles" type="GPUParticles3D" parent="."]
 amount = 20
 visibility_aabb = AABB(-1322.95, -84.5299, -1787, 2645.9, 169.06, 3573.99)
 trail_lifetime = 0.2
-process_material = SubResource("ParticleProcessMaterial_rak02")
-draw_pass_1 = SubResource("QuadMesh_xe46a")
+process_material = SubResource("ParticleProcessMaterial_jjuxq")
+draw_pass_1 = SubResource("QuadMesh_fq6g8")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 light_color = Color(1, 1, 0, 1)
 light_energy = 0.5
 
 [node name="smack" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("2_yc4vx")
+stream = ExtResource("1_633hj")
 volume_db = -15.0
 max_distance = 20.0
 
 [node name="arrow_flight" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("3_m4v7g")
+stream = ExtResource("2_6t0ti")
 volume_db = -15.0
 max_distance = 10.0

@@ -1,0 +1,59 @@
+[gd_scene load_steps=9 format=3 uid="uid://w01log63kxlf"]
+
+[ext_resource type="Script" path="res://assets/scripts/enemy.gd" id="1_qy3q2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_uqe75"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5m2xj"]
+albedo_color = Color(1, 0.584314, 0.584314, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ly88o"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_im2dp"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4q5fy"]
+radius = 6.02738
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4m6f1"]
+radius = 8.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_imf8t"]
+properties/0/path = NodePath(".:sync_position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:sync_velocity")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="enemy" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00244, 0)
+script = ExtResource("1_qy3q2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_uqe75")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_5m2xj")
+mesh = SubResource("CapsuleMesh_ly88o")
+
+[node name="nose3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.536411, 0.293282, 0)
+mesh = SubResource("BoxMesh_im2dp")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="AreaOfDetection" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaOfDetection"]
+shape = SubResource("SphereShape3D_4q5fy")
+
+[node name="AreaOfAttack" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaOfAttack"]
+shape = SubResource("SphereShape3D_4m6f1")
+
+[node name="ArrowSpawnPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59183, 0.546098, 0)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_imf8t")

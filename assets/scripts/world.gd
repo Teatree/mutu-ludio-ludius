@@ -7,9 +7,16 @@ extends Node
 @onready var spawn_manager: SpawnManager = $SpawnManager
 @onready var key_spawn_manager: KeySpawnManager = $KeySpawnManager
 
+const Enemy = preload("res://assets/scenes/enemy.tscn")
+
 const Player = preload("res://assets/fpc/character.tscn")
 const PORT = 9999
 var enet_peer = ENetMultiplayerPeer.new()
+
+var spawned_enemies = []
+
+func _ready():
+	multiplayer.peer_connected.connect(_on_peer_connected)
 
 func _unhandled_input(event):
 	if Input.is_action_just_pressed("quit"):
@@ -28,6 +35,8 @@ func _on_host_button_pressed():
 	
 	# Spawn keys when the game starts
 	spawn_keys.rpc()
+	if multiplayer.is_server():
+		spawn_enemies()
 
 @rpc("call_local")
 func spawn_keys():
@@ -64,3 +73,27 @@ func update_health_bar(health_value):
 func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
 		node.health_changed.connect(update_health_bar)
+
+func _on_peer_connected(peer_id):
+	if multiplayer.is_server():
+		# Inform the new peer about existing enemies
+		for enemy_data in spawned_enemies:
+			rpc_id(peer_id, "spawn_enemy", enemy_data)
+
+func spawn_enemies():
+	# Spawn enemies at predefined positions or randomly on the NavMesh
+	if multiplayer.is_server():
+		for spawn_point in $EnemySpawnManager.get_children():
+			var enemy_data = {
+				"position": spawn_point.global_position,
+				"id": randi()  # Generate a unique ID for each enemy
+			}
+			spawned_enemies.append(enemy_data)
+			rpc("spawn_enemy", enemy_data)
+
+@rpc("call_local")
+func spawn_enemy(enemy_data: Dictionary):
+	var enemy = Enemy.instantiate()
+	enemy.name = str(enemy_data["id"])
+	enemy.global_position = enemy_data["position"]
+	add_child(enemy)
