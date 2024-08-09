@@ -38,6 +38,38 @@ func _on_host_button_pressed():
 	if multiplayer.is_server():
 		spawn_enemies()
 
+func _process(delta):
+	if multiplayer.is_server():
+		move_enemies()
+
+func move_enemies():
+	var enemies = get_tree().get_nodes_in_group("enemies")
+	var players = get_tree().get_nodes_in_group("players")
+	
+	print("Number of enemies: ", enemies.size())
+	print("Number of players: ", players.size())
+	
+	for enemy in enemies:
+		var nearest_player = find_nearest_player(enemy, players)
+		if nearest_player:
+			print("Moving enemy towards player at: ", nearest_player.global_position)
+			enemy.move_towards.rpc(nearest_player.global_position)
+		else:
+			print("No nearest player found for enemy")
+
+func find_nearest_player(enemy: Enemy, players: Array) -> CharacterBody3D:
+	var nearest_player = null
+	var min_distance = INF
+	
+	for player in players:
+		var distance = enemy.global_position.distance_to(player.global_position)
+		if distance < min_distance:
+			min_distance = distance
+			nearest_player = player
+	
+	return nearest_player
+
+
 @rpc("call_local")
 func spawn_keys():
 	key_spawn_manager.spawn_keys()

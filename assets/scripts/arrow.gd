@@ -8,6 +8,9 @@ var max_lifetime: float = 10.0
 var damage: int = 1
 var shooter_id: int = 0
 
+var arrow_id: int = 0
+var has_dealt_damage: bool = false
+
 # Debug Trail
 @export var debug_trail_enabled: bool = false
 @export var debug_trail_length: int = 100
@@ -32,7 +35,7 @@ var debug_trail_timer: float = 0
 func _ready():
 	set_physics_process(true)
 
-func initialize(start_transform: Transform3D, initial_speed: float, shooter: int):
+func initialize(start_transform: Transform3D, initial_speed: float, shooter: int, shooter_arrow_id: int):
 	global_transform = start_transform
 	initial_velocity = -global_transform.basis.z * initial_speed
 	current_velocity = initial_velocity
@@ -49,7 +52,9 @@ func initialize(start_transform: Transform3D, initial_speed: float, shooter: int
 	collision_shape.rotate_x(deg_to_rad(270))
 	
 	if debug_trail_enabled:
-		add_debug_point()  # Add the first point immediately
+		add_debug_point() 
+		
+	arrow_id = shooter_arrow_id
 
 func _physics_process(delta):
 	time_alive += delta
@@ -63,20 +68,30 @@ func _physics_process(delta):
 
 	var collision = move_and_collide(movement)
 
-	if collision:
+	if collision and not has_dealt_damage:
 		collide_effect.emitting = true
 		trail_effect.emitting = false
 		light_spot.visible = false
 		smack_sound.play()
 		flying_sound.stream_paused = true
 		var collider = collision.get_collider()
-		if collider is CharacterBody3D and collider.name != str(shooter_id):
-			collider.receive_damage.rpc_id(collider.get_multiplayer_authority())
+		
+		if collider is CharacterBody3D:
+			if collider is Enemy:
+				# Handle enemy hit
+				collider.receive_damage_request.rpc_id(1, damage, arrow_id)
+				print("enemy hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+			elif collider.name != str(shooter_id):
+				# Handle player hit
+				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
+				print("player hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+			
+			has_dealt_damage = true
 			spawn_blood_effect.rpc(global_position)
 			flash_hit_player.rpc(collider.get_path())
 			queue_free()
-		elif not collider is CharacterBody3D:
-			# Stick the arrow
+		else:
+			# Stick the arrow to non-character objects
 			collision_shape.disabled = true
 			set_physics_process(false)
 	
@@ -97,20 +112,6 @@ func add_debug_point():
 	if debug_trail.size() > debug_trail_length:
 		var old_point = debug_trail.pop_front()
 		old_point.queue_free()
-
-func _on_area_3d_body_entered(body):
-	if body is CharacterBody3D and body.get_instance_id() != shooter_id:
-		collide_effect.emitting = true
-		spawn_blood_effect.rpc(global_position)
-		
-		if body.has_method("receive_damage"):
-			if body.name.is_valid_int():  # Player
-				body.receive_damage.rpc_id(body.get_multiplayer_authority())
-			else:  # Enemy
-				body.receive_damage.rpc()
-		queue_free()
-	else:
-		print("Invalid target or shooter hit themselves")
 
 @rpc("call_local")
 func spawn_blood_effect(pos: Vector3):

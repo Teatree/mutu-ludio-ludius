@@ -12,16 +12,16 @@ albedo_color = Color(1, 0.584314, 0.584314, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_im2dp"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_4q5fy"]
-radius = 6.02738
+radius = 1.89471
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_4m6f1"]
-radius = 8.0
+radius = 2.73243
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_imf8t"]
-properties/0/path = NodePath(".:sync_position")
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cn6mr"]
+properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:sync_velocity")
+properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
@@ -56,4 +56,4 @@ shape = SubResource("SphereShape3D_4m6f1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59183, 0.546098, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_imf8t")
+replication_config = SubResource("SceneReplicationConfig_cn6mr")

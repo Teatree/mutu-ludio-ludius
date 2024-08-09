@@ -2,10 +2,14 @@ extends CharacterBody3D
 
 class_name Enemy
 
-@export var move_speed := 3.0
+@export var move_speed := 1
 @export var attack_interval := 5.0
 @export var max_health := 2
+var move_direction: Vector3 = Vector3.FORWARD
+var move_timer: float = 0.0
+const MOVE_DURATION: float = 5.0  # Move for 5 seconds before changing direction
 var current_health: int
+var last_hit_arrow_id: int = -1
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var detection_area: Area3D = $AreaOfDetection
@@ -20,12 +24,20 @@ var current_state: State = State.IDLE
 var target_player: CharacterBody3D = null
 var time_since_last_attack := 0.0
 
+var wait_timer: float = 0.0
+const WAIT_TIME: float = 3.0
+const MOVE_DISTANCE: float = 1.0
+
 # Preload the arrow scene
 const EnemyArrow = preload("res://assets/scenes/enemyArrow.tscn")
+@export var enemy_id: int = 0
 
 func _ready():
 	current_health = max_health
 	set_multiplayer_authority(1)
+	add_to_group("enemies")
+	print("Enemy added to 'enemies' group")
+	
 	synchronizer.set_multiplayer_authority(1)
 	
 	if is_multiplayer_authority():
@@ -43,9 +55,10 @@ func _ready():
 	
 	# Make sure to call this when the node is ready
 	call_deferred("actor_setup")
-
-@export var sync_position: Vector3 = Vector3.ZERO
-@export var sync_velocity: Vector3 = Vector3.ZERO
+	wait_timer = WAIT_TIME
+	
+	if multiplayer.is_server():
+		enemy_id = randi()
 
 func actor_setup():
 	# Wait for the first physics frame so the NavigationServer can sync.
@@ -59,8 +72,10 @@ func move(safe_velocity: Vector3):
 	move_and_slide()
 
 func _physics_process(delta):
-	if not is_multiplayer_authority():
+	if not multiplayer.is_server():
 		return
+	
+	#print("Enemy physics process running on server")
 	
 	match current_state:
 		State.IDLE:
@@ -71,19 +86,41 @@ func _physics_process(delta):
 			attack_behavior(delta)
 	
 	move_and_slide()
+
+@rpc("any_peer", "call_local")
+func move_towards(target_position: Vector3):
+	print("move_towards called with target: ", target_position)
+	if not is_multiplayer_authority():
+		return
 	
-	sync_position = global_position
-	sync_velocity = velocity
+	var direction = (target_position - global_position).normalized()
+	velocity = direction * move_speed
+	move_and_slide()
+	
+	if velocity.length() > 0.1:
+		look_at(global_position + velocity, Vector3.UP)
 
 func _process(delta):
 	if not is_multiplayer_authority():
-		# Smoothly interpolate position and velocity for non-authoritative clients
-		global_position = global_position.lerp(sync_position, 15 * delta)
-		velocity = velocity.lerp(sync_velocity, 15 * delta)
+		if velocity.length() > 0.01:
+			look_at(global_position + velocity, Vector3.UP)
 
 func idle_behavior(delta):
-	# Implement idle wandering behavior here
-	pass
+	move_timer += delta
+	
+	if move_timer >= MOVE_DURATION:
+		# Choose a new random direction
+		move_direction = Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized()
+		move_timer = 0.0
+	
+	# Move in the current direction
+	velocity = move_direction * move_speed
+	
+	# Make the enemy face the direction it's moving
+	if velocity.length() > 0.01:
+		look_at(global_position + velocity, Vector3.UP)
+	
+	move_and_slide()
 
 func pursue_behavior(delta):
 	if target_player:
@@ -132,18 +169,35 @@ func _on_attack_area_body_exited(body):
 		current_state = State.PURSUE
 
 @rpc("any_peer")
-func receive_damage():
-	if not is_multiplayer_authority():
+func receive_damage_request(damage: int, arrow_id: int):
+	print("last_hit_arrow_id: " + str(last_hit_arrow_id) + "arrow_id: " + str(arrow_id))
+	if not is_multiplayer_authority() or arrow_id == last_hit_arrow_id:
 		return
-	current_health -= 1
+		
+	print("last id was: " + str(last_hit_arrow_id) + " and now arrow id is " + str(arrow_id) + " applying damage!")
+	last_hit_arrow_id = arrow_id
+	apply_damage(damage)
+
+func apply_damage(damage: int):
+	current_health -= damage
 	print("Enemy hit! Current health: ", current_health)
+	
+	# Broadcast the new health to all clients
+	rpc("update_health", current_health)
 	
 	if current_health <= 0:
 		die()
+	else:
+		rpc("flash_hit")
+
+@rpc("call_local")
+func update_health(new_health: int):
+	current_health = new_health
+	if current_health <= 0:
+		remove_enemy()
 
 func die():
-	# Implement death behavior (e.g., play death animation, spawn loot, etc.)
-	print("Enemy died!")
+	print("Enemy ", enemy_id, " died!")
 	rpc("remove_enemy")
 
 @rpc("call_local")

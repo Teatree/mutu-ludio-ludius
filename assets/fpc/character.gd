@@ -51,6 +51,8 @@ signal player_animation_changed(animation_name)
 @export var reload_time : float = 3.0  # Time it takes to reload in seconds
 @onready var reload_timer : Timer = Timer.new()
 var is_loaded : bool = true  # Start with a loaded crossbow
+var arrow_shoot_count: int = 0
+var arrow_shooter_id: int = 0
 
 @export var respawn_time : float = 3.0  # Time before respawn after death
 @onready var respawn_timer : Timer = Timer.new()
@@ -59,6 +61,8 @@ var is_dead : bool = false
 @export var Arrow: PackedScene
 @export var arrow_speed = 20
 @export var arrow_lifetime = 10
+
+var last_hit_arrow_id: int = -1
 
 @export var death_model_scene: PackedScene  # Set this in the inspector
 var death_model: Node3D = null
@@ -84,7 +88,7 @@ var pose
 @export var hit_flash_duration: float = 0.15
 @export var hit_flash_color: Color = Color(1, 0, 0, 1)  # Bright red
 var original_material: Material
-var flash_material: Material
+# var flash_material: Material
 var is_flashing: bool = false
 
 @onready var PlayerCollision = $Collision
@@ -154,6 +158,15 @@ func _ready():
 		crossbow_local.set_layer_mask_value(2, 0)
 		return
 	
+	if not is_multiplayer_authority():
+		PlayerMesh.set_layer_mask_value(1, 1)
+		PlayerMesh.set_layer_mask_value(2, 0)
+		return
+	
+	add_to_group("players")
+	print("Player added to 'players' group")
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
 	ui_root.visible = true
 	
 	head_rotation_x = -HEAD.rotation.x + 105
@@ -188,8 +201,8 @@ func _ready():
 	
 	if PlayerMesh:
 		original_material = PlayerMesh.get_surface_override_material(0)
-		flash_material = original_material.duplicate()
-		flash_material.albedo_color = hit_flash_color
+		#flash_material = original_material.duplicate()
+		#flash_material.albedo_color = hit_flash_color
 
 @rpc("call_local")
 func flash_hit_effect():
@@ -197,7 +210,7 @@ func flash_hit_effect():
 		return
 	
 	is_flashing = true
-	PlayerMesh.set_surface_override_material(0, flash_material)
+	#PlayerMesh.set_surface_override_material(0, flash_material)
 	
 	get_tree().create_timer(hit_flash_duration).timeout.connect(
 		func():
@@ -526,7 +539,12 @@ func spawn_arrow():
 	var spawn_transform = HEAD.global_transform
 	spawn_transform.origin += -HEAD.global_transform.basis.z  # Move 1 meter along the negative Z-axis
 	
-	arrow.initialize(spawn_transform, arrow_speed, get_multiplayer_authority())
+	print("spawning_arrow " + str(get_multiplayer_authority()))
+	arrow_shoot_count = arrow_shoot_count + 1
+	print(" arrow_shoot_count: " + str(arrow_shoot_count))
+	arrow_shooter_id = get_multiplayer_authority() + arrow_shoot_count
+	
+	arrow.initialize(spawn_transform, arrow_speed, get_multiplayer_authority(), arrow_shooter_id) #randi for a random arror id
 	arrow.max_lifetime = arrow_lifetime
 	
 	# Set the shooter's collision layer to ignore
@@ -692,13 +710,18 @@ func update_animation(input_dir):
 		change_animation.rpc(new_animation)
 
 @rpc("any_peer")
-func receive_damage():
-	health -= 1
+func receive_damage(damage_amount: int, arrow_id: int):
+	if not is_multiplayer_authority() or arrow_id == last_hit_arrow_id:
+		return
+	
+	health -= damage_amount
+	last_hit_arrow_id = arrow_id
 	splat_sound.play()
+	health_changed.emit(health)
+	
 	if health <= 0:
 		die()
-	else:
-		flash_hit_effect.rpc()
+	
 	health_changed.emit(health)
 
 func die():
