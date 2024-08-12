@@ -374,7 +374,7 @@ func change_bone_rot(isWalkingOrRunning):
 	var rotation_quaternion_y
 	if isWalkingOrRunning == true:
 		head_rotation_x = -HEAD.rotation.x - 1.6
-		rotation_quaternion_y = Quaternion(Vector3(0, 0, 1), 0.1)
+		rotation_quaternion_y = Quaternion(Vector3(0, 0, 1), 0.6)
 		#print("this " + str(isWalkingOrRunning))
 	elif isWalkingOrRunning == false:
 		head_rotation_x = -HEAD.rotation.x - 1.6
