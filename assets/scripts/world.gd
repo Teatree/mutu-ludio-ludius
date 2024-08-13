@@ -4,8 +4,8 @@ extends Node
 @onready var address_entry = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressEntry
 @onready var hud = $CanvasLayer/HUD
 @onready var health_bar = $CanvasLayer/HUD/HealthBar
-@onready var spawn_manager: SpawnManager = $SpawnManager
-@onready var key_spawn_manager: KeySpawnManager = $KeySpawnManager
+@onready var spawn_manager = $SpawnManager
+@onready var key_spawn_manager = $KeySpawnManager
 
 const Enemy = preload("res://assets/scenes/enemy.tscn")
 
@@ -46,13 +46,13 @@ func move_enemies():
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var players = get_tree().get_nodes_in_group("players")
 	
-	print("Number of enemies: ", enemies.size())
-	print("Number of players: ", players.size())
+	#print("Number of enemies: ", enemies.size())
+	#print("Number of players: ", players.size())
 	
 	for enemy in enemies:
 		var nearest_player = find_nearest_player(enemy, players)
 		if nearest_player:
-			print("Moving enemy towards player at: ", nearest_player.global_position)
+			#print("Moving enemy towards player at: ", nearest_player.global_position)
 			enemy.move_towards.rpc(nearest_player.global_position)
 		else:
 			print("No nearest player found for enemy")

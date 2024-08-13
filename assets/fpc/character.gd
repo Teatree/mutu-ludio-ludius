@@ -73,6 +73,13 @@ const SPRINT_SPEED = 5.0
 
 var health = 2
 var can_attack := true
+var stamina = 100
+const STAMINA_COOLDOWN = 2
+@onready var stamina_cooldown_timer : Timer = Timer.new()
+var is_recover_stamina = false 
+const STAMINA_REC_COST = 0.5
+const STAMINA_RUN_COST = 0.4
+const STAMINA_JUMP_COST = 2
 
 @onready var crossBow_AnimPlayer = $Head/crossbow/crossbowAnimation
 @onready var arrow_AnimPlayer = $Head/crossbow/arrowAnimation
@@ -109,6 +116,7 @@ var distance_since_last_step = 0.0
 # ui
 @onready var ui_AnimPlayer = $UserInterface/uiAnimation
 @onready var ui_root = $UserInterface
+@onready var ui_stamina_bar = $UserInterface/Stamina/StaminaBar
 
 # keys
 var keys = 0
@@ -198,6 +206,11 @@ func _ready():
 	respawn_timer.wait_time = respawn_time
 	respawn_timer.connect("timeout", Callable(self, "_on_respawn"))
 	add_child(respawn_timer)
+	
+	stamina_cooldown_timer.one_shot = true
+	stamina_cooldown_timer.wait_time = STAMINA_COOLDOWN
+	stamina_cooldown_timer.connect("timeout", Callable(self, "_on_stamina_cooldown_complete"))
+	add_child(stamina_cooldown_timer)
 	
 	if PlayerMesh:
 		original_material = PlayerMesh.get_surface_override_material(0)
@@ -330,6 +343,8 @@ func handle_jumping():
 			if Input.is_action_pressed(JUMP) and is_on_floor() and !low_ceiling:
 				if jump_animation:
 					JUMP_ANIMATION.play("jump", 0.25)
+					stamina -= STAMINA_JUMP_COST
+					stamina_cooldown_timer.stop()
 				velocity.y += jump_velocity # Adding instead of setting so jumping on slopes works properly
 		else:
 			if Input.is_action_just_pressed(JUMP) and is_on_floor() and !low_ceiling:
@@ -388,30 +403,38 @@ func change_bone_rot(isWalkingOrRunning):
 	PlayerSkeleton.set_bone_global_pose_override(spine, pose, 1.0, true)
 
 func handle_state(moving):
-	if sprint_enabled:
-		if sprint_mode == 0:
-			if Input.is_action_pressed(SPRINT) and state != "crouching":
-				if moving:
-					if state != "sprinting":
-						enter_sprint_state()
-				else:
-					if state == "sprinting":
-						enter_normal_state()
-			elif state == "sprinting":
-				enter_normal_state()
-		elif sprint_mode == 1:
-			if moving:
-				# If the player is holding sprint before moving, handle that cenerio
-				if Input.is_action_pressed(SPRINT) and state == "normal":
-					enter_sprint_state()
-				if Input.is_action_just_pressed(SPRINT):
-					match state:
-						"normal":
+	if stamina <= 0 and not crouch_enabled:
+		enter_normal_state()
+	else:
+		if state == "sprinting":
+			stamina -= STAMINA_RUN_COST
+			is_recover_stamina = false
+			stamina_cooldown_timer.stop()
+		
+		if sprint_enabled:
+			if sprint_mode == 0:
+				if Input.is_action_pressed(SPRINT) and state != "crouching":
+					if moving:
+						if state != "sprinting" and stamina > 0:
 							enter_sprint_state()
-						"sprinting":
+					else:
+						if state == "sprinting":
 							enter_normal_state()
-			elif state == "sprinting":
-				enter_normal_state()
+				elif state == "sprinting":
+					enter_normal_state()
+			elif sprint_mode == 1:
+				if moving:
+					# holding sprint button
+					if Input.is_action_pressed(SPRINT) and state == "normal"  and stamina > 0:
+						enter_sprint_state()
+					if Input.is_action_just_pressed(SPRINT):
+						match state:
+							"normal":
+								enter_sprint_state()
+							"sprinting":
+								enter_normal_state()
+				elif state == "sprinting":
+					enter_normal_state()
 	
 	if crouch_enabled:
 		if crouch_mode == 0:
@@ -505,6 +528,29 @@ func _process(delta):
 					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 				Input.MOUSE_MODE_VISIBLE:
 					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	handle_stamina()
+	
+func handle_stamina():
+	ui_stamina_bar.value = stamina
+	
+	if stamina >= 100:
+		ui_stamina_bar.visible = false
+	else:
+		ui_stamina_bar.visible = true
+	
+	if is_recover_stamina == true:
+		print("starting to recover stamina")
+		if(stamina < 100):
+			stamina += STAMINA_REC_COST
+	
+	if stamina == 0 or is_recover_stamina == false and stamina_cooldown_timer.is_stopped() and state != "sprinting":
+		print("should start timer")
+		stamina_cooldown_timer.start()
+
+func _on_stamina_cooldown_complete():
+	print("stamina cooldown over")
+	is_recover_stamina = true
 
 func _unhandled_input(event):
 	if not is_multiplayer_authority(): return
@@ -731,6 +777,7 @@ func die():
 	respawn_timer.start()
 	PlayerModel.visible = false
 	crossbow_fps.visible = false
+	arrow_fps.visible = false
 
 @rpc("call_local")
 func hide_player_mesh():

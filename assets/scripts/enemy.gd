@@ -89,7 +89,7 @@ func _physics_process(delta):
 
 @rpc("any_peer", "call_local")
 func move_towards(target_position: Vector3):
-	print("move_towards called with target: ", target_position)
+	#print("move_towards called with target: ", target_position)
 	if not is_multiplayer_authority():
 		return
 	
