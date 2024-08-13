@@ -100,10 +100,12 @@ func move_towards(target_position: Vector3):
 	if velocity.length() > 0.1:
 		look_at(global_position + velocity, Vector3.UP)
 
+
 func _process(delta):
 	if not is_multiplayer_authority():
 		if velocity.length() > 0.01:
 			look_at(global_position + velocity, Vector3.UP)
+
 
 func idle_behavior(delta):
 	move_timer += delta
@@ -121,6 +123,7 @@ func idle_behavior(delta):
 		look_at(global_position + velocity, Vector3.UP)
 	
 	move_and_slide()
+
 
 func pursue_behavior(delta):
 	if target_player:

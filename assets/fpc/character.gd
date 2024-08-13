@@ -403,7 +403,23 @@ func change_bone_rot(isWalkingOrRunning):
 	PlayerSkeleton.set_bone_global_pose_override(spine, pose, 1.0, true)
 
 func handle_state(moving):
-	if stamina <= 0 and not crouch_enabled:
+	if crouch_enabled:
+		if crouch_mode == 0:
+			if Input.is_action_pressed(CROUCH) and state != "sprinting":
+				if state != "crouching":
+					enter_crouch_state()
+			elif state == "crouching" and !$CrouchCeilingDetection.is_colliding():
+				enter_normal_state()
+		elif crouch_mode == 1:
+			if Input.is_action_just_pressed(CROUCH):
+				match state:
+					"normal":
+						enter_crouch_state()
+					"crouching":
+						if !$CrouchCeilingDetection.is_colliding():
+							enter_normal_state()
+	
+	if stamina <= 0:
 		enter_normal_state()
 	else:
 		if state == "sprinting":
@@ -435,25 +451,8 @@ func handle_state(moving):
 								enter_normal_state()
 				elif state == "sprinting":
 					enter_normal_state()
-	
-	if crouch_enabled:
-		if crouch_mode == 0:
-			if Input.is_action_pressed(CROUCH) and state != "sprinting":
-				if state != "crouching":
-					enter_crouch_state()
-			elif state == "crouching" and !$CrouchCeilingDetection.is_colliding():
-				enter_normal_state()
-		elif crouch_mode == 1:
-			if Input.is_action_just_pressed(CROUCH):
-				match state:
-					"normal":
-						enter_crouch_state()
-					"crouching":
-						if !$CrouchCeilingDetection.is_colliding():
-							enter_normal_state()
-
-
 # Any enter state function should only be called once when you want to enter that state, not every frame.
+
 
 func enter_normal_state():
 	#print("entering normal state")
@@ -463,12 +462,14 @@ func enter_normal_state():
 	state = "normal"
 	speed = base_speed
 
+
 func enter_crouch_state():
 	#print("entering crouch state")
 	var prev_state = state
 	state = "crouching"
 	speed = crouch_speed
 	CROUCH_ANIMATION.play("crouch")
+
 
 func enter_sprint_state():
 	#print("entering sprint state")
@@ -530,7 +531,8 @@ func _process(delta):
 					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	handle_stamina()
-	
+
+
 func handle_stamina():
 	ui_stamina_bar.value = stamina
 	
