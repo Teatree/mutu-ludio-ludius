@@ -11,11 +11,13 @@ albedo_color = Color(1, 0.584314, 0.584314, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_im2dp"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_4q5fy"]
-radius = 1.89471
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1q8r0"]
+height = 4.0
+radius = 4.0
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_4m6f1"]
-radius = 2.73243
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oo0r5"]
+height = 4.0
+radius = 3.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cn6mr"]
 properties/0/path = NodePath(".:position")
@@ -25,35 +27,43 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="enemy" type="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00244, 0)
+[node name="enemy" type="CharacterBody3D" groups=["enemies"]]
+collision_layer = 7
+collision_mask = 7
 script = ExtResource("1_qy3q2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_uqe75")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 material_override = SubResource("StandardMaterial3D_5m2xj")
 mesh = SubResource("CapsuleMesh_ly88o")
 
 [node name="nose3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.536411, 0.293282, 0)
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.536411, 1, 0)
 mesh = SubResource("BoxMesh_im2dp")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+avoidance_enabled = true
 
 [node name="AreaOfDetection" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaOfDetection"]
-shape = SubResource("SphereShape3D_4q5fy")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("CylinderShape3D_1q8r0")
 
 [node name="AreaOfAttack" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaOfAttack"]
-shape = SubResource("SphereShape3D_4m6f1")
+shape = SubResource("CylinderShape3D_oo0r5")
 
 [node name="ArrowSpawnPoint" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59183, 0.546098, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59183, 1, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_cn6mr")
+
+[connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

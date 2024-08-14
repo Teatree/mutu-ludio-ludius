@@ -6,6 +6,7 @@ extends Node
 @onready var health_bar = $CanvasLayer/HUD/HealthBar
 @onready var spawn_manager = $SpawnManager
 @onready var key_spawn_manager = $KeySpawnManager
+@onready var e_destination = $destination
 
 const Enemy = preload("res://assets/scenes/enemy.tscn")
 
@@ -38,22 +39,26 @@ func _on_host_button_pressed():
 	if multiplayer.is_server():
 		spawn_enemies()
 
-func _process(delta):
+func _physics_process(delta):
 	if multiplayer.is_server():
-		move_enemies()
+		handle_enemy_behaviour()
+		
 
-func move_enemies():
+func handle_enemy_behaviour():
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var players = get_tree().get_nodes_in_group("players")
 	
 	#print("Number of enemies: ", enemies.size())
 	#print("Number of players: ", players.size())
+	#get_tree().call_group("enemies", "update_target_location", e_destination.global_transform.origin)
 	
 	for enemy in enemies:
 		var nearest_player = find_nearest_player(enemy, players)
+		#if players:
+		#get_tree().call_group("enemies", "update_target_location", e_destination.global_transform.origin)
 		if nearest_player:
 			#print("Moving enemy towards player at: ", nearest_player.global_position)
-			enemy.move_towards.rpc(nearest_player.global_position)
+			enemy.move_towards.rpc(nearest_player.global_transform.origin)
 		else:
 			print("No nearest player found for enemy")
 

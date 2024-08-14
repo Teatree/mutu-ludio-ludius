@@ -8,6 +8,7 @@ class_name Enemy
 var move_direction: Vector3 = Vector3.FORWARD
 var move_timer: float = 0.0
 const MOVE_DURATION: float = 5.0  # Move for 5 seconds before changing direction
+const SPEED: float = 3.0
 var current_health: int
 var last_hit_arrow_id: int = -1
 
@@ -36,7 +37,7 @@ func _ready():
 	current_health = max_health
 	set_multiplayer_authority(1)
 	add_to_group("enemies")
-	print("Enemy added to 'enemies' group")
+	#print("Enemy added to 'enemies' group")
 	
 	synchronizer.set_multiplayer_authority(1)
 	
@@ -61,31 +62,47 @@ func _ready():
 		enemy_id = randi()
 
 func actor_setup():
-	# Wait for the first physics frame so the NavigationServer can sync.
 	await get_tree().physics_frame
-	
-	# Now that the navigation map is ready, set the process callback
-	nav_agent.velocity_computed.connect(move)
 
-func move(safe_velocity: Vector3):
-	velocity = safe_velocity
-	move_and_slide()
 
 func _physics_process(delta):
 	if not multiplayer.is_server():
 		return
 	
+	var current_location = global_transform.origin
+	var next_location = nav_agent.get_next_path_position()
+	var new_vel = current_location.direction_to(next_location) * SPEED 
+	
+	nav_agent.set_velocity(new_vel)
+	
+	
 	#print("Enemy physics process running on server")
 	
-	match current_state:
-		State.IDLE:
-			idle_behavior(delta)
-		State.PURSUE:
-			pursue_behavior(delta)
-		State.ATTACK:
-			attack_behavior(delta)
-	
+	#match current_state:
+		#State.IDLE:
+			#state_idle_behavior(delta)
+		#State.PURSUE:
+			#state_pursue_behavior(delta)
+		#State.ATTACK:
+			#state_attack_behavior(delta)
+
+
+#func _process(delta):
+	#if not is_multiplayer_authority():
+		#if velocity.length() > 0.01:
+			#look_at(global_position + velocity, Vector3.UP)
+
+
+func update_target_location(target_location):
+	print("updating target location, \n target location: " + str(target_location))
+	nav_agent.set_target_position (target_location)
+
+func _on_navigation_agent_3d_velocity_computed(safe_velocity):
+	print(str(name) + ": found target position")
+	velocity = velocity.move_toward(safe_velocity, .25)
+	print(str(name) + ": velocity: " + str(velocity))
 	move_and_slide()
+
 
 @rpc("any_peer", "call_local")
 func move_towards(target_position: Vector3):
@@ -93,21 +110,23 @@ func move_towards(target_position: Vector3):
 	if not is_multiplayer_authority():
 		return
 	
-	var direction = (target_position - global_position).normalized()
-	velocity = direction * move_speed
+	nav_agent.set_target_position(target_position)
+	
+	var current_location = global_transform.origin
+	var next_location = nav_agent.get_next_path_position()
+	
+	# Zero out the y component to prevent vertical movement if not desired
+	next_location.y = current_location.y
+	
+	var new_vel = current_location.direction_to(next_location) * SPEED 
+	
+	print("nav_agent found new \n velocity:" + str(new_vel) + "\n next location: " + str(next_location))
+	nav_agent.set_velocity(new_vel)
+	
 	move_and_slide()
 	
-	if velocity.length() > 0.1:
-		look_at(global_position + velocity, Vector3.UP)
 
-
-func _process(delta):
-	if not is_multiplayer_authority():
-		if velocity.length() > 0.01:
-			look_at(global_position + velocity, Vector3.UP)
-
-
-func idle_behavior(delta):
+func state_idle_behavior(delta):
 	move_timer += delta
 	
 	if move_timer >= MOVE_DURATION:
@@ -125,7 +144,7 @@ func idle_behavior(delta):
 	move_and_slide()
 
 
-func pursue_behavior(delta):
+func state_pursue_behavior(delta):
 	if target_player:
 		nav_agent.target_position = target_player.global_position
 		
@@ -133,6 +152,9 @@ func pursue_behavior(delta):
 			return
 		
 		var next_position = nav_agent.get_next_path_position()
+		
+		# Flatten the movement on the y-axis
+		next_position.y = global_position.y 
 		var new_velocity = (next_position - global_position).normalized() * move_speed
 		velocity = velocity.move_toward(new_velocity, delta * 100.0)
 		
@@ -142,7 +164,8 @@ func pursue_behavior(delta):
 		
 		move_and_slide()
 
-func attack_behavior(delta):
+
+func state_attack_behavior(delta):
 	time_since_last_attack += delta
 	if time_since_last_attack >= attack_interval:
 		shoot_arrow()

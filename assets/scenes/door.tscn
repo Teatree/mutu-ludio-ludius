@@ -104,7 +104,7 @@ skeleton = NodePath("../..")
 transform = Transform3D(-5.42999e-07, 0.15, 0, -0.15, -5.42999e-07, 0, 0, 0, 0.15, -0.899741, 0.59284, 0.314284)
 visible = false
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." index="2"]
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="2" groups=["doors"]]
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("3_85aty")

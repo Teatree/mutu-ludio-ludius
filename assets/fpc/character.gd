@@ -339,6 +339,7 @@ func _physics_process(delta):
 
 func handle_jumping():
 	if jumping_enabled:
+		
 		if continuous_jumping: # Hold down the jump button
 			if Input.is_action_pressed(JUMP) and is_on_floor() and !low_ceiling:
 				if jump_animation:
@@ -346,6 +347,8 @@ func handle_jumping():
 					stamina -= STAMINA_JUMP_COST
 					stamina_cooldown_timer.stop()
 				velocity.y += jump_velocity # Adding instead of setting so jumping on slopes works properly
+				is_recover_stamina = false
+				stamina_cooldown_timer.stop()
 		else:
 			if Input.is_action_just_pressed(JUMP) and is_on_floor() and !low_ceiling:
 				if jump_animation:
@@ -542,16 +545,16 @@ func handle_stamina():
 		ui_stamina_bar.visible = true
 	
 	if is_recover_stamina == true:
-		print("starting to recover stamina")
+		#print("starting to recover stamina")
 		if(stamina < 100):
 			stamina += STAMINA_REC_COST
 	
 	if stamina == 0 or is_recover_stamina == false and stamina_cooldown_timer.is_stopped() and state != "sprinting":
-		print("should start timer")
+		#print("should start timer")
 		stamina_cooldown_timer.start()
 
 func _on_stamina_cooldown_complete():
-	print("stamina cooldown over")
+	#print("stamina cooldown over")
 	is_recover_stamina = true
 
 func _unhandled_input(event):

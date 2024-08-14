@@ -5,7 +5,7 @@ const KEYS_REQUIRED = 5
 
 func _ready():
 	add_to_group("doors")
-	print("Door added to 'doors' group")
+	#print("Door added to 'doors' group")
 
 func try_open(player):
 	print("Trying to open door")
