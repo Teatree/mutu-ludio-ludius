@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://blt4k0tex241u"]
+[gd_scene load_steps=16 format=3 uid="uid://blt4k0tex241u"]
 
 [ext_resource type="Script" path="res://assets/scripts/enemyArrow.gd" id="1_6rj0j"]
 [ext_resource type="AudioStream" uid="uid://72yq47c877nx" path="res://assets/sounds/bolt_smack.mp3" id="1_633hj"]
 [ext_resource type="AudioStream" uid="uid://0rrthnhqay78" path="res://assets/sounds/bolt_flying.mp3" id="2_6t0ti"]
+[ext_resource type="PackedScene" uid="uid://dw8en7ecjcevv" path="res://assets/scenes/blood2.tscn" id="2_ggl71"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5sian"]
 resource_name = "metal"
@@ -113,8 +114,9 @@ size = Vector2(0.02, 0.02)
 [node name="enemyArrow" type="CharacterBody3D"]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 script = ExtResource("1_6rj0j")
+blood_effect_scene = ExtResource("2_ggl71")
 
-[node name="arrow" type="MeshInstance3D" parent="."]
+[node name="ArrowMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(0, -0.0934494, 0, 0.0934494, 0, 8.88178e-16, -4.44089e-16, 0, 0.0934494, 0.00961844, -0.017918, 8.41474e-09)
 mesh = SubResource("ArrayMesh_a0jmd")
 skeleton = NodePath("")
@@ -123,7 +125,7 @@ skeleton = NodePath("")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00588253, 2.00929, -2.10194e-07)
 shape = SubResource("CylinderShape3D_13glv")
 
-[node name="expolde_particles" type="GPUParticles3D" parent="."]
+[node name="CollideParticles" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00680246, 0)
 emitting = false
 amount = 16
@@ -133,7 +135,7 @@ visibility_aabb = AABB(-1320, -62.8674, -1591.88, 2640, 125.735, 3183.75)
 process_material = SubResource("ParticleProcessMaterial_flb65")
 draw_pass_1 = SubResource("QuadMesh_7bqn1")
 
-[node name="trail_particles" type="GPUParticles3D" parent="."]
+[node name="TrailParticles" type="GPUParticles3D" parent="."]
 amount = 20
 visibility_aabb = AABB(-1322.95, -84.5299, -1787, 2645.9, 169.06, 3573.99)
 trail_lifetime = 0.2
@@ -144,12 +146,12 @@ draw_pass_1 = SubResource("QuadMesh_fq6g8")
 light_color = Color(1, 1, 0, 1)
 light_energy = 0.5
 
-[node name="smack" type="AudioStreamPlayer3D" parent="."]
+[node name="SmackSound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("1_633hj")
 volume_db = -15.0
 max_distance = 20.0
 
-[node name="arrow_flight" type="AudioStreamPlayer3D" parent="."]
+[node name="FlyingSound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("2_6t0ti")
 volume_db = -15.0
 max_distance = 10.0

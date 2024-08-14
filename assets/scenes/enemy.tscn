@@ -13,11 +13,11 @@ albedo_color = Color(1, 0.584314, 0.584314, 1)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_1q8r0"]
 height = 4.0
-radius = 4.0
+radius = 4.96437
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_oo0r5"]
 height = 4.0
-radius = 3.0
+radius = 6.11216
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cn6mr"]
 properties/0/path = NodePath(".:position")
@@ -42,7 +42,7 @@ material_override = SubResource("StandardMaterial3D_5m2xj")
 mesh = SubResource("CapsuleMesh_ly88o")
 
 [node name="nose3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.536411, 1, 0)
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.0156348, 1.27734, -0.447303)
 mesh = SubResource("BoxMesh_im2dp")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
@@ -65,5 +65,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59183, 1, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_cn6mr")
+
+[node name="MoveWaitTimer" type="Timer" parent="."]
+
+[node name="ReturnTimer" type="Timer" parent="."]
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

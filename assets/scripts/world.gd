@@ -44,25 +44,29 @@ func _physics_process(delta):
 		handle_enemy_behaviour()
 		
 
+#
 func handle_enemy_behaviour():
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var players = get_tree().get_nodes_in_group("players")
 	
-	#print("Number of enemies: ", enemies.size())
-	#print("Number of players: ", players.size())
-	#get_tree().call_group("enemies", "update_target_location", e_destination.global_transform.origin)
-	
 	for enemy in enemies:
-		var nearest_player = find_nearest_player(enemy, players)
-		#if players:
-		#get_tree().call_group("enemies", "update_target_location", e_destination.global_transform.origin)
-		if nearest_player:
-			#print("Moving enemy towards player at: ", nearest_player.global_position)
-			enemy.move_towards.rpc(nearest_player.global_transform.origin)
-		else:
-			print("No nearest player found for enemy")
+		if enemy.has_method("get_current_state"):
+			match enemy.get_current_state():
+				0:  # IDLE
+					# No action needed, enemy handles its own idle behavior
+					pass
+				1:  # PURSUE
+					var nearest_player = find_nearest_player(enemy, players)
+					if nearest_player:
+						enemy.set_target_player(nearest_player)
+					else:
+						enemy.enter_idle_state()
+				2:  # ATTACK
+					# No action needed, enemy handles its own attack behavior
+					pass
 
-func find_nearest_player(enemy: Enemy, players: Array) -> CharacterBody3D:
+#
+func find_nearest_player(enemy, players: Array):
 	var nearest_player = null
 	var min_distance = INF
 	

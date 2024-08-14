@@ -2120,8 +2120,7 @@ mesh = SubResource("PrismMesh_treqn")
 script = ExtResource("2_unp3n")
 
 [node name="EnemySpawnPoint1" type="Node3D" parent="EnemySpawnManager"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.08, 0.25, -2.757)
-visible = false
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.08, -0.646127, -2.757)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint1"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
@@ -2129,8 +2128,7 @@ layers = 2
 mesh = SubResource("BoxMesh_t1hbv")
 
 [node name="EnemySpawnPoint2" type="Node3D" parent="EnemySpawnManager"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 6.63258, 2, -17.0683)
-visible = false
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 6.63258, 0.0934004, -17.0683)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint2"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
@@ -2138,8 +2136,7 @@ layers = 2
 mesh = SubResource("BoxMesh_t1hbv")
 
 [node name="EnemySpawnPoint3" type="Node3D" parent="EnemySpawnManager"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -10.8316, 2, 14.2689)
-visible = false
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -10.8316, 0.113056, 14.2689)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint3"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
@@ -2147,8 +2144,7 @@ layers = 2
 mesh = SubResource("BoxMesh_t1hbv")
 
 [node name="EnemySpawnPoint4" type="Node3D" parent="EnemySpawnManager"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -19.3341, 1.51066, 30.2274)
-visible = false
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -19.3341, 0.0937333, 30.2274)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint4"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
@@ -2156,8 +2152,7 @@ layers = 2
 mesh = SubResource("BoxMesh_t1hbv")
 
 [node name="EnemySpawnPoint5" type="Node3D" parent="EnemySpawnManager"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 6.6772, 1.51066, 37.1187)
-visible = false
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 6.6772, -0.631226, 37.1187)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint5"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
@@ -2165,8 +2160,7 @@ layers = 2
 mesh = SubResource("BoxMesh_t1hbv")
 
 [node name="EnemySpawnPoint6" type="Node3D" parent="EnemySpawnManager"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 3.09688, 1.51066, 64.5329)
-visible = false
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 3.09688, 0.0886578, 64.5329)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint6"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
