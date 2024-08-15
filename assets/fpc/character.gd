@@ -117,6 +117,7 @@ var distance_since_last_step = 0.0
 @onready var ui_AnimPlayer = $UserInterface/uiAnimation
 @onready var ui_root = $UserInterface
 @onready var ui_stamina_bar = $UserInterface/Stamina/StaminaBar
+@onready var ui_key_count = $UserInterface/key_count
 
 # keys
 var keys = 0
@@ -621,6 +622,7 @@ func _on_reload_complete():
 
 func collect_key():
 	keys += 1
+	ui_key_count.text = str(keys)+"/5"
 	print("Player %s now has %d keys" % [name, keys])
 
 func check_door_interaction():
