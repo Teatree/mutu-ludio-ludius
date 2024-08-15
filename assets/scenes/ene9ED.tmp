@@ -13,7 +13,7 @@ albedo_color = Color(1, 0.584314, 0.584314, 1)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_1q8r0"]
 height = 4.0
-radius = 6.98383
+radius = 6.735
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_oo0r5"]
 height = 4.0
@@ -28,8 +28,8 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="enemy" type="CharacterBody3D" groups=["enemies"]]
-collision_layer = 5
-collision_mask = 5
+collision_layer = 7
+collision_mask = 7
 script = ExtResource("1_qy3q2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -49,8 +49,6 @@ mesh = SubResource("BoxMesh_im2dp")
 avoidance_enabled = true
 
 [node name="AreaOfDetection" type="Area3D" parent="."]
-collision_layer = 2
-collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaOfDetection"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
@@ -58,14 +56,12 @@ shape = SubResource("CylinderShape3D_1q8r0")
 
 [node name="AreaOfAttack" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-collision_layer = 0
-collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaOfAttack"]
 shape = SubResource("CylinderShape3D_oo0r5")
 
 [node name="ArrowSpawnPoint" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00427568, 1.36826, -0.734574)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59183, 1, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_cn6mr")
@@ -73,5 +69,7 @@ replication_config = SubResource("SceneReplicationConfig_cn6mr")
 [node name="AttackTimer" type="Timer" parent="."]
 
 [node name="IdleTimer" type="Timer" parent="."]
+
+[node name="ReturnTimer" type="Timer" parent="."]
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

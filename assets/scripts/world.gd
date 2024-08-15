@@ -137,3 +137,4 @@ func spawn_enemy(enemy_data: Dictionary):
 	enemy.name = str(enemy_data["id"])
 	enemy.global_position = enemy_data["position"]
 	add_child(enemy)
+	enemy.enter_idle_state()  # Set initial state to IDLE
