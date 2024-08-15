@@ -88,7 +88,7 @@ func _physics_process(delta):
 			
 			has_dealt_damage = true
 			spawn_blood_effect.rpc(global_position)
-			flash_hit_player.rpc(collider.get_path())
+			#flash_hit_player.rpc(collider.get_path())
 			queue_free()
 		else:
 			# Stick the arrow to non-character objects

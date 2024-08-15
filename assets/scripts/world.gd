@@ -42,9 +42,8 @@ func _on_host_button_pressed():
 func _physics_process(delta):
 	if multiplayer.is_server():
 		handle_enemy_behaviour()
-		
 
-#
+
 func handle_enemy_behaviour():
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var players = get_tree().get_nodes_in_group("players")

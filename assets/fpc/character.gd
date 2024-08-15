@@ -4,8 +4,8 @@ signal health_changed(health_value)
 signal player_animation_changed(animation_name)
 
 @export_category("Character")
-@export var base_speed : float = 3.0
-@export var sprint_speed : float = 6.0
+@export var base_speed : float = 2.5
+@export var sprint_speed : float = 3.5
 @export var crouch_speed : float = 1.0
 
 @export var acceleration : float = 10.0
@@ -703,6 +703,7 @@ func play_reload_effects():
 	ui_AnimPlayer.play("RELOAD")
 	crossBow_AnimPlayer.stop()
 	crossBow_AnimPlayer.play("RELOAD")
+	PlayerModelAnimationTree.set("parameters/reload/active", true)
 
 @rpc("call_local")
 func reset_weapon_animations():
