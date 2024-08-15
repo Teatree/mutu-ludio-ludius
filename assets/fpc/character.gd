@@ -683,11 +683,6 @@ func change_animation(animation_name):
 			
 	player_animation_changed.emit(animation_name)
 
-@rpc("call_local")
-func play_jump_animation():
-	PlayerModelAnimationTree.set("parameters/jump/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
-	PlayerModelAnimationTree.set("parameters/jump/active", true)
-
 @rpc("call_local") 
 func play_shoot_effects():
 	ui_AnimPlayer.stop()
@@ -703,6 +698,7 @@ func play_reload_effects():
 	ui_AnimPlayer.play("RELOAD")
 	crossBow_AnimPlayer.stop()
 	crossBow_AnimPlayer.play("RELOAD")
+	PlayerModelAnimationTree.set("parameters/reload/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	PlayerModelAnimationTree.set("parameters/reload/active", true)
 
 @rpc("call_local")
