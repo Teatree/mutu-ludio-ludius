@@ -10,7 +10,7 @@ extends Node
 
 const Enemy = preload("res://assets/scenes/enemy.tscn")
 
-const Player = preload("res://assets/fpc/character.tscn")
+const Player = preload("res://assets/scenes/character.tscn")
 const PORT = 9999
 var enet_peer = ENetMultiplayerPeer.new()
 
@@ -38,6 +38,16 @@ func _on_host_button_pressed():
 	spawn_keys.rpc()
 	if multiplayer.is_server():
 		spawn_enemies()
+
+func _on_join_button_pressed():
+	main_menu.hide()
+	hud.show()
+	
+	enet_peer.create_client("localhost", PORT)
+	multiplayer.multiplayer_peer = enet_peer
+	
+	addPlayer(multiplayer.get_unique_id())
+
 
 func _physics_process(delta):
 	if multiplayer.is_server():
@@ -82,14 +92,7 @@ func find_nearest_player(enemy, players: Array):
 func spawn_keys():
 	key_spawn_manager.spawn_keys()
 
-func _on_join_button_pressed():
-	main_menu.hide()
-	hud.show()
-	
-	enet_peer.create_client("localhost", PORT)
-	multiplayer.multiplayer_peer = enet_peer
-	
-	addPlayer(multiplayer.get_unique_id())
+
 
 func addPlayer(peer_id):
 	var spawn_data = spawn_manager.get_random_spawn_point()

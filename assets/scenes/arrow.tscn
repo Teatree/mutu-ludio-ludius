@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://dqjgpd5h2vx3q"]
 
-[ext_resource type="Script" path="res://assets/scripts/arrow.gd" id="1_d68qs"]
+[ext_resource type="Script" path="res://assets/scenes/scripts/arrow.gd" id="1_n1vi5"]
 [ext_resource type="PackedScene" uid="uid://dw8en7ecjcevv" path="res://assets/scenes/blood2.tscn" id="2_a7e0k"]
 [ext_resource type="AudioStream" uid="uid://72yq47c877nx" path="res://assets/sounds/bolt_smack.mp3" id="2_yc4vx"]
 [ext_resource type="AudioStream" uid="uid://0rrthnhqay78" path="res://assets/sounds/bolt_flying.mp3" id="3_m4v7g"]
@@ -113,7 +113,7 @@ size = Vector2(0.02, 0.02)
 
 [node name="arrow" type="CharacterBody3D"]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -0.000332445, -0.00076877, 0.00137603)
-script = ExtResource("1_d68qs")
+script = ExtResource("1_n1vi5")
 blood_effect_scene = ExtResource("2_a7e0k")
 
 [node name="arrow" type="MeshInstance3D" parent="."]

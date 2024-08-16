@@ -1,9 +1,9 @@
 [gd_scene load_steps=15 format=3 uid="uid://cs4drhmc1bql5"]
 
-[ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="1_e18vq"]
-[ext_resource type="Texture2D" uid="uid://pe7a4weirj2g" path="res://textures/dark.png" id="2_08fdt"]
-[ext_resource type="Texture2D" uid="uid://cxjxvqmf4boxq" path="res://textures/green.png" id="3_q4clv"]
-[ext_resource type="Texture2D" uid="uid://dsv4jm4vydflb" path="res://textures/orange.png" id="4_1ns5t"]
+[ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://assets/scenes/character.tscn" id="1_e18vq"]
+[ext_resource type="Texture2D" uid="uid://pe7a4weirj2g" path="res://assets/textures/dark.png" id="2_08fdt"]
+[ext_resource type="Texture2D" uid="uid://cxjxvqmf4boxq" path="res://assets/textures/green.png" id="3_q4clv"]
+[ext_resource type="Texture2D" uid="uid://dsv4jm4vydflb" path="res://assets/textures/orange.png" id="4_1ns5t"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_edcox"]
 ground_color = Color(0.160784, 0.815686, 0.905882, 1)

@@ -1,8 +1,8 @@
 [gd_scene load_steps=28 format=3 uid="uid://b64fy6e8f0w5d"]
 
-[ext_resource type="Script" path="res://assets/scripts/world.gd" id="1_04dgn"]
-[ext_resource type="Script" path="res://assets/scripts/KeySpawnManager.gd" id="2_pd1c8"]
-[ext_resource type="Script" path="res://assets/scripts/SpawnManager.gd" id="2_unp3n"]
+[ext_resource type="Script" path="res://assets/scenes/scripts/world.gd" id="1_04dgn"]
+[ext_resource type="Script" path="res://assets/scenes/scripts/KeySpawnManager.gd" id="2_pd1c8"]
+[ext_resource type="Script" path="res://assets/scenes/scripts/SpawnManager.gd" id="2_unp3n"]
 [ext_resource type="MeshLibrary" uid="uid://chv80uhw8anfg" path="res://assets/3d/tilesSet/tileset.tres" id="3_osyca"]
 [ext_resource type="PackedScene" uid="uid://bi1qnoqelk4hy" path="res://assets/scenes/key.tscn" id="5_m52ye"]
 [ext_resource type="PackedScene" uid="uid://k1a675rcue17" path="res://assets/scenes/door.tscn" id="6_it5kb"]
@@ -492,10 +492,10 @@ transform = Transform3D(-1.5, 0, 1.31134e-07, 0, 1.5, 0, -1.31134e-07, 0, -1.5, 
 transform = Transform3D(1.96701e-07, 0, 1.5, 0, 1.5, 0, -1.5, 0, 1.96701e-07, -6.08416, 0.0205871, 63.7355)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://assets/fpc/character.tscn")
 spawn_path = NodePath("..")
 
 [node name="player_armor_guy" parent="." instance=ExtResource("7_ltaji")]
+visible = false
 
 [node name="destination" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.934189, 1.15354, 1.37182)

@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cgmitpr37fcp0" path="res://assets/3d/environment/door.glb" id="1_y3p2v"]
 [ext_resource type="PackedScene" uid="uid://c0dogmcn3m0p" path="res://assets/3d/environment/silent_hill_key.glb" id="2_quo1j"]
-[ext_resource type="Script" path="res://assets/scripts/doorArea.gd" id="3_85aty"]
+[ext_resource type="Script" path="res://assets/scenes/scripts/doorArea.gd" id="3_85aty"]
 
 [sub_resource type="Animation" id="Animation_21skl"]
 resource_name = "open"

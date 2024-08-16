@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bi1qnoqelk4hy"]
 
 [ext_resource type="PackedScene" uid="uid://c6tu3gnbhp0td" path="res://assets/3d/weapons/silent_hill_key.glb" id="1_62acx"]
-[ext_resource type="Script" path="res://assets/scripts/keyArea.gd" id="2_iv0h3"]
+[ext_resource type="Script" path="res://assets/scenes/scripts/keyArea.gd" id="2_iv0h3"]
 
 [sub_resource type="Animation" id="Animation_1chdg"]
 resource_name = "default"

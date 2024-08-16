@@ -2,6 +2,8 @@ extends CharacterBody3D
 
 class_name Enemy
 
+signal enemy_animation_changed(animation_name)
+
 @export var move_speed := 1.5
 @export var run_speed := 2.0
 @export var attack_interval := 5.0
@@ -15,6 +17,7 @@ var last_hit_arrow_id: int = -1
 @export var attack_radius: float = 5.0  # Default detection radius
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
+@onready var enemyAnimationTree: AnimationTree = $enemy_skel/AnimationTree
 @onready var detection_area: Area3D = $AreaOfDetection
 @onready var detection_area_coll: CollisionShape3D = $AreaOfDetection/CollisionShape3D
 @onready var attack_area: Area3D = $AreaOfAttack
@@ -94,6 +97,11 @@ func _physics_process(delta):
 		State.ATTACK:
 			handle_attack_state()
 	
+	if not velocity == Vector3.ZERO:
+		change_animation.rpc("walking")
+	else:
+		change_animation.rpc("idle")
+
 	move_and_slide()
 
 func set_detection_radius(radius: float):
@@ -172,6 +180,7 @@ func enter_idle_state():
 	set_random_idle_target()
 	set_detection_radius(detection_radius)
 	set_attack_radius(attack_radius)
+	play_subtract_aim_animation.rpc()
 	# print_once("ENTER STATE: Idle")
 	# print("Current position: " + str(global_position))
 
@@ -187,6 +196,7 @@ func enter_attack_state():
 	current_state = State.ATTACK
 	attack_timer.start()
 	set_attack_radius(attack_radius*1.5)
+	play_add_aim_animation.rpc()
 	# print_once("ENTER STATE: Attack")
 	# print("Attack timer started, duration: " + str(attack_timer.wait_time))
 
@@ -266,16 +276,48 @@ func _on_attack_timer_timeout():
 func shoot_arrow():
 	rpc("spawn_arrow")
 
+
 @rpc("call_local")
 func spawn_arrow():
 	var arrow = EnemyArrow.instantiate()
 	arrow.global_transform = arrow_spawn_point.global_transform
 	get_tree().root.add_child(arrow)
 	arrow.initialize(arrow_spawn_point.global_transform, 20.0, self)
+
+	# Play Reload Animation
+	enemyAnimationTree.set("parameters/reloadTrigger/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+	enemyAnimationTree.set("parameters/reloadTrigger/active", true)
 	
 	if target_player:
 		var direction = (target_player.global_position - arrow_spawn_point.global_position).normalized()
 		arrow.look_at(arrow_spawn_point.global_position + direction, Vector3.UP)
+
+
+@rpc("call_local")
+func change_animation(animation_name):
+	#current_animation = animation_name
+	
+	var anim_node_path = "parameters/%s" % animation_name
+	enemyAnimationTree.set(anim_node_path, AnimationNodeAnimation.PLAY_MODE_BACKWARD)
+	
+	match animation_name:
+		"idle":
+			enemyAnimationTree.set("parameters/idleToWalk/blend_amount", 0)
+		"walking":
+			enemyAnimationTree.set("parameters/idleToWalk/blend_amount", 1)
+
+	enemy_animation_changed.emit(animation_name)
+
+
+@rpc("call_local")
+func play_add_aim_animation():
+	enemyAnimationTree.set("parameters/addAiming/add_amount", 1)
+
+@rpc("call_local")
+func play_subtract_aim_animation():
+	enemyAnimationTree.set("parameters/addAiming/add_amount", 0)
+
+
 
 @rpc("any_peer")
 func receive_damage_request(damage: int, arrow_id: int):

@@ -27,7 +27,6 @@ var has_dealt_damage: bool = false
 func _ready():
 	set_physics_process(true)
 
-# $$$ CHANGE $$$
 func initialize(start_transform: Transform3D, initial_speed: float, shooter: Enemy):
 	global_transform = start_transform
 	initial_velocity = -global_transform.basis.z * initial_speed
@@ -43,7 +42,6 @@ func initialize(start_transform: Transform3D, initial_speed: float, shooter: Ene
 	
 	arrow_id = randi()  # Generate a unique ID for each arrow
 
-# $$$ CHANGE $$$
 func _physics_process(delta):
 	time_alive += delta
 	if time_alive > max_lifetime:
@@ -61,7 +59,6 @@ func _physics_process(delta):
 	
 	look_at(global_position + velocity.normalized(), Vector3.UP)
 
-# $$$ ADDED $$$
 func handle_collision(collision):
 	collide_effect.emitting = true
 	trail_effect.emitting = false
@@ -71,19 +68,22 @@ func handle_collision(collision):
 	var collider = collision.get_collider()
 	
 	if collider is CharacterBody3D:
-			if collider is Enemy:
-				# Handle enemy hit
-				collider.receive_damage_request.rpc_id(1, damage, arrow_id)
-				print("enemy hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
-			elif collider.name != str(shooter_id):
-				# Handle player hit
+		if collider is Enemy:
+			# Handle enemy hit
+			collider.receive_damage_request.rpc_id(1, damage, arrow_id)
+			print("enemy hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+		elif collider.name != str(shooter_id):
+			# Handle player hit
+			if collider.has_method("receive_damage"):
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 				print("player hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
-			
-			has_dealt_damage = true
-			spawn_blood_effect(global_position)
-			flash_hit_player(collider.get_path())
-			queue_free()
+			else:
+				print("Error: Player does not have receive_damage method")
+				print("Available methods: ", collider.get_method_list())
+		
+		has_dealt_damage = true
+		spawn_blood_effect(global_position)
+		queue_free()
 	else:
 		# Stick the arrow to non-character objects
 		collision_shape.disabled = true

@@ -262,7 +262,6 @@ bones/31/scale = Vector3(1, 1, 1)
 bones/32/rotation = Quaternion(4.60306e-07, -9.1095e-09, -1.91736e-07, 1)
 
 [node name="CharacterMesh2" type="MeshInstance3D" parent="Armature/Skeleton3D" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_anbt6")
 skin = SubResource("Skin_bfcj2")
 surface_material_override/0 = SubResource("StandardMaterial3D_8arux")

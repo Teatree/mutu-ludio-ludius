@@ -14,6 +14,7 @@ signal player_animation_changed(animation_name)
 @export var immobile : bool = false
 @export_file var default_reticle
 
+
 @export_group("Nodes")
 @export var HEAD : Node3D
 @export var CAMERA : Camera3D
@@ -642,6 +643,7 @@ func check_door_interaction():
 			print("Collider is not a door")
 	else:
 		print("Ray is not colliding with anything")
+
 
 @rpc("call_local")
 func change_animation(animation_name):
