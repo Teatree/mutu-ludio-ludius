@@ -40,7 +40,7 @@ func initialize(start_transform: Transform3D, initial_speed: float, shooter: int
 	initial_velocity = -global_transform.basis.z * initial_speed
 	current_velocity = initial_velocity
 	shooter_id = shooter
-	
+
 	# Set the scale of the arrow
 	scale = Vector3(0.05, 0.05, 0.05)
 	

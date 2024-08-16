@@ -92,6 +92,7 @@ var pose
 
 @onready var PlayerModelAnimationTree = $PlayerModel/PlayerModelAnimationTree
 @onready var PlayerMesh = $PlayerModel/Armature/Skeleton3D/CharacterMesh
+@onready var PlayerMesh_skin = $PlayerModel/Armature/Skeleton3D/CharacterMesh/CharacterMesh_skin
 @export var hit_flash_duration: float = 0.15
 @export var hit_flash_color: Color = Color(1, 0, 0, 1)  # Bright red
 var original_material: Material
@@ -157,6 +158,8 @@ func _ready():
 	if not is_multiplayer_authority():
 		PlayerMesh.set_layer_mask_value(1, 1)
 		PlayerMesh.set_layer_mask_value(2, 0)
+		PlayerMesh_skin.set_layer_mask_value(1, 1)
+		PlayerMesh_skin.set_layer_mask_value(2, 0)
 		
 		crossbow_fps.set_layer_mask_value(1, 0)
 		crossbow_fps.set_layer_mask_value(2, 1)
@@ -170,6 +173,8 @@ func _ready():
 	if not is_multiplayer_authority():
 		PlayerMesh.set_layer_mask_value(1, 1)
 		PlayerMesh.set_layer_mask_value(2, 0)
+		PlayerMesh_skin.set_layer_mask_value(1, 1)
+		PlayerMesh_skin.set_layer_mask_value(2, 0)
 		return
 	
 	add_to_group("players")
@@ -213,8 +218,8 @@ func _ready():
 	stamina_cooldown_timer.connect("timeout", Callable(self, "_on_stamina_cooldown_complete"))
 	add_child(stamina_cooldown_timer)
 	
-	if PlayerMesh:
-		original_material = PlayerMesh.get_surface_override_material(0)
+	# if PlayerMesh:
+	# 	original_material = PlayerMesh.get_surface_override_material(0)
 		#flash_material = original_material.duplicate()
 		#flash_material.albedo_color = hit_flash_color
 
@@ -787,6 +792,8 @@ func die():
 func hide_player_mesh():
 	PlayerMesh.set_layer_mask_value(1, 0)
 	PlayerMesh.set_layer_mask_value(2, 1) 
+	PlayerMesh_skin.set_layer_mask_value(1, 0)
+	PlayerMesh_skin.set_layer_mask_value(2, 1) 
 	crossbow_local.set_layer_mask_value(1, 0)
 	crossbow_local.set_layer_mask_value(2, 1) 
 	PlayerCollision.disabled = true
@@ -823,6 +830,8 @@ func reset_player_state():
 	health_changed.emit(health)
 	PlayerMesh.set_layer_mask_value(1, 1)  # Turn on visibility on layer 1
 	PlayerMesh.set_layer_mask_value(2, 0)
+	PlayerMesh_skin.set_layer_mask_value(1, 1)  # Turn on visibility on layer 1
+	PlayerMesh_skin.set_layer_mask_value(2, 0)
 	crossbow_local.set_layer_mask_value(1, 1)  # Turn on visibility on layer 1
 	crossbow_local.set_layer_mask_value(2, 0)
 	PlayerCollision.disabled = false
