@@ -492,10 +492,10 @@ transform = Transform3D(-1.5, 0, 1.31134e-07, 0, 1.5, 0, -1.31134e-07, 0, -1.5, 
 transform = Transform3D(1.96701e-07, 0, 1.5, 0, 1.5, 0, -1.5, 0, 1.96701e-07, -6.08416, 0.0205871, 63.7355)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://assets/scenes/character.tscn")
 spawn_path = NodePath("..")
 
 [node name="player_armor_guy" parent="." instance=ExtResource("7_ltaji")]
-visible = false
 
 [node name="destination" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.934189, 1.15354, 1.37182)

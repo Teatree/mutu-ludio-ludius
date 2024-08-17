@@ -92,13 +92,8 @@ var spine
 var pose
 
 @onready var PlayerModelAnimationTree = $PlayerModel/PlayerModelAnimationTree
-@onready var PlayerMesh = $PlayerModel/Armature/Skeleton3D/CharacterMesh
-@onready var PlayerMesh_skin = $PlayerModel/Armature/Skeleton3D/CharacterMesh/CharacterMesh_skin
-@export var hit_flash_duration: float = 0.15
-@export var hit_flash_color: Color = Color(1, 0, 0, 1)  # Bright red
-var original_material: Material
-# var flash_material: Material
-var is_flashing: bool = false
+@onready var PlayerMesh = $PlayerModel/Armature/Skeleton3D/CharacterMesh_1
+@onready var PlayerMesh_skin = $PlayerModel/Armature/Skeleton3D/CharacterMesh_1/CharacterMesh_skin_1
 
 @onready var PlayerCollision = $Collision
 @onready var crossbow_fps = $Head/crossbow/Armature/Skeleton3D/crossbow
@@ -171,13 +166,6 @@ func _ready():
 		crossbow_local.set_layer_mask_value(2, 0)
 		return
 	
-	if not is_multiplayer_authority():
-		PlayerMesh.set_layer_mask_value(1, 1)
-		PlayerMesh.set_layer_mask_value(2, 0)
-		PlayerMesh_skin.set_layer_mask_value(1, 1)
-		PlayerMesh_skin.set_layer_mask_value(2, 0)
-		return
-	
 	add_to_group("players")
 	print("Player added to 'players' group")
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -218,25 +206,6 @@ func _ready():
 	stamina_cooldown_timer.wait_time = STAMINA_COOLDOWN
 	stamina_cooldown_timer.connect("timeout", Callable(self, "_on_stamina_cooldown_complete"))
 	add_child(stamina_cooldown_timer)
-	
-	# if PlayerMesh:
-	# 	original_material = PlayerMesh.get_surface_override_material(0)
-		#flash_material = original_material.duplicate()
-		#flash_material.albedo_color = hit_flash_color
-
-@rpc("call_local")
-func flash_hit_effect():
-	if is_flashing:
-		return
-	
-	is_flashing = true
-	#PlayerMesh.set_surface_override_material(0, flash_material)
-	
-	get_tree().create_timer(hit_flash_duration).timeout.connect(
-		func():
-			PlayerMesh.set_surface_override_material(0, original_material)
-			is_flashing = false
-	)
 
 func check_controls(): # If you add a control, you might want to add a check for it here.
 	# The actions are being disabled so the engine doesn't halt the entire project in debug mode

@@ -18,13 +18,17 @@ var last_hit_arrow_id: int = -1
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var enemyAnimationTree: AnimationTree = $enemy_skel/AnimationTree
+@onready var enemyDeathAnimation: AnimationPlayer = $enemy_skel/DeathAnimation
 @onready var detection_area: Area3D = $AreaOfDetection
 @onready var detection_area_coll: CollisionShape3D = $AreaOfDetection/CollisionShape3D
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var attack_area: Area3D = $AreaOfAttack
 @onready var arrow_spawn_point: Node3D = $ArrowSpawnPoint
 @onready var synchronizer = $MultiplayerSynchronizer
 @onready var idle_timer: Timer = $IdleTimer
 @onready var attack_timer: Timer = $AttackTimer
+
+var isDead = false
 
 enum State { IDLE, PURSUE, ATTACK }
 var current_state: State = State.IDLE
@@ -89,6 +93,9 @@ func _physics_process(delta):
 	if not multiplayer.is_server():
 		return
 	
+	if isDead:
+		return
+
 	match current_state:
 		State.IDLE:
 			handle_idle_state()
@@ -331,33 +338,30 @@ func apply_damage(damage: int):
 	current_health -= damage
 	# print("Enemy hit! Current health: ", current_health)
 	
-	rpc("update_health", current_health)
-	
-	if current_health <= 0:
-		die()
-	else:
-		rpc("flash_hit")
-		
+	rpc("update_health_and_die", current_health)
+
 	# Enter pursue state if hit by a player
 	var attacker = get_tree().get_nodes_in_group("players").filter(func(player): return player.arrow_shooter_id == last_hit_arrow_id)
 	if attacker.size() > 0:
 		enter_pursue_state(attacker[0])
 
 @rpc("call_local")
-func update_health(new_health: int):
+func update_health_and_die(new_health: int):
 	current_health = new_health
 	if current_health <= 0:
-		remove_enemy()
+		# Die
+		enemyAnimationTree.get_tree().paused = false
+		enemyDeathAnimation.play("die")
+		
+		change_animation.rpc("idle")
+		enemyAnimationTree.set("parameters/idleTimeScale/scale", 0)
+		collision_shape.disabled = true
 
-func die():
-	# print("Enemy ", enemy_id, " died!")
-	rpc("remove_enemy")
-
-@rpc("call_local")
-func remove_enemy():
-	queue_free()
-
-@rpc("call_local")
-func flash_hit():
-	# Implement hit flash effect here
-	pass
+		detection_area.body_entered.disconnect(_on_detection_area_body_entered)
+		detection_area.body_exited.disconnect(_on_detection_area_body_exited)
+		attack_area.body_entered.disconnect(_on_attack_area_body_entered)
+		attack_area.body_exited.disconnect(_on_attack_area_body_exited)
+		attack_timer.timeout.disconnect(_on_attack_timer_timeout)
+		idle_timer.timeout.disconnect(_on_attack_timer_timeout)
+		isDead = true
+		#queue_free()
