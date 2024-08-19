@@ -111,6 +111,7 @@ var	distance_since_last_step = 0.0
 @onready var ui_root = $UserInterface
 @onready var ui_stamina_bar	= $UserInterface/Stamina/StaminaBar
 @onready var ui_key_count =	$UserInterface/key_count
+@onready var ui_elements_to_hide = [$UserInterface/arrow, $UserInterface/emptyCircle, $UserInterface/fillCircle, $UserInterface/key, $UserInterface/key_count, $UserInterface/Stamina]
 
 # keys
 var	keys = 0
@@ -792,6 +793,9 @@ func die():
 	spawn_death_model.rpc()
 	hide_player_mesh.rpc()
 	respawn_timer.start()
+	HEADBOB_ANIMATION.play("die")
+	for a in ui_elements_to_hide:
+		a.visible = false
 	PlayerModel.visible	= false
 	crossbow_fps.visible = false
 	arrow_fps.visible =	false

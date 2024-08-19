@@ -3,7 +3,7 @@ extends	Node
 @onready var main_menu = $CanvasLayer/MainMenu
 @onready var address_entry = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressEntry
 @onready var hud = $CanvasLayer/HUD
-@onready var health_bar	= $CanvasLayer/HUD/HealthBar
+@onready var blood_splat = $CanvasLayer/HUD/blood_splat
 @onready var spawn_manager = $SpawnManager
 @onready var key_spawn_manager = $KeySpawnManager
 @onready var e_destination = $destination
@@ -118,7 +118,8 @@ func removePlayer(peer_id):
 
 
 func update_health_bar(health_value):
-	health_bar.value = health_value
+	# health value is not needed but I keep it anyway in case I want to display a health bar in the future
+	blood_splat.visible = true
 
 func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
