@@ -71,15 +71,15 @@ func handle_collision(collision):
 		if collider is Enemy:
 			# Handle enemy hit
 			collider.receive_damage_request.rpc_id(1, damage, arrow_id)
-			print("enemy hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+			# print("enemy hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
 		elif collider.name != str(shooter_id):
 			# Handle player hit
 			if collider.has_method("receive_damage"):
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
-				print("player hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+				# print("player hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
 			else:
 				print("Error: Player does not have receive_damage method")
-				print("Available methods: ", collider.get_method_list())
+				# print("Available methods: ", collider.get_method_list())
 		
 		has_dealt_damage = true
 		spawn_blood_effect(global_position)
