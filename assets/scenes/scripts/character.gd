@@ -92,7 +92,7 @@ var	spine
 var	pose
 
 @onready var PlayerModelAnimationTree =	$PlayerModel/PlayerModelAnimationTree
-@onready var PlayerMesh	= $PlayerModel/Armature/Skeleton3D/ChracterMesh
+@onready var PlayerMesh	= $PlayerModel/Armature/Skeleton3D/CharacterMesh
 #@onready var PlayerMesh_skin =	$PlayerModel/Armature/Skeleton3D/CharacterMesh_1/CharacterMesh_skin_1
 
 @onready var PlayerCollision = $Collision
@@ -619,44 +619,91 @@ func check_door_interaction():
 func change_animation(animation_name):
 	current_animation =	animation_name
 
+	#print("changing animations, and Input.is_action_pressed(BACKWARD) = " + str(Input.is_action_pressed(BACKWARD)))
+
 	match animation_name:
 		"idle":
-			PlayerModelAnimationTree.set("parameters/idleToWalk/blend_amount",	0)
-			PlayerModelAnimationTree.set("parameters/walkToRun/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/walkToCrouch/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/crouchIdleToWalk/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/jump/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
 		"walk":
-			PlayerModelAnimationTree.set("parameters/idleToWalk/blend_amount",	1)
-			PlayerModelAnimationTree.set("parameters/walkToRun/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/walkToCrouch/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/crouchIdleToWalk/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/jump/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	1)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
+		"WalkBack":
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	1)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 1)
 		"run":
-			PlayerModelAnimationTree.set("parameters/idleToWalk/blend_amount",	0)
-			PlayerModelAnimationTree.set("parameters/walkToRun/blend_amount", 1)
-			PlayerModelAnimationTree.set("parameters/walkToCrouch/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/crouchIdleToWalk/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/jump/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
+		"back run":
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
 		"crouch	idle":
-			PlayerModelAnimationTree.set("parameters/idleToWalk/blend_amount",	0)
-			PlayerModelAnimationTree.set("parameters/walkToRun/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/walkToCrouch/blend_amount", 1)
-			PlayerModelAnimationTree.set("parameters/crouchIdleToWalk/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/jump/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
 		"crouch	walk":
-			PlayerModelAnimationTree.set("parameters/idleToWalk/blend_amount",	0)
-			PlayerModelAnimationTree.set("parameters/walkToRun/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/walkToCrouch/blend_amount", 1)
-			PlayerModelAnimationTree.set("parameters/crouchIdleToWalk/blend_amount", 1)
-			PlayerModelAnimationTree.set("parameters/jump/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
+		"back crouch walk":
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	1)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
 		"jumping":
-			PlayerModelAnimationTree.set("parameters/idleToWalk/blend_amount",	0)
-			PlayerModelAnimationTree.set("parameters/walkToRun/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/walkToCrouch/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/crouchIdleToWalk/blend_amount", 0)
-			PlayerModelAnimationTree.set("parameters/jump/blend_amount", 1)
-			
+			PlayerModelAnimationTree.set("parameters/idleToWalkX/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/walkToRunX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkToCrouchX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/crouchIdleToWalkX/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/jumpX/blend_amount", 1)
+			PlayerModelAnimationTree.set("parameters/crouchForwardtoBack/blend_amount",	0)
+			PlayerModelAnimationTree.set("parameters/runForwardToBack/blend_amount", 0)
+			PlayerModelAnimationTree.set("parameters/walkForwardToBack/blend_amount", 0)
+	
 	player_animation_changed.emit(animation_name)
 
 @rpc("call_local")	
@@ -708,11 +755,9 @@ func play_shoot_sound():
 func play_reload_sound():
 	crossbowReload_sounds.play()
 
+
 func update_animation(input_dir):
 	var	new_animation =	current_animation
-	var	forward_direction =	-global_transform.basis.z
-	var	movement_direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
-	var	is_moving_backwards	= forward_direction.dot(movement_direction)	< 0
 
 	if is_on_floor() == false: 
 		new_animation =	"jumping"
@@ -720,15 +765,21 @@ func update_animation(input_dir):
 		new_animation =	"idle"
 	elif state == "sprinting":
 		new_animation =	"run"
+	elif state == "sprinting" and Input.is_action_pressed(BACKWARD):
+		new_animation =	"run backward"
 	elif input_dir == Vector2.ZERO and state == "crouching":
 		new_animation =	"crouch	idle"
 	elif input_dir != Vector2.ZERO and state == "crouching":
 		new_animation =	"crouch	walk"
+	elif input_dir != Vector2.ZERO and state == "crouching" and Input.is_action_pressed(BACKWARD):
+		new_animation = "crouch	walk backward"
 	elif input_dir != Vector2.ZERO and state != "crouching":
 		new_animation =	"walk"
+	elif input_dir != Vector2.ZERO and state != "crouching" and Input.is_action_pressed(BACKWARD):
+		new_animation =	"walk backward"
 
 	if new_animation != current_animation and is_multiplayer_authority():
-		change_animation.rpc(new_animation,	is_moving_backwards)
+		change_animation.rpc(new_animation)
 
 
 @rpc("any_peer")
