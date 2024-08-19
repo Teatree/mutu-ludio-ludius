@@ -1,9 +1,23 @@
-[gd_scene load_steps=42 format=3 uid="uid://w01log63kxlf"]
+[gd_scene load_steps=56 format=3 uid="uid://w01log63kxlf"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/enemy.gd" id="1_wul1x"]
 [ext_resource type="Texture2D" uid="uid://cswr4el86lbib" path="res://assets/3d/weapons/character/enemy/enemy_skel_0.png" id="2_cuvns"]
 [ext_resource type="Texture2D" uid="uid://owjtm4ktkth8" path="res://assets/3d/weapons/character/enemy/enemy_skel_4.png" id="3_av8cl"]
 [ext_resource type="Texture2D" uid="uid://dtejtgkh0btwt" path="res://assets/3d/weapons/character/enemy/enemy_skel_1.png" id="4_oy6it"]
+[ext_resource type="AudioStream" uid="uid://qudfjx57grpm" path="res://assets/sounds/skeleton_idle_1.mp3" id="5_8nmbj"]
+[ext_resource type="AudioStream" uid="uid://13qum0s5ofku" path="res://assets/sounds/splat.mp3" id="5_egm0c"]
+[ext_resource type="AudioStream" uid="uid://dlgcupph55xmh" path="res://assets/sounds/skeleton_idle_2.mp3" id="6_mjajn"]
+[ext_resource type="AudioStream" uid="uid://dif753okgwb3r" path="res://assets/sounds/step2.mp3" id="6_wdepx"]
+[ext_resource type="AudioStream" uid="uid://c5nr8p1y4nqol" path="res://assets/sounds/skeleton_idle_3.mp3" id="7_1aiwr"]
+[ext_resource type="AudioStream" uid="uid://txj2xmusslm" path="res://assets/sounds/step1.mp3" id="7_efx5y"]
+[ext_resource type="AudioStream" uid="uid://2mseankjc4c1" path="res://assets/sounds/step4.mp3" id="8_ovsbn"]
+[ext_resource type="AudioStream" uid="uid://cempjocjt8y6e" path="res://assets/sounds/step3.mp3" id="9_n6f2d"]
+[ext_resource type="AudioStream" uid="uid://c6upei7gxfn7c" path="res://assets/sounds/w_step1.mp3" id="10_1i0vc"]
+[ext_resource type="AudioStream" uid="uid://d0kfua0spcj6j" path="res://assets/sounds/w_step2.mp3" id="11_5ljrx"]
+[ext_resource type="AudioStream" uid="uid://b3j1thp8451kg" path="res://assets/sounds/w_step3.mp3" id="12_yjt53"]
+[ext_resource type="AudioStream" uid="uid://dqr0h4pxrbj4k" path="res://assets/sounds/w_step4.mp3" id="13_lo58q"]
+[ext_resource type="AudioStream" uid="uid://clxhw4ff7nyvg" path="res://assets/sounds/crossbow_reload.mp3" id="14_xknp1"]
+[ext_resource type="AudioStream" uid="uid://dm6rvqr0c7e8f" path="res://assets/sounds/crossbow_shoot.mp3" id="15_m37pi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yhnlg"]
 resource_name = "mtl21"
@@ -1263,6 +1277,8 @@ animation = &"idle"
 animation = &"reload"
 
 [sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_8wkhp"]
+filter_enabled = true
+filters = ["Armature/Skeleton3D:body", "Armature/Skeleton3D:head", "Armature/Skeleton3D:lowerarm.l", "Armature/Skeleton3D:lowerarm.r", "Armature/Skeleton3D:lowerleg.l", "Armature/Skeleton3D:lowerleg.r", "Armature/Skeleton3D:upperarm.l", "Armature/Skeleton3D:upperarm.r", "Armature/Skeleton3D:upperleg.l", "Armature/Skeleton3D:upperleg.r"]
 fadein_time = 0.5
 fadeout_time = 0.25
 
@@ -1270,7 +1286,7 @@ fadeout_time = 0.25
 animation = &"walking"
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_uxufx"]
-graph_offset = Vector2(-538.667, -44)
+graph_offset = Vector2(-193.334, 118.667)
 nodes/addAiming/node = SubResource("AnimationNodeAdd2_l1qha")
 nodes/addAiming/position = Vector2(480, 133.333)
 nodes/aim/node = SubResource("AnimationNodeAnimation_5ori1")
@@ -1345,6 +1361,10 @@ collision_layer = 5
 collision_mask = 5
 script = ExtResource("1_wul1x")
 
+[node name="SurfaceDetector" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0129361, 1.02351, -0.0449572)
+collision_mask = 8
+
 [node name="enemy_skel" type="Node3D" parent="."]
 transform = Transform3D(-1, 1.54769e-07, -2.53045e-06, 0, 0.998135, 0.0610485, 2.53518e-06, 0.0610485, -0.998135, 0, 0, 0)
 
@@ -1357,7 +1377,7 @@ bones/0/parent = -1
 bones/0/rest = Transform3D(0.999953, 0.00965959, 0.000274537, -0.00965622, 0.9999, -0.0103788, -0.000374764, 0.0103757, 0.999946, -0.00855852, 0, -0.0333334)
 bones/0/enabled = true
 bones/0/position = Vector3(-0.00855852, -0.00681511, -0.0878541)
-bones/0/rotation = Quaternion(0.077543, 0.000511382, -0.00480466, 0.996977)
+bones/0/rotation = Quaternion(0.0772468, 0.000509955, -0.00480481, 0.997)
 bones/0/scale = Vector3(1, 1, 1)
 bones/1/name = "head"
 bones/1/parent = 0
@@ -1392,21 +1412,21 @@ bones/5/parent = 0
 bones/5/rest = Transform3D(0.998813, 0.0484946, 0.00571679, 0.0488047, -0.99523, -0.0844738, 0.00159298, 0.0846506, -0.996426, 0.0818405, -0.0233899, -0.0148483)
 bones/5/enabled = true
 bones/5/position = Vector3(0.0818405, -0.0233899, -0.0148483)
-bones/5/rotation = Quaternion(0.985295, 0.0290127, -0.0214969, 0.167006)
+bones/5/rotation = Quaternion(0.985337, 0.0290311, -0.0214922, 0.166753)
 bones/5/scale = Vector3(1.00002, 1, 1.00005)
 bones/6/name = "lowerleg.l"
 bones/6/parent = 5
 bones/6/rest = Transform3D(0.999106, -0.0416991, 0.00697399, 0.0422637, 0.980744, -0.190669, 0.00111103, 0.190793, 0.98163, 5.63341e-09, 0.416945, 7.27596e-09)
 bones/6/enabled = true
 bones/6/position = Vector3(5.63341e-09, 0.416945, 7.27596e-09)
-bones/6/rotation = Quaternion(0.136171, 0.00146554, 0.0299722, 0.990231)
+bones/6/rotation = Quaternion(0.136284, 0.00146552, 0.029997, 0.990215)
 bones/6/scale = Vector3(1, 1, 1)
 bones/7/name = "upperarm.r"
 bones/7/parent = 0
 bones/7/rest = Transform3D(0.996017, -0.0453194, 0.0768268, -0.0403655, -0.997078, -0.0648539, 0.0795412, 0.0614939, -0.994939, -0.214951, 0.528689, 0.0211749)
 bones/7/enabled = true
 bones/7/position = Vector3(-0.214951, 0.528689, 0.0211749)
-bones/7/rotation = Quaternion(0.995476, -0.0194138, 0.0407175, 0.0836173)
+bones/7/rotation = Quaternion(0.995524, -0.0194362, 0.0407011, 0.0830537)
 bones/7/scale = Vector3(1, 1, 1.00001)
 bones/8/name = "lowerarm.r"
 bones/8/parent = 7
@@ -1427,14 +1447,14 @@ bones/10/parent = 0
 bones/10/rest = Transform3D(0.999566, -0.0293058, -0.0035415, -0.0295004, -0.995982, -0.0845633, -0.00104907, 0.0846297, -0.996426, -0.064249, -0.0248012, -0.0148884)
 bones/10/enabled = true
 bones/10/position = Vector3(-0.064249, -0.0248012, -0.0148884)
-bones/10/rotation = Quaternion(0.985523, -0.0195415, 0.0233723, 0.166783)
+bones/10/rotation = Quaternion(0.985565, -0.0195594, 0.0233652, 0.16653)
 bones/10/scale = Vector3(1, 1, 1.00004)
 bones/11/name = "lowerleg.r"
 bones/11/parent = 10
 bones/11/rest = Transform3D(0.999106, 0.0416992, -0.00697405, -0.0422638, 0.980744, -0.190669, -0.001111, 0.190793, 0.981629, -4.6166e-09, 0.416944, -3.55067e-09)
 bones/11/enabled = true
 bones/11/position = Vector3(-4.6166e-09, 0.416944, -3.55067e-09)
-bones/11/rotation = Quaternion(0.136171, -0.00146556, -0.0299721, 0.990231)
+bones/11/rotation = Quaternion(0.136283, -0.00146554, -0.029997, 0.990215)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "ikleg.l"
 bones/12/parent = -1
@@ -1505,7 +1525,7 @@ mesh = SubResource("ArrayMesh_j2yqs")
 skin = SubResource("Skin_dd10a")
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="enemy_skel/Armature/Skeleton3D"]
-transform = Transform3D(0.993292, 0.0991636, 0.059484, 0.10593, -0.986592, -0.124158, 0.0463735, 0.129627, -0.990488, -0.223796, -0.250405, 0.0236739)
+transform = Transform3D(0.993292, 0.0991636, 0.059484, 0.105905, -0.986662, -0.123624, 0.0464305, 0.129096, -0.990555, -0.223796, -0.250349, 0.0229526)
 bone_name = "wrist.r"
 bone_idx = 9
 
@@ -1584,5 +1604,76 @@ replication_config = SubResource("SceneReplicationConfig_cn6mr")
 [node name="AttackTimer" type="Timer" parent="."]
 
 [node name="IdleTimer" type="Timer" parent="."]
+
+[node name="idleSkel1" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_8nmbj")
+max_distance = 20.0
+
+[node name="idleSkel2" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.018064, 0.547871, -0.196659)
+stream = ExtResource("6_mjajn")
+max_distance = 20.0
+
+[node name="idleSkel3" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_1aiwr")
+max_distance = 20.0
+
+[node name="splat" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.018064, 0.547871, -0.196659)
+stream = ExtResource("5_egm0c")
+volume_db = -5.0
+max_distance = 20.0
+
+[node name="stepSound2" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_wdepx")
+volume_db = -10.0
+max_distance = 20.0
+
+[node name="stepSound1" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.018064, 0.547871, -0.196659)
+stream = ExtResource("7_efx5y")
+volume_db = -10.0
+max_distance = 20.0
+
+[node name="stepSound4" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("8_ovsbn")
+volume_db = -10.0
+max_distance = 20.0
+
+[node name="stepSound3" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("9_n6f2d")
+volume_db = -10.0
+max_distance = 20.0
+
+[node name="w_stepSound1" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("10_1i0vc")
+volume_db = -15.0
+max_distance = 20.0
+
+[node name="w_stepSound2" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.018064, 0.547871, -0.196659)
+stream = ExtResource("11_5ljrx")
+volume_db = -15.0
+max_distance = 20.0
+
+[node name="w_stepSound3" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("12_yjt53")
+volume_db = -15.0
+max_distance = 20.0
+
+[node name="w_stepSound4" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("13_lo58q")
+volume_db = -15.0
+max_distance = 20.0
+
+[node name="crossbowReload" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("14_xknp1")
+volume_db = -15.0
+max_distance = 20.0
+
+[node name="crossbowShoot" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("15_m37pi")
+volume_db = -15.0
+max_distance = 20.0
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

@@ -4,8 +4,8 @@ signal health_changed(health_value)
 signal player_animation_changed(animation_name)
 
 @export_category("Character")
-@export	var	base_speed : float = 2.5
-@export	var	sprint_speed : float = 3.5
+@export	var	base_speed : float = 2
+@export	var	sprint_speed : float = 4
 @export	var	crouch_speed : float = 1.0
 
 @export	var	acceleration : float = 10.0
@@ -68,10 +68,6 @@ var	last_hit_arrow_id: int = -1
 @export	var	death_model_scene: PackedScene	# Set this in the inspector
 var	death_model: Node3D	= null
 
-# Member variables
-const SPEED	= 3.0
-const SPRINT_SPEED = 5.0
-
 var	health = 2
 var	can_attack := true
 var	stamina	= 100
@@ -121,17 +117,9 @@ var	keys = 0
 @onready var interaction_ray = $Head/Camera/InteractionRay
 
 var	current_animation =	"idle"
-var	target_blend_amounts = {
-	"idleToWalk2": 0.0,
-	"walkToRun2": 0.0,
-	"walkToCrouch":	0.0,
-	"crouchIdleToWalk":	0.0
-}
-var	current_blend_amounts =	target_blend_amounts.duplicate()
-const BLEND_SPEED =	5.0	 # Adjust this value to change how fast	the	blending occurs
 
 var	speed :	float =	base_speed
-var	current_speed :	float =	SPEED
+var	current_speed :	float =	speed
 # States: normal, crouching, sprinting
 var	state :	String = "normal"
 var	low_ceiling	: bool = false # This is for when the cieling is too low and the player	needs to crouch.
@@ -337,6 +325,8 @@ func handle_movement(delta,	input_dir):
 	direction =	Vector3(direction.x, 0, direction.y)
 	move_and_slide()
 	
+	print("speed: " + str(speed))
+
 	if in_air_momentum:
 		if is_on_floor():
 			if motion_smoothing:
