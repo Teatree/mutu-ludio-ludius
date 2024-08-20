@@ -6,9 +6,9 @@ signal enemy_animation_changed(animation_name)
 
 @export	var	move_speed := 1.5
 @export	var	run_speed := 2
-@export	var	attack_interval	:= 5.0
+@export	var	attack_interval	:= 4.0
 @export	var	max_health := 1
-@export	var	idle_wait_time := 5.0
+@export	var	idle_wait_time := 6.0
 
 var	current_health:	int
 var	last_hit_arrow_id: int = -1
@@ -224,14 +224,14 @@ func enter_pursue_state(player:	CharacterBody3D):
 	current_state =	State.PURSUE
 	target_player =	player
 	set_detection_radius(detection_radius*2)
-	set_attack_radius(attack_radius)
+	#set_attack_radius(attack_radius)
 	# print_once("ENTER	STATE: Pursue")
 	# print("Target	player position: " + str(player.global_position))
 
 func enter_attack_state():
 	current_state =	State.ATTACK
 	attack_timer.start()
-	set_attack_radius(attack_radius*1.5)
+	set_attack_radius(attack_radius*2)
 	play_add_aim_animation.rpc()
 	# print_once("ENTER	STATE: Attack")
 	# print("Attack	timer started, duration: " + str(attack_timer.wait_time))
@@ -271,22 +271,25 @@ func create_debug_cube(position: Vector3):
 func get_current_state() -> int:
 	return current_state
 
+# $$$ CHANGE $$$
 # Checks if there's	a clear	line of sight to the target
 func has_line_of_sight(target: CharacterBody3D)	-> bool:
 	var	space_state	= get_world_3d().direct_space_state
-	var	query =	PhysicsRayQueryParameters3D.create(global_position,	target.global_position)
+	
+	# Adjust the start and end positions to be at a	more appropriate height
+	var	start_position = global_position + Vector3(0, 1.0, 0)  # Raise 1 meter from	the	ground
+	var	end_position = target.global_position +	Vector3(0, 1.0,	0)	# Raise	1 meter	from the ground
+	
+	var	query =	PhysicsRayQueryParameters3D.create(start_position, end_position)
 	query.collision_mask = 1  # Set	this to match your world geometry collision	layer
 	query.collide_with_bodies =	true
 	query.collide_with_areas = false
+	query.exclude =	[self, target]	# Exclude the enemy	itself and the target from the check
 
 	var	result = space_state.intersect_ray(query)
-	
-	if result.is_empty():
-		return true
-	elif result.collider == target:
-		return true
-	else:
-		return false
+	#print("has line	of sight: "	+ str(result))
+
+	return result.is_empty()  # If the result is empty,	there's	a clear	line of sight
 
 func set_target_player(player: CharacterBody3D):
 	target_player =	player
@@ -462,24 +465,21 @@ func is_on_water() -> bool:
 				return true
 	return false
 
-# $$$ ADD $$$
+
 # Plays	the	splat sound	when hit
 func play_splat_sound():
 	splat_sound.play()
 
-# $$$ ADD $$$
 # Plays	the	crossbow shoot sound
 func play_crossbow_shoot_sound():
 	crossbow_shoot_sound.play()
 
-# $$$ ADD $$$
 # Plays	the	crossbow reload	sound
 func play_crossbow_reload_sound():
 	crossbow_reload_sound.play()
 
-# $$$ ADD $$$
 # Plays	a random idle sound
 func play_random_idle_sound():
-	if not idle_sounds.is_empty():
+	if not idle_sounds.is_empty() and not isDead:
 		var	random_sound_index = randi() % idle_sounds.size()
 		idle_sounds[random_sound_index].play()

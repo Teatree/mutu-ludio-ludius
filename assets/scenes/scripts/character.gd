@@ -55,7 +55,7 @@ var	is_loaded :	bool = true	 # Start with a	loaded crossbow
 var	arrow_shoot_count: int = 0
 var	arrow_shooter_id: int =	0
 
-@export	var	respawn_time : float = 3.0	# Time before respawn after	death
+@export	var	respawn_time : float = 15.0	# Time before respawn after	death
 @onready var respawn_timer : Timer = Timer.new()
 var	is_dead	: bool = false
 
@@ -111,6 +111,8 @@ var	distance_since_last_step = 0.0
 @onready var ui_root = $UserInterface
 @onready var ui_stamina_bar	= $UserInterface/Stamina/StaminaBar
 @onready var ui_key_count =	$UserInterface/key_count
+@onready var ui_door_hint_text2 : Label =	$UserInterface/DoorOpenHint/DoorOpentxt2
+@onready var ui_door_hint_text1 : Label =	$UserInterface/DoorOpenHint/DoorOpentxt
 @onready var ui_elements_to_hide = [$UserInterface/arrow, $UserInterface/emptyCircle, $UserInterface/fillCircle, $UserInterface/key, $UserInterface/key_count, $UserInterface/Stamina]
 
 # keys
@@ -277,7 +279,6 @@ func _physics_process(delta):
 		if distance_since_last_step	>= step_run_distance:
 			rpc("play_step_sound")
 			distance_since_last_step = 0.0
-	
 
 
 	# The player is not	able to stand up if the	ceiling	is too low
@@ -326,7 +327,7 @@ func handle_movement(delta,	input_dir):
 	direction =	Vector3(direction.x, 0, direction.y)
 	move_and_slide()
 	
-	print("speed: " + str(speed))
+	#print("speed: " + str(speed))
 
 	if in_air_momentum:
 		if is_on_floor():
@@ -502,6 +503,16 @@ func _process(delta):
 					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	handle_stamina()
+
+	if interaction_ray.is_colliding() and keys < 5:
+		ui_door_hint_text1.visible = false
+		ui_door_hint_text2.visible = true
+	elif interaction_ray.is_colliding() and keys >= 5:
+		ui_door_hint_text1.visible = true
+		ui_door_hint_text2.visible = false
+	else:
+		ui_door_hint_text1.visible = false
+		ui_door_hint_text2.visible = false
 
 
 func handle_stamina():
@@ -794,6 +805,8 @@ func die():
 	hide_player_mesh.rpc()
 	respawn_timer.start()
 	HEADBOB_ANIMATION.play("die")
+	ui_AnimPlayer.play("DIED")
+	default_reticle = null
 	for a in ui_elements_to_hide:
 		a.visible = false
 	PlayerModel.visible	= false

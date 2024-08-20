@@ -100,7 +100,7 @@ func addPlayer(peer_id):
 	player.global_position = spawn_data.position
 	if player.is_multiplayer_authority():
 		player.tree_exiting.connect(func():	spawn_manager.release_spawn_point(spawn_data.position))
-		player.health_changed.connect(update_health_bar)
+		player.health_changed.connect(show_blood_splat)
 	
 	rpc("sync_new_player", peer_id,	spawn_data.position)
 
@@ -117,13 +117,13 @@ func removePlayer(peer_id):
 		player.queue_free()
 
 
-func update_health_bar(health_value):
+func show_blood_splat(health_value):
 	# health value is not needed but I keep it anyway in case I want to display a health bar in the future
 	blood_splat.visible = true
 
 func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
-		node.health_changed.connect(update_health_bar)
+		node.health_changed.connect(show_blood_splat)
 
 func _on_peer_connected(peer_id):
 	if multiplayer.is_server():
