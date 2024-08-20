@@ -127,23 +127,6 @@ func spawn_blood_effect(pos: Vector3):
 		else:
 			push_error("Blood effect scene is not a GPUParticles3D")
 
-@rpc("call_local")
-func flash_hit_player(hit_player_path: NodePath):
-	var hit_player = get_node(hit_player_path)
-	if hit_player and hit_player.has_node("PlayerModel/Armature/Skeleton3D/CharacterMesh"):
-		var player_mesh = hit_player.get_node("PlayerModel/Armature/Skeleton3D/CharacterMesh")
-		var original_material = player_mesh.get_surface_override_material(0)
-		# Create the flash material
-		var flash_material = original_material.duplicate()
-		flash_material.albedo_color = hit_flash_color
-		
-		player_mesh.set_surface_override_material(0, flash_material)
-		
-		get_tree().create_timer(hit_flash_duration).timeout.connect(
-			func():
-				player_mesh.set_surface_override_material(0, original_material)
-		)
-
 # Add this function to create a debug sphere
 func create_debug_sphere(position: Vector3, color: Color = Color.RED) -> MeshInstance3D:
 	var sphere_mesh = SphereMesh.new()

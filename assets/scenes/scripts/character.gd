@@ -14,10 +14,10 @@ signal player_animation_changed(animation_name)
 @export	var	immobile : bool	= false
 @export_file var default_reticle
 
-
 @export_group("Nodes")
 @export	var	HEAD : Node3D
 @export	var	CAMERA : Camera3D
+@export	var	SPECTATING_CAMERA :	Camera3D
 @export	var	HEADBOB_ANIMATION :	AnimationPlayer
 @export	var	JUMP_ANIMATION : AnimationPlayer
 @export	var	CROUCH_ANIMATION : AnimationPlayer
@@ -83,6 +83,7 @@ const STAMINA_JUMP_COST	= 2
 @onready var raycast = $Head/Camera/RayCast3D
 @onready var PlayerModel = $PlayerModel
 @onready var PlayerSkeleton	= $PlayerModel/Armature/Skeleton3D
+var	has_escaped	= false
 #animation bs
 var	spine
 var	pose
@@ -111,8 +112,8 @@ var	distance_since_last_step = 0.0
 @onready var ui_root = $UserInterface
 @onready var ui_stamina_bar	= $UserInterface/Stamina/StaminaBar
 @onready var ui_key_count =	$UserInterface/key_count
-@onready var ui_door_hint_text2 : Label =	$UserInterface/DoorOpenHint/DoorOpentxt2
-@onready var ui_door_hint_text1 : Label =	$UserInterface/DoorOpenHint/DoorOpentxt
+@onready var ui_door_hint_text2	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt2
+@onready var ui_door_hint_text1	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt
 @onready var ui_elements_to_hide = [$UserInterface/arrow, $UserInterface/emptyCircle, $UserInterface/fillCircle, $UserInterface/key, $UserInterface/key_count, $UserInterface/Stamina]
 
 # keys
@@ -142,6 +143,7 @@ func _enter_tree():
 
 func _ready():
 	CAMERA.current = false
+	SPECTATING_CAMERA.current =	false
 	if not is_multiplayer_authority():
 		PlayerMesh.set_layer_mask_value(1, 1)
 		PlayerMesh.set_layer_mask_value(2, 0)
@@ -165,6 +167,7 @@ func _ready():
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	CAMERA.current = true
+	SPECTATING_CAMERA.current =	false
 	
 	# If the controller	is rotated in a	certain	direction for game design purposes,	redirect this rotation into	the	head.
 	HEAD.rotation.y	= rotation.y
@@ -504,10 +507,10 @@ func _process(delta):
 	
 	handle_stamina()
 
-	if interaction_ray.is_colliding() and keys < 5:
+	if interaction_ray.is_colliding() and keys < 5 and not has_escaped:
 		ui_door_hint_text1.visible = false
 		ui_door_hint_text2.visible = true
-	elif interaction_ray.is_colliding() and keys >= 5:
+	elif interaction_ray.is_colliding()	and	keys >= 5 and not has_escaped:
 		ui_door_hint_text1.visible = true
 		ui_door_hint_text2.visible = false
 	else:
@@ -574,6 +577,10 @@ func spawn_arrow():
 	print("	arrow_shoot_count: " + str(arrow_shoot_count))
 	arrow_shooter_id = get_multiplayer_authority() + arrow_shoot_count
 	
+	print("spawn_transform " + str(spawn_transform))
+	print("arrow_speed " + str(arrow_speed))
+	print("get_multiplayer_authority() " + str(get_multiplayer_authority()))
+	print("arrow_shooter_id	" +	str(arrow_shooter_id))
 	arrow.initialize(spawn_transform, arrow_speed, get_multiplayer_authority(),	arrow_shooter_id) #randi for a random arror	id
 	arrow.max_lifetime = arrow_lifetime
 	
@@ -773,11 +780,11 @@ func update_animation(input_dir):
 		new_animation =	"crouch	idle"
 	elif input_dir != Vector2.ZERO and state == "crouching":
 		new_animation =	"crouch	walk"
-	elif input_dir != Vector2.ZERO and state == "crouching" and Input.is_action_pressed(BACKWARD):
-		new_animation = "crouch	walk backward"
+	elif input_dir != Vector2.ZERO and state == "crouching"	and	Input.is_action_pressed(BACKWARD):
+		new_animation =	"crouch	walk backward"
 	elif input_dir != Vector2.ZERO and state != "crouching":
 		new_animation =	"walk"
-	elif input_dir != Vector2.ZERO and state != "crouching" and Input.is_action_pressed(BACKWARD):
+	elif input_dir != Vector2.ZERO and state != "crouching"	and	Input.is_action_pressed(BACKWARD):
 		new_animation =	"walk backward"
 
 	if new_animation != current_animation and is_multiplayer_authority():
@@ -806,9 +813,9 @@ func die():
 	respawn_timer.start()
 	HEADBOB_ANIMATION.play("die")
 	ui_AnimPlayer.play("DIED")
-	default_reticle = null
-	for a in ui_elements_to_hide:
-		a.visible = false
+	default_reticle	= null
+	for	a in ui_elements_to_hide:
+		a.visible =	false
 	PlayerModel.visible	= false
 	crossbow_fps.visible = false
 	arrow_fps.visible =	false
@@ -861,3 +868,69 @@ func reset_player_state():
 	crossbow_local.set_layer_mask_value(1, 1)  # Turn on visibility	on layer 1
 	crossbow_local.set_layer_mask_value(2, 0)
 	PlayerCollision.disabled = false
+
+
+# Escaping Functionality
+# Initiates	the	escape sequence	for	the	player
+func initiate_escape():
+	if not is_multiplayer_authority():
+		return
+	
+	has_escaped	= true
+	rpc("set_player_escaped")
+	disable_player_controls()
+	play_escape_animation()
+
+# Disables player controls when	escaping
+func disable_player_controls():
+	set_physics_process(false)
+	set_process_input(false)
+
+# Plays	the	escape animation using the UI AnimationPlayer
+func play_escape_animation():
+	ui_AnimPlayer.play("ESCAPED")
+	ui_AnimPlayer.animation_finished.connect(_on_escape_animation_finished,	CONNECT_ONE_SHOT)
+
+func _on_escape_animation_finished():
+	switch_to_spectator_mode()
+
+# Switches the player's	view to spectator mode
+func switch_to_spectator_mode():
+	if not is_multiplayer_authority():
+		return
+	
+	var	players	= get_tree().get_nodes_in_group("players")
+	print("All players:	" +	str(players))
+	var	available_players =	players.filter(func(p):	return p != self and not p.has_escaped)
+	
+	if available_players.is_empty():
+		print("No available	players	to spectate")
+		return
+	
+	var	random_player =	available_players[randi() %	available_players.size()]
+	set_spectator_mode(random_player.name)
+
+# Add a	new	RPC	function to handle spectator mode switching
+func set_spectator_mode(target_player_name):
+	CAMERA.current = false
+	
+	var	target_player =	get_node("/root/World/"	+ target_player_name)
+	if target_player and is_instance_valid(target_player):
+		target_player.SPECTATING_CAMERA.current	= true
+	else:
+		print("Failed to find target player	for	spectating")
+
+# Finds	a new player to spectate
+func find_new_spectating_target():
+	var	world =	get_node("/root/World")
+	for	player in world.all_players:
+		if player != self and not player.has_escaped:
+			SPECTATING_CAMERA.global_transform = player.CAMERA.global_transform
+			break
+
+@rpc("call_local")
+func set_player_escaped():
+	has_escaped	= true
+	visible	= false
+	if is_multiplayer_authority():
+		switch_to_spectator_mode()

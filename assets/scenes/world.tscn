@@ -481,9 +481,11 @@ _spawnable_scenes = PackedStringArray("res://assets/scenes/character.tscn")
 spawn_path = NodePath("..")
 
 [node name="player_armor_guy" parent="." instance=ExtResource("7_ltaji")]
+visible = false
 
 [node name="destination" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.934189, 1.15354, 1.37182)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="destination"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.51166, 0)

@@ -3,7 +3,7 @@ extends	Node
 @onready var main_menu = $CanvasLayer/MainMenu
 @onready var address_entry = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressEntry
 @onready var hud = $CanvasLayer/HUD
-@onready var blood_splat = $CanvasLayer/HUD/blood_splat
+@onready var ui_blood_splat	= $CanvasLayer/HUD/blood_splat
 @onready var spawn_manager = $SpawnManager
 @onready var key_spawn_manager = $KeySpawnManager
 @onready var e_destination = $destination
@@ -36,6 +36,7 @@ func _on_host_button_pressed():
 	
 	# Spawn	keys when the game starts
 	spawn_keys.rpc()
+	
 	if multiplayer.is_server():
 		spawn_enemies()
 
@@ -74,7 +75,7 @@ func handle_enemy_behaviour():
 					# No action	needed,	enemy handles its own attack behavior
 					pass
 
-#
+
 func find_nearest_player(enemy,	players: Array):
 	var	nearest_player = null
 	var	min_distance = INF
@@ -90,7 +91,16 @@ func find_nearest_player(enemy,	players: Array):
 
 @rpc("call_local")
 func spawn_keys():
-	key_spawn_manager.spawn_keys()
+	if multiplayer.is_server():
+		key_spawn_manager.spawn_keys()
+		# Sync the spawned keys	with all clients
+		rpc("sync_keys", key_spawn_manager.get_key_data())
+
+@rpc("call_local")
+func sync_keys(key_data):
+	if not multiplayer.is_server():
+		key_spawn_manager.spawn_keys_from_data(key_data)
+
 
 func addPlayer(peer_id):
 	var	spawn_data = spawn_manager.get_random_spawn_point()
@@ -102,24 +112,29 @@ func addPlayer(peer_id):
 		player.tree_exiting.connect(func():	spawn_manager.release_spawn_point(spawn_data.position))
 		player.health_changed.connect(show_blood_splat)
 	
+	# Inform all clients about the new player
 	rpc("sync_new_player", peer_id,	spawn_data.position)
 
-func sync_new_player(peer_id, position):
-	if not has_node(str(peer_id)):
-		var	player = Player.instantiate()
-		player.name	= str(peer_id)
-		add_child(player)
-		player.global_position = position
 
 func removePlayer(peer_id):
 	var	player = get_node_or_null(str(peer_id))
 	if player:
 		player.queue_free()
 
+@rpc("call_local")
+func sync_new_player(peer_id, position):
+	if not has_node(str(peer_id)):
+		var	player = Player.instantiate()
+		player.name	= str(peer_id)
+		add_child(player)
+		player.global_position = position
+		print("New player added: ", peer_id)
+	else:
+		print("Player already exists: ", peer_id)
 
 func show_blood_splat(health_value):
-	# health value is not needed but I keep it anyway in case I want to display a health bar in the future
-	blood_splat.visible = true
+	# health value is not needed but I keep	it anyway in case I	want to display	a health bar in the	future
+	ui_blood_splat.visible	= true
 
 func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
@@ -127,6 +142,8 @@ func _on_multiplayer_spawner_spawned(node):
 
 func _on_peer_connected(peer_id):
 	if multiplayer.is_server():
+		rpc_id(peer_id,	"sync_keys", key_spawn_manager.get_key_data())
+
 		# Inform the new peer about	existing enemies
 		for	enemy_data in spawned_enemies:
 			rpc_id(peer_id,	"spawn_enemy", enemy_data)
@@ -149,3 +166,24 @@ func spawn_enemy(enemy_data: Dictionary):
 	enemy.global_position =	enemy_data["position"]
 	add_child(enemy)
 	enemy.enter_idle_state()  # Set	initial	state to IDLE
+
+
+# End Game
+# Checks if all	players	have escaped or died
+func check_game_end():
+	var	players	= get_tree().get_nodes_in_group("players")
+	var	all_escaped_or_dead	= true
+	
+	for	player in players:
+		if not player.has_escaped and player.health	> 0:
+			all_escaped_or_dead	= false
+			break
+	
+	if all_escaped_or_dead:
+		end_game()
+
+# Ends the game	and	shows the result screen
+func end_game():
+	# Implement	game end logic here
+	print("Game	Over - All players have	escaped	or died")
+	# You can add a	game over screen or restart	the	game here
