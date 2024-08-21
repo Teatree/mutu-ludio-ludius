@@ -224,6 +224,7 @@ func enter_pursue_state(player:	CharacterBody3D):
 	current_state =	State.PURSUE
 	target_player =	player
 	set_detection_radius(detection_radius*2)
+	
 	#set_attack_radius(attack_radius)
 	# print_once("ENTER	STATE: Pursue")
 	# print("Target	player position: " + str(player.global_position))
@@ -403,6 +404,13 @@ func play_add_aim_animation():
 func play_subtract_aim_animation():
 	enemyAnimationTree.set("parameters/addAiming/add_amount", 0)
 
+@rpc("call_local")
+func play_add_die_animation():
+	enemyAnimationTree.set("parameters/addDie/add_amount", 1)
+
+@rpc("call_local")
+func play_subtract_die_animation():
+	enemyAnimationTree.set("parameters/addDie/add_amount", 0)
 
 
 @rpc("any_peer")
@@ -435,8 +443,8 @@ func update_health_and_die(new_health: int):
 		
 		change_animation.rpc("idle")
 		enemyAnimationTree.set("parameters/idleTimeScale/scale", 0)
+		
 		collision_shape.disabled = true
-
 		detection_area.body_entered.disconnect(_on_detection_area_body_entered)
 		detection_area.body_exited.disconnect(_on_detection_area_body_exited)
 		attack_area.body_entered.disconnect(_on_attack_area_body_entered)
@@ -444,6 +452,9 @@ func update_health_and_die(new_health: int):
 		attack_timer.timeout.disconnect(_on_attack_timer_timeout)
 		idle_timer.timeout.disconnect(_on_attack_timer_timeout)
 		isDead = true
+		play_add_die_animation.rpc()
+		play_subtract_aim_animation.rpc()
+
 		#queue_free()
 
 
