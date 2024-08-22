@@ -3,7 +3,7 @@ extends	Node
 class_name KeySpawnManager
 
 @export	var	Key: PackedScene
-@export	var	max_keys: int =	12
+@export	var	max_keys: int =	12 # there are 3 Players, they each need 5, this creates conflict baby!
 @export	var	spawn_chance: float	= 0.5  # 50% chance	to spawn a key at each attempt
 
 var	spawn_points: Array[Node3D]	= []
