@@ -807,10 +807,16 @@ func receive_damage(damage_amount: int,	arrow_id: int):
 	health_changed.emit(health)
 
 func die():
+	if not is_multiplayer_authority():
+		return
+
 	is_dead	= true
+	disable_player_controls()
+
+	# spawn a dead body
 	spawn_death_model.rpc()
 	hide_player_mesh.rpc()
-	respawn_timer.start()
+	# animation and ui shit
 	HEADBOB_ANIMATION.play("die")
 	ui_AnimPlayer.play("DIED")
 	default_reticle	= null
@@ -819,6 +825,10 @@ func die():
 	PlayerModel.visible	= false
 	crossbow_fps.visible = false
 	arrow_fps.visible =	false
+
+	#respawn_timer.start()
+	await get_tree().create_timer(6).timeout
+	switch_to_spectator_mode()
 
 @rpc("call_local")
 func hide_player_mesh():

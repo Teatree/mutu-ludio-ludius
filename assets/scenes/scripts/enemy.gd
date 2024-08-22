@@ -36,6 +36,7 @@ var	last_hit_arrow_id: int = -1
 @onready var w_step_sounds = [$w_stepSound1, $w_stepSound2,	$w_stepSound3, $w_stepSound4]
 @onready var surface_detector: RayCast3D = $SurfaceDetector
 @onready var splat_sound: AudioStreamPlayer3D =	$splat
+@onready var hugh_sound: AudioStreamPlayer3D =	$hugh
 @onready var crossbow_shoot_sound: AudioStreamPlayer3D = $crossbowShoot
 @onready var crossbow_reload_sound:	AudioStreamPlayer3D	= $crossbowReload
 
@@ -359,6 +360,9 @@ func _on_attack_timer_timeout():
 		attack_timer.start()
 
 func shoot_arrow():
+	hugh_sound.play()
+	await get_tree().create_timer(1).timeout
+
 	rpc("spawn_arrow")
 	play_crossbow_shoot_sound()
 
@@ -443,6 +447,8 @@ func update_health_and_die(new_health: int):
 		
 		change_animation.rpc("idle")
 		enemyAnimationTree.set("parameters/idleTimeScale/scale", 0)
+		enemyAnimationTree.set("parameters/reloadTrigger/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
+		enemyAnimationTree.set("parameters/reloadTrigger/active", false)
 		
 		collision_shape.disabled = true
 		detection_area.body_entered.disconnect(_on_detection_area_body_entered)
