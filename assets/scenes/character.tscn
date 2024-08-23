@@ -1,4 +1,4 @@
-[gd_scene load_steps=108 format=3 uid="uid://cc1m2a1obsyn4"]
+[gd_scene load_steps=113 format=3 uid="uid://cc1m2a1obsyn4"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/character.gd" id="1_av1cb"]
 [ext_resource type="PackedScene" uid="uid://dqjgpd5h2vx3q" path="res://assets/scenes/arrow.tscn" id="2_da8b0"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://dv70cjtbjyi61" path="res://assets/2d/key_ui.png" id="10_o6s37"]
 [ext_resource type="FontFile" uid="uid://chkm0ks7oxx0k" path="res://assets/fonts/Cambria-Font-For-Windows.ttf" id="11_s30su"]
 [ext_resource type="Script" path="res://assets/fpc/EditorModule.gd" id="12_bd6ks"]
+[ext_resource type="Texture2D" uid="uid://bxcjgva8m34f8" path="res://assets/2d/lid.png" id="12_ma5xn"]
 [ext_resource type="AudioStream" uid="uid://13qum0s5ofku" path="res://assets/sounds/splat.mp3" id="13_ruxvy"]
 [ext_resource type="AudioStream" uid="uid://dif753okgwb3r" path="res://assets/sounds/step2.mp3" id="14_dvvp6"]
 [ext_resource type="AudioStream" uid="uid://txj2xmusslm" path="res://assets/sounds/step1.mp3" id="15_iwje4"]
@@ -2805,6 +2806,10 @@ MarginContainer/constants/margin_left = 10
 MarginContainer/constants/margin_right = 10
 MarginContainer/constants/margin_top = 10
 
+[sub_resource type="LabelSettings" id="LabelSettings_fcega"]
+font = ExtResource("11_s30su")
+font_size = 18
+
 [sub_resource type="LabelSettings" id="LabelSettings_e5683"]
 font = ExtResource("11_s30su")
 font_size = 18
@@ -2854,7 +2859,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 2.7, 3),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(566, 418), Vector2(566, 418), Vector2(552, 418)]
+"values": [Vector2(364, 310), Vector2(364, 310), Vector2(364, 295)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2882,7 +2887,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(552, 418), Vector2(552, 404)]
+"values": [Vector2(364, 295), Vector2(364, 280)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -2907,7 +2912,7 @@ _data = {
 
 [sub_resource type="LabelSettings" id="LabelSettings_t1hsa"]
 font = ExtResource("11_s30su")
-font_size = 32
+font_size = 24
 shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ecfk7"]
@@ -2915,6 +2920,42 @@ bg_color = Color(0, 0, 0, 0.0941176)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tobnh"]
 bg_color = Color(0.647395, 0.647395, 0.647395, 1)
+
+[sub_resource type="Animation" id="Animation_6e4wt"]
+resource_name = "RESET"
+
+[sub_resource type="Animation" id="Animation_4n3b6"]
+resource_name = "BLINK"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("bottom eyelid:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(-24, 360), Vector2(-24, 207), Vector2(-24, 360)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("top eyelid:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(-24, -276), Vector2(-24, -68), Vector2(-24, -276)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ag7fa"]
+_data = {
+"BLINK": SubResource("Animation_4n3b6"),
+"RESET": SubResource("Animation_6e4wt")
+}
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_k4wwl"]
 
@@ -2936,6 +2977,11 @@ properties/3/replication_mode = 1
 transform = Transform3D(0.999997, 0, 0.00261799, 0, 1, 0, -0.00261799, 0, 0.999997, 0, 0, 0)
 collision_layer = 3
 collision_mask = 3
+wall_min_slide_angle = 0.785398
+floor_stop_on_slope = false
+floor_block_on_wall = false
+floor_max_angle = 0.174533
+safe_margin = 0.01
 script = ExtResource("1_av1cb")
 default_reticle = "res://assets/scenes/reticles/reticle_0.tscn"
 HEAD = NodePath("Head")
@@ -2977,7 +3023,7 @@ bones/0/name = "spine_lower"
 bones/0/parent = -1
 bones/0/rest = Transform3D(0.999979, 0.00637302, 0.00067427, -0.00640788, 0.992762, 0.119924, 9.48859e-05, -0.119926, 0.992783, -0.00148176, -0.0299894, 0.0278833)
 bones/0/enabled = true
-bones/0/position = Vector3(-0.00148176, -0.0701249, 0.0278832)
+bones/0/position = Vector3(-0.00148176, -0.0771647, 0.0278832)
 bones/0/rotation = Quaternion(-0.11846, 0.00569243, -0.0109421, 0.992882)
 bones/0/scale = Vector3(1, 1, 1)
 bones/1/name = "spine_upper"
@@ -2985,28 +3031,28 @@ bones/1/parent = 0
 bones/1/rest = Transform3D(0.999979, -0.00629938, 0.0011783, 0.00637308, 0.958142, -0.286222, 0.000674041, 0.286224, 0.958162, 0, 0.232505, 1.49012e-08)
 bones/1/enabled = true
 bones/1/position = Vector3(0, 0.232505, 1.49012e-08)
-bones/1/rotation = Quaternion(0.14863, 0.000204095, 0.00324594, 0.988888)
+bones/1/rotation = Quaternion(0.16356, 0.000490932, 0.00341063, 0.986527)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/name = "head"
 bones/2/parent = 1
 bones/2/rest = Transform3D(1, -2.02444e-08, 8.61005e-10, 2.02444e-08, 0.996388, -0.0849112, 8.61083e-10, 0.0849112, 0.996388, -1.77636e-15, 0.30301, 7.45058e-09)
 bones/2/enabled = true
 bones/2/position = Vector3(-1.77636e-15, 0.30301, 7.45058e-09)
-bones/2/rotation = Quaternion(0.0362709, -0.000109377, -4.9328e-05, 0.999342)
+bones/2/rotation = Quaternion(0.0130213, -0.000517753, -0.00023354, 0.999915)
 bones/2/scale = Vector3(1, 1, 1)
 bones/3/name = "upper_arm.L"
 bones/3/parent = 1
 bones/3/rest = Transform3D(-0.992832, 0.118085, -0.018456, -0.118157, -0.946508, 0.300269, 0.0179885, 0.300297, 0.953676, 0.221551, 0.226499, -0.00340557)
 bones/3/enabled = true
 bones/3/position = Vector3(0.196161, 0.239363, 0.00943017)
-bones/3/rotation = Quaternion(0.0470588, -0.0762052, 0.991038, -0.0991022)
+bones/3/rotation = Quaternion(0.0474782, -0.0710843, 0.991427, -0.0988206)
 bones/3/scale = Vector3(1, 1, 1)
 bones/4/name = "lower_arm.L"
 bones/4/parent = 3
 bones/4/rest = Transform3D(0.908503, 0.417522, 0.0172177, 0.0179835, 0.00209999, -0.999836, -0.41749, 0.908664, -0.00560069, -2.00089e-08, 0.288866, 0)
 bones/4/enabled = true
 bones/4/position = Vector3(-2.00089e-08, 0.288866, 0)
-bones/4/rotation = Quaternion(0.195151, 0.0396728, -0.0737913, 0.977188)
+bones/4/rotation = Quaternion(0.17797, 0.0417347, -0.0730821, 0.98043)
 bones/4/scale = Vector3(0.904597, 0.904597, 0.904597)
 bones/5/name = "wrist.L"
 bones/5/parent = 4
@@ -3020,14 +3066,14 @@ bones/6/parent = 1
 bones/6/rest = Transform3D(-0.992832, -0.118085, 0.0184557, 0.118157, -0.946508, 0.300269, -0.0179887, 0.300297, 0.953675, -0.221551, 0.226499, -0.00340567)
 bones/6/enabled = true
 bones/6/position = Vector3(-0.196161, 0.239363, 0.00943003)
-bones/6/rotation = Quaternion(-0.0746777, 0.154262, 0.981735, 0.0826063)
+bones/6/rotation = Quaternion(-0.0754386, 0.161883, 0.98049, 0.08211)
 bones/6/scale = Vector3(1, 1, 0.999999)
 bones/7/name = "lower_arm.R"
 bones/7/parent = 6
 bones/7/rest = Transform3D(0.908504, -0.417522, -0.0172177, -0.0179837, 0.00209951, -0.999836, 0.41749, 0.908664, -0.00560117, -6.00703e-08, 0.288865, 1.30385e-08)
 bones/7/enabled = true
 bones/7/position = Vector3(-6.00703e-08, 0.288865, 1.30385e-08)
-bones/7/rotation = Quaternion(0.622779, -0.126656, 0.239302, 0.734057)
+bones/7/rotation = Quaternion(0.615564, -0.126464, 0.240849, 0.739648)
 bones/7/scale = Vector3(0.904597, 0.904597, 0.904597)
 bones/8/name = "wrist.R"
 bones/8/parent = 7
@@ -3041,35 +3087,35 @@ bones/9/parent = 0
 bones/9/rest = Transform3D(-0.996892, 0.078317, -0.00958059, -0.0783533, -0.99692, 0.00339488, -0.0092853, 0.00413496, 0.999948, 0.0912099, 0.00597273, -0.022985)
 bones/9/enabled = true
 bones/9/position = Vector3(0.0912099, 0.00597273, -0.022985)
-bones/9/rotation = Quaternion(-0.0038032, 0.0431124, 0.99656, -0.0706746)
+bones/9/rotation = Quaternion(-0.00451134, 0.0577547, 0.995634, -0.0731938)
 bones/9/scale = Vector3(1.00003, 1, 1)
 bones/10/name = "lower_leg.L"
 bones/10/parent = 9
 bones/10/rest = Transform3D(0.998925, 0.0454071, 0.00936684, -0.0460173, 0.946399, 0.319706, 0.00565214, -0.319793, 0.94747, -6.77892e-09, 0.305416, -1.97906e-09)
 bones/10/enabled = true
 bones/10/position = Vector3(-6.77892e-09, 0.305416, -1.97906e-09)
-bones/10/rotation = Quaternion(-0.366836, 0.000886168, -0.052444, 0.928806)
+bones/10/rotation = Quaternion(-0.390612, 0.000876634, -0.0558432, 0.91886)
 bones/10/scale = Vector3(1, 1, 1)
 bones/11/name = "upper_leg.R"
 bones/11/parent = 0
 bones/11/rest = Transform3D(-0.997817, -0.0656098, 0.00818831, 0.0656406, -0.997837, 0.00350809, 0.00794047, 0.0040379, 0.99996, -0.0882841, 0.00482878, -0.023106)
 bones/11/enabled = true
 bones/11/position = Vector3(-0.0882841, 0.00482878, -0.023106)
-bones/11/rotation = Quaternion(-0.0108151, 0.0340606, 0.998149, 0.0492085)
+bones/11/rotation = Quaternion(-0.010377, 0.0492249, 0.997378, 0.0520262)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "lower_leg.R"
 bones/12/parent = 11
 bones/12/rest = Transform3D(0.998925, -0.0454072, -0.00936685, 0.0460175, 0.946399, 0.319706, -0.00565219, -0.319793, 0.94747, 1.08407e-08, 0.305416, 8.14907e-10)
 bones/12/enabled = true
 bones/12/position = Vector3(1.08407e-08, 0.305416, 8.14907e-10)
-bones/12/rotation = Quaternion(-0.355622, -0.000890482, 0.0508409, 0.933246)
+bones/12/rotation = Quaternion(-0.380205, -0.000880975, 0.0543553, 0.923303)
 bones/12/scale = Vector3(1, 1, 1)
 bones/13/name = "foot.R"
 bones/13/parent = 12
 bones/13/rest = Transform3D(0.999997, -0.0020437, 0.00150743, 0.00124394, -0.123302, -0.992369, 0.00221398, 0.992367, -0.123299, 1.04297e-08, 0.428261, -1.10012e-08)
 bones/13/enabled = true
 bones/13/position = Vector3(1.04297e-08, 0.428261, -1.10012e-08)
-bones/13/rotation = Quaternion(0.81586, -0.0208132, 0.0709443, 0.573504)
+bones/13/rotation = Quaternion(0.822173, -0.023039, 0.0703146, 0.564408)
 bones/13/scale = Vector3(1, 1, 1)
 bones/14/name = "IK_knee.L"
 bones/14/parent = -1
@@ -3113,7 +3159,7 @@ mesh = SubResource("ArrayMesh_1ekrd")
 skin = SubResource("Skin_16hfj")
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="PlayerModel/Armature/Skeleton3D"]
-transform = Transform3D(-0.18481, 0.342065, -0.816782, -0.885133, -0.0959527, 0.16009, -0.0261007, 0.831913, 0.354308, -0.167875, 0.129183, 0.255816)
+transform = Transform3D(-0.18481, 0.342065, -0.816782, -0.883778, -0.123519, 0.14824, -0.0554724, 0.828269, 0.359427, -0.167875, 0.114007, 0.259181)
 bone_name = "wrist.R"
 bone_idx = 8
 
@@ -3183,7 +3229,7 @@ near = 1.1
 libraries = {
 "": SubResource("AnimationLibrary_o0unb")
 }
-blend_times = [&"walk", &"RESET", 0.5, &"RESET", &"walk", 0.5, &"RESET", &"RESET", 0.5]
+blend_times = [&"RESET", &"RESET", 0.5, &"RESET", &"walk", 0.5, &"walk", &"RESET", 0.5]
 
 [node name="JumpAnimation" type="AnimationPlayer" parent="Head"]
 libraries = {
@@ -3304,10 +3350,10 @@ layout_mode = 2
 
 [node name="arrow" type="TextureRect" parent="UserInterface"]
 layout_mode = 2
-offset_left = 540.0
-offset_top = 417.0
-offset_right = 570.0
-offset_bottom = 447.0
+offset_left = 352.0
+offset_top = 294.0
+offset_right = 382.0
+offset_bottom = 324.0
 scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(118, 80)
 texture = ExtResource("7_y5jeu")
@@ -3315,10 +3361,10 @@ stretch_mode = 3
 
 [node name="emptyCircle" type="TextureRect" parent="UserInterface"]
 layout_mode = 2
-offset_left = 552.0
-offset_top = 418.0
-offset_right = 582.0
-offset_bottom = 448.0
+offset_left = 364.0
+offset_top = 295.0
+offset_right = 394.0
+offset_bottom = 325.0
 scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(122, 78)
 texture = ExtResource("8_hn8io")
@@ -3326,21 +3372,30 @@ stretch_mode = 3
 
 [node name="fillCircle" type="TextureRect" parent="UserInterface"]
 layout_mode = 2
-offset_left = 552.0
-offset_top = 418.0
-offset_right = 582.0
-offset_bottom = 448.0
+offset_left = 364.0
+offset_top = 295.0
+offset_right = 394.0
+offset_bottom = 325.0
 scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(122, 78)
 texture = ExtResource("9_bglcu")
 stretch_mode = 3
 
+[node name="arrowCount" type="Label" parent="UserInterface"]
+layout_mode = 0
+offset_left = 446.0
+offset_top = 330.0
+offset_right = 486.0
+offset_bottom = 353.0
+text = "5"
+label_settings = SubResource("LabelSettings_fcega")
+
 [node name="key" type="TextureRect" parent="UserInterface"]
 layout_mode = 2
-offset_left = -65.0
-offset_top = 400.0
-offset_right = 37.0
-offset_bottom = 500.0
+offset_left = -67.0
+offset_top = 276.0
+offset_right = 35.0
+offset_bottom = 376.0
 scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(122, 78)
 texture = ExtResource("10_o6s37")
@@ -3348,10 +3403,10 @@ stretch_mode = 3
 
 [node name="key_count" type="Label" parent="UserInterface"]
 layout_mode = 0
-offset_left = 38.0
-offset_top = 452.0
-offset_right = 78.0
-offset_bottom = 476.0
+offset_left = 36.0
+offset_top = 328.0
+offset_right = 76.0
+offset_bottom = 352.0
 text = "0/5"
 label_settings = SubResource("LabelSettings_e5683")
 
@@ -3369,10 +3424,10 @@ offset_bottom = 54.0
 [node name="DoorOpentxt" type="Label" parent="UserInterface/DoorOpenHint"]
 visible = false
 layout_mode = 0
-offset_left = 181.0
-offset_top = 365.0
-offset_right = 479.0
-offset_bottom = 416.0
+offset_left = 107.0
+offset_top = 249.0
+offset_right = 405.0
+offset_bottom = 300.0
 text = "Press  F  to Interact"
 label_settings = SubResource("LabelSettings_t1hsa")
 horizontal_alignment = 1
@@ -3381,10 +3436,10 @@ vertical_alignment = 1
 [node name="DoorOpentxt2" type="Label" parent="UserInterface/DoorOpenHint"]
 visible = false
 layout_mode = 0
-offset_left = 13.0
-offset_top = 365.0
-offset_right = 620.0
-offset_bottom = 416.0
+offset_left = -61.0
+offset_top = 249.0
+offset_right = 546.0
+offset_bottom = 300.0
 text = "Gather 5 Keys to Open this Door"
 label_settings = SubResource("LabelSettings_t1hsa")
 horizontal_alignment = 1
@@ -3400,10 +3455,10 @@ offset_bottom = 481.0
 [node name="StaminaBar" type="ProgressBar" parent="UserInterface/Stamina"]
 visible = false
 layout_mode = 0
-offset_left = 208.0
-offset_top = 25.0
-offset_right = 432.0
-offset_bottom = 27.0
+offset_left = 138.0
+offset_top = -102.0
+offset_right = 362.0
+offset_bottom = -100.0
 theme_override_styles/background = SubResource("StyleBoxFlat_ecfk7")
 theme_override_styles/fill = SubResource("StyleBoxFlat_tobnh")
 step = 1.0
@@ -3418,10 +3473,10 @@ offset_bottom = 6.0
 
 [node name="Died txt" type="Label" parent="UserInterface/Died Text"]
 layout_mode = 0
-offset_left = 181.0
-offset_top = 193.0
-offset_right = 477.0
-offset_bottom = 294.0
+offset_left = 99.0
+offset_top = 142.0
+offset_right = 395.0
+offset_bottom = 243.0
 text = "you fkn DIED, son!"
 label_settings = SubResource("LabelSettings_t1hsa")
 horizontal_alignment = 1
@@ -3435,14 +3490,40 @@ offset_bottom = 6.0
 
 [node name="Escaped txt" type="Label" parent="UserInterface/Escaped Text"]
 layout_mode = 0
-offset_left = 181.0
-offset_top = 193.0
-offset_right = 477.0
-offset_bottom = 294.0
+offset_left = 92.0
+offset_top = 145.0
+offset_right = 388.0
+offset_bottom = 246.0
 text = "You ESCAPED!"
 label_settings = SubResource("LabelSettings_t1hsa")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Blink" type="Control" parent="UserInterface"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="bottom eyelid" type="TextureRect" parent="UserInterface/Blink"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = 360.0
+offset_right = 511.0
+offset_bottom = 611.0
+texture = ExtResource("12_ma5xn")
+
+[node name="top eyelid" type="TextureRect" parent="UserInterface/Blink"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = -276.0
+offset_right = 509.0
+offset_bottom = -1.0
+texture = ExtResource("12_ma5xn")
+
+[node name="blinkAnimation" type="AnimationPlayer" parent="UserInterface/Blink"]
+libraries = {
+"": SubResource("AnimationLibrary_ag7fa")
+}
 
 [node name="CrouchCeilingDetection" type="ShapeCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

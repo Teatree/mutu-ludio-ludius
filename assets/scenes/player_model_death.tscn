@@ -2331,7 +2331,7 @@ mesh = SubResource("ArrayMesh_gu48h")
 skin = SubResource("Skin_0mpf5")
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="PlayerModelChild/Armature/Skeleton3D" index="1"]
-transform = Transform3D(-0.184811, 0.342065, -0.816781, -0.885325, -0.0887502, 0.163152, -0.0184398, 0.832712, 0.352909, -0.167875, 0.133216, 0.254803)
+transform = Transform3D(-0.184811, 0.342065, -0.816781, -0.885325, -0.0887501, 0.163152, -0.0184397, 0.832712, 0.352909, -0.167875, 0.133216, 0.254803)
 bone_name = "wrist.R"
 bone_idx = 8
 

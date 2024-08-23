@@ -33,6 +33,7 @@ signal player_animation_changed(animation_name)
 @export	var	PAUSE :	String = "ui_cancel"
 @export	var	CROUCH : String	= "crouch"
 @export	var	SPRINT : String	= "sprint"
+@export	var	BLINK : String	= "Blink"
 
 @export_group("Feature Settings")
 @export	var	jumping_enabled	: bool = true
@@ -109,6 +110,7 @@ var	distance_since_last_step = 0.0
 
 # ui
 @onready var ui_AnimPlayer = $UserInterface/uiAnimation
+@onready var ui_BlinkPlayer = $UserInterface/Blink/blinkAnimation
 @onready var ui_root = $UserInterface
 @onready var ui_stamina_bar	= $UserInterface/Stamina/StaminaBar
 @onready var ui_key_count =	$UserInterface/key_count
@@ -283,7 +285,6 @@ func _physics_process(delta):
 			rpc("play_step_sound")
 			distance_since_last_step = 0.0
 
-
 	# The player is not	able to stand up if the	ceiling	is too low
 	low_ceiling	= $CrouchCeilingDetection.is_colliding()
 	
@@ -354,7 +355,12 @@ func handle_head_rotation():
 	
 	mouseInput = Vector2.ZERO
 	HEAD.rotation.x	= clamp(HEAD.rotation.x, deg_to_rad(-90), deg_to_rad(90))
-	
+
+func perform_a_blink():
+	if not ui_BlinkPlayer.is_playing() or ui_BlinkPlayer.current_animation != "BLINK":
+		ui_BlinkPlayer.stop()
+		ui_BlinkPlayer.play("BLINK")
+
 @rpc("call_local")
 func change_bone_rot(isWalkingOrRunning):
 	spine =	PlayerSkeleton.find_bone("spine_upper")
@@ -555,6 +561,9 @@ func _unhandled_input(event):
 	
 	if Input.is_action_just_pressed("reload"):
 		start_reload()
+
+	if Input.is_action_just_pressed("Blink"):
+		perform_a_blink()
 
 func shoot():
 	if is_multiplayer_authority():
