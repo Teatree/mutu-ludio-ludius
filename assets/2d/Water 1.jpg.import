@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nsls3endjivr"
-path.s3tc="res://.godot/imported/Wood 6 - 128x128.png-8645f063c9432e92b2e9ca14d5c4a2bb.s3tc.ctex"
+uid="uid://d34jclnvrl4lq"
+path.s3tc="res://.godot/imported/Water 1.jpg-192d82156d3c64e753a17ca95ad120fc.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/2d/Wood 6 - 128x128.png"
-dest_files=["res://.godot/imported/Wood 6 - 128x128.png-8645f063c9432e92b2e9ca14d5c4a2bb.s3tc.ctex"]
+source_file="res://assets/2d/Water 1.jpg"
+dest_files=["res://.godot/imported/Water 1.jpg-192d82156d3c64e753a17ca95ad120fc.s3tc.ctex"]
 
 [params]
 

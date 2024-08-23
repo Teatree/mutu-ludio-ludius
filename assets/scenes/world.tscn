@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://b64fy6e8f0w5d"]
+[gd_scene load_steps=60 format=3 uid="uid://b64fy6e8f0w5d"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/world.gd" id="1_04dgn"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/KeySpawnManager.gd" id="2_pd1c8"]
@@ -13,6 +13,9 @@
 [ext_resource type="Texture2D" uid="uid://owjtm4ktkth8" path="res://assets/3d/weapons/character/enemy/enemy_skel_4.png" id="7_5a3p6"]
 [ext_resource type="PackedScene" uid="uid://bv5yeh7cijobm" path="res://assets/scenes/player_armor_guy.tscn" id="7_ltaji"]
 [ext_resource type="Texture2D" uid="uid://dtejtgkh0btwt" path="res://assets/3d/weapons/character/enemy/enemy_skel_1.png" id="8_mrbqn"]
+[ext_resource type="Shader" path="res://assets/scenes/water_test.gdshader" id="14_68jxa"]
+[ext_resource type="Texture2D" uid="uid://d34jclnvrl4lq" path="res://assets/2d/Water 1.jpg" id="15_u41uj"]
+[ext_resource type="Texture2D" uid="uid://chr7knfmufv8t" path="res://assets/2d/0039.png" id="15_wsyvg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hi5j7"]
 emission_enabled = true
@@ -346,6 +349,31 @@ albedo_color = Color(1, 1, 0, 1)
 material = SubResource("StandardMaterial3D_tuequ")
 radius = 0.05
 height = 0.1
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_tvgj3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qhj6v"]
+render_priority = 0
+shader = ExtResource("14_68jxa")
+shader_parameter/albedo = Color(0.689309, 0.597359, 0.502923, 1)
+shader_parameter/scroll_speed1 = Vector2(0, 0.075)
+shader_parameter/scroll_speed2 = Vector2(-0.09, 0)
+shader_parameter/blend_factor = 0.25
+shader_parameter/scale1 = Vector2(100, 100)
+shader_parameter/scale2 = Vector2(100, 100)
+shader_parameter/wave_strength = 0.025
+shader_parameter/wave_scale = 0.0
+shader_parameter/pixelation_level = 16
+shader_parameter/FoamSize = 0.5
+shader_parameter/WaterOpacity = 0.8
+shader_parameter/FoamGlowIntensity = 0.25
+shader_parameter/water_texture1 = ExtResource("15_u41uj")
+shader_parameter/water_texture2 = SubResource("CanvasTexture_tvgj3")
+shader_parameter/noise_texture = ExtResource("15_wsyvg")
+
+[sub_resource type="BoxMesh" id="BoxMesh_77g71"]
+material = SubResource("ShaderMaterial_qhj6v")
+size = Vector3(100, 25, 100)
 
 [node name="World" type="Node"]
 script = ExtResource("1_04dgn")
@@ -1295,6 +1323,7 @@ draw_pass_1 = SubResource("QuadMesh_w6u8f")
 
 [node name="water" type="MeshInstance3D" parent="."]
 transform = Transform3D(70.4828, 0, 0, 0, 1, 0, 0, 0, 97.1826, 6.02843, -0.879143, 24.6419)
+visible = false
 material_override = SubResource("StandardMaterial3D_uohbx")
 mesh = SubResource("BoxMesh_7c5ec")
 
@@ -1328,6 +1357,10 @@ visible = false
 [node name="MeshInstance3D" type="MeshInstance3D" parent="destination"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.51166, 0)
 mesh = SubResource("SphereMesh_xhoov")
+
+[node name="water_test" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.99443, -12.9193, 8.80858)
+mesh = SubResource("BoxMesh_77g71")
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]

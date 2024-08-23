@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://5mx82rqpykip"]
+
+[ext_resource type="PackedScene" uid="uid://ixct18vrj5ro" path="res://beach.glb" id="1"]
+
+[node name="beach" instance=ExtResource("1")]
