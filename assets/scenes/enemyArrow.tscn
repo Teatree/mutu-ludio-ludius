@@ -1,15 +1,17 @@
-[gd_scene load_steps=16 format=3 uid="uid://blt4k0tex241u"]
+[gd_scene load_steps=19 format=3 uid="uid://blt4k0tex241u"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/enemyArrow.gd" id="1_6rj0j"]
 [ext_resource type="AudioStream" uid="uid://72yq47c877nx" path="res://assets/sounds/bolt_smack.mp3" id="1_633hj"]
 [ext_resource type="AudioStream" uid="uid://0rrthnhqay78" path="res://assets/sounds/bolt_flying.mp3" id="2_6t0ti"]
 [ext_resource type="PackedScene" uid="uid://dw8en7ecjcevv" path="res://assets/scenes/blood2.tscn" id="2_ggl71"]
+[ext_resource type="Texture2D" uid="uid://cjnyuxvwlerw6" path="res://assets/2d/Mat_Metal_Gray_01-128x128.png" id="3_6qsah"]
+[ext_resource type="Texture2D" uid="uid://nsls3endjivr" path="res://assets/2d/Wood 6 - 128x128.png" id="4_gfwyy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5sian"]
 resource_name = "metal"
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.265722, 0.456218, 0.513274, 1)
+albedo_texture = ExtResource("3_6qsah")
 metallic = 0.764896
 roughness = 0.550901
 
@@ -17,7 +19,7 @@ roughness = 0.550901
 resource_name = "brown"
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.544248, 0.314715, 0.115592, 1)
+albedo_texture = ExtResource("4_gfwyy")
 roughness = 0.892971
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_hxss0"]
@@ -111,6 +113,9 @@ billboard_mode = 2
 material = SubResource("StandardMaterial3D_ookob")
 size = Vector2(0.02, 0.02)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_2njp3"]
+radius = 2.11814
+
 [node name="enemyArrow" type="CharacterBody3D"]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 script = ExtResource("1_6rj0j")
@@ -155,3 +160,10 @@ max_distance = 20.0
 stream = ExtResource("2_6t0ti")
 volume_db = -15.0
 max_distance = 10.0
+
+[node name="PickupArea" type="Area3D" parent="."]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -4.65661e-09, -4, 0)
+
+[node name="PickupArea_collision" type="CollisionShape3D" parent="PickupArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.82077e-10, 0, 0)
+shape = SubResource("SphereShape3D_2njp3")

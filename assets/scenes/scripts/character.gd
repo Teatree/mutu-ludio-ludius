@@ -33,7 +33,7 @@ signal player_animation_changed(animation_name)
 @export	var	PAUSE :	String = "ui_cancel"
 @export	var	CROUCH : String	= "crouch"
 @export	var	SPRINT : String	= "sprint"
-@export	var	BLINK : String	= "Blink"
+@export	var	BLINK :	String	= "Blink"
 
 @export_group("Feature Settings")
 @export	var	jumping_enabled	: bool = true
@@ -72,6 +72,7 @@ var	death_model: Node3D	= null
 var	health = 2
 var	can_attack := true
 var	stamina	= 100
+var	arrow_count	= 2
 const STAMINA_COOLDOWN = 2
 @onready var stamina_cooldown_timer	: Timer	= Timer.new()
 var	is_recover_stamina = false	
@@ -110,10 +111,11 @@ var	distance_since_last_step = 0.0
 
 # ui
 @onready var ui_AnimPlayer = $UserInterface/uiAnimation
-@onready var ui_BlinkPlayer = $UserInterface/Blink/blinkAnimation
+@onready var ui_BlinkPlayer	= $UserInterface/Blink/blinkAnimation
 @onready var ui_root = $UserInterface
 @onready var ui_stamina_bar	= $UserInterface/Stamina/StaminaBar
 @onready var ui_key_count =	$UserInterface/key_count
+@onready var ui_arrow_count	=	$UserInterface/arrowCount
 @onready var ui_door_hint_text2	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt2
 @onready var ui_door_hint_text1	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt
 @onready var ui_elements_to_hide = [$UserInterface/arrow, $UserInterface/emptyCircle, $UserInterface/fillCircle, $UserInterface/key, $UserInterface/key_count, $UserInterface/Stamina]
@@ -200,6 +202,8 @@ func _ready():
 	stamina_cooldown_timer.wait_time = STAMINA_COOLDOWN
 	stamina_cooldown_timer.connect("timeout", Callable(self, "_on_stamina_cooldown_complete"))
 	add_child(stamina_cooldown_timer)
+
+	update_arrow_count_ui()
 
 func check_controls(): # If you	add	a control, you might want to add a check for it here.
 	# The actions are being	disabled so the	engine doesn't halt	the	entire project in debug	mode
@@ -460,6 +464,10 @@ func enter_sprint_state():
 	speed =	sprint_speed
 
 
+func update_arrow_count_ui():
+	ui_arrow_count.text	= str(arrow_count-1)
+
+
 func update_camera_fov():
 	if state == "sprinting":
 		CAMERA.fov = lerp(CAMERA.fov, 85.0,	0.3)
@@ -604,10 +612,19 @@ func start_reload():
 	if is_loaded:
 		print("Crossbow	is already loaded")
 		return
-	print("Starting	reload")
-	reload_timer.start()
-	play_reload_effects.rpc()
-	play_reload_sound.rpc()
+	
+	if arrow_count-1 >= 1:
+		print("Starting	reload")
+		reload_timer.start()
+		play_reload_effects.rpc()
+		play_reload_sound.rpc()
+
+		await get_tree().create_timer(3).timeout
+		arrow_count	-= 1
+		update_arrow_count_ui()
+	else:
+		print("Can't reload, insufficient arrows")
+
 
 func _on_reload_complete():
 	is_loaded =	true
@@ -800,6 +817,16 @@ func update_animation(input_dir):
 		change_animation.rpc(new_animation)
 
 
+func pickup_arrow():
+	arrow_count	+= 1
+	update_arrow_count_ui()
+
+@rpc("any_peer")
+func _do_pickup_arrow():
+	if is_multiplayer_authority():
+		arrow_count	+= 1
+		update_arrow_count_ui()
+
 @rpc("any_peer")
 func receive_damage(damage_amount: int,	arrow_id: int):
 	if not is_multiplayer_authority() or arrow_id == last_hit_arrow_id:
@@ -822,10 +849,10 @@ func die():
 	is_dead	= true
 	disable_player_controls()
 
-	# spawn a dead body
+	# spawn	a dead body
 	spawn_death_model.rpc()
 	hide_player_mesh.rpc()
-	# animation and ui shit
+	# animation	and	ui shit
 	HEADBOB_ANIMATION.play("die")
 	ui_AnimPlayer.play("DIED")
 	default_reticle	= null

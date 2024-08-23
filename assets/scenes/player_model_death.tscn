@@ -1,9 +1,12 @@
-[gd_scene load_steps=27 format=3 uid="uid://sxd6mansywie"]
+[gd_scene load_steps=30 format=3 uid="uid://sxd6mansywie"]
 
 [ext_resource type="PackedScene" uid="uid://bdo8sa487fmev" path="res://assets/3d/weapons/character/playermodel.glb" id="1_vl834"]
 [ext_resource type="Texture2D" uid="uid://bsbp8bhu5440e" path="res://assets/3d/weapons/character/playermodel_Untitled.png" id="2_6ckcp"]
 [ext_resource type="Texture2D" uid="uid://uf7w316korhg" path="res://assets/3d/weapons/character/player/rand_ferrer_58.png" id="2_3414i"]
 [ext_resource type="Texture2D" uid="uid://dxr264wmu1ddn" path="res://assets/3d/weapons/character/player/rand_ferrer_57.png" id="3_kmgqv"]
+[ext_resource type="Texture2D" uid="uid://nsls3endjivr" path="res://assets/2d/Wood 6 - 128x128.png" id="5_3l0tm"]
+[ext_resource type="Texture2D" uid="uid://sa5us84jxjdp" path="res://assets/2d/Mat_Cloth_Canvas_06-128x128.png" id="6_sig38"]
+[ext_resource type="Texture2D" uid="uid://cjnyuxvwlerw6" path="res://assets/2d/Mat_Metal_Gray_01-128x128.png" id="7_y6djk"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4n0my"]
 albedo_texture = ExtResource("2_6ckcp")
@@ -116,21 +119,21 @@ bind/18/pose = Transform3D(-0.999657, 0.0261929, 0, 0, 0, -1, -0.0261929, -0.999
 resource_name = "brown"
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.544248, 0.314715, 0.115592, 1)
+albedo_texture = ExtResource("5_3l0tm")
 roughness = 0.892971
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aoykp"]
 resource_name = "white"
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.98256, 0.98256, 0.98256, 1)
+albedo_texture = ExtResource("6_sig38")
 roughness = 0.892971
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p6qay"]
 resource_name = "metal"
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.265722, 0.456218, 0.513274, 1)
+albedo_texture = ExtResource("7_y6djk")
 metallic = 0.764896
 roughness = 0.550901
 

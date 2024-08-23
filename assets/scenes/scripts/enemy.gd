@@ -6,7 +6,7 @@ signal enemy_animation_changed(animation_name)
 
 @export	var	move_speed := 1.5
 @export	var	run_speed := 2
-@export	var	attack_interval	:= 4.0
+@export	var	attack_interval	:= 1
 @export	var	max_health := 1
 @export	var	idle_wait_time := 6.0
 
@@ -14,7 +14,7 @@ var	current_health:	int
 var	last_hit_arrow_id: int = -1
 
 @export	var	detection_radius: float	= 7.0  # Default detection radius
-@export	var	attack_radius: float = 5.0	# Default detection	radius
+@export	var	attack_radius: float = 4.5	# Default detection	radius
 
 @onready var los_check_timer: Timer	= $LOSCheckTimer
 
@@ -224,8 +224,8 @@ func enter_idle_state():
 func enter_pursue_state(player:	CharacterBody3D):
 	current_state =	State.PURSUE
 	target_player =	player
-	set_detection_radius(detection_radius*2)
-	
+	set_detection_radius(detection_radius*3)
+	attack_timer.wait_time = attack_interval # resetting of the hacky way of making a quick initial attack
 	#set_attack_radius(attack_radius)
 	# print_once("ENTER	STATE: Pursue")
 	# print("Target	player position: " + str(player.global_position))
@@ -357,6 +357,7 @@ func _on_attack_area_body_exited(body):
 func _on_attack_timer_timeout():
 	if current_state == State.ATTACK and target_player and players_in_attack.has(target_player)	and	players_in_detection.has(target_player):
 		shoot_arrow()
+		attack_timer.wait_time = attack_interval * 3 # Don't be alarmed, this is so you can get that initial fast attack
 		attack_timer.start()
 
 func shoot_arrow():
