@@ -357,7 +357,7 @@ func _on_attack_area_body_exited(body):
 func _on_attack_timer_timeout():
 	if current_state == State.ATTACK and target_player and players_in_attack.has(target_player)	and	players_in_detection.has(target_player):
 		shoot_arrow()
-		attack_timer.wait_time = attack_interval * 3 # Don't be alarmed, this is so you can get that initial fast attack
+		attack_timer.wait_time = attack_interval * 5 # Don't be alarmed, this is so you can get that initial fast attack
 		attack_timer.start()
 
 func shoot_arrow():

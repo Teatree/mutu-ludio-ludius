@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv3berq4gb4y2"
-path.s3tc="res://.godot/imported/tilesets_tilesets_atlas_n.png-e199918ec505894cf3de465e26d7e808.s3tc.ctex"
+uid="uid://se1erwrkix82"
+path.s3tc="res://.godot/imported/tilesets_tilesets_atlas_n_2.png-d9d3a6303163ecf166499e522be7a948.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "5f741a19ee8588707d9d104471eb2c2b"
+"md5": "98b7e12e79d1df986c2cce3906059197"
 }
 
 [deps]
 
-source_file="res://assets/3d/tilesSet/tilesets_tilesets_atlas_n.png"
-dest_files=["res://.godot/imported/tilesets_tilesets_atlas_n.png-e199918ec505894cf3de465e26d7e808.s3tc.ctex"]
+source_file="res://assets/3d/tilesSet/tilesets_tilesets_atlas_n_2.png"
+dest_files=["res://.godot/imported/tilesets_tilesets_atlas_n_2.png-d9d3a6303163ecf166499e522be7a948.s3tc.ctex"]
 
 [params]
 
@@ -28,7 +28,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://assets/3d/tilesSet/tilesets_tilesets_atlas_n.png"
+roughness/src_normal="res://assets/3d/tilesSet/tilesets_tilesets_atlas_n_2.png"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
