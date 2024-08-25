@@ -119,6 +119,7 @@ var	distance_since_last_step = 0.0
 @onready var ui_door_hint_text2	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt2
 @onready var ui_door_hint_text1	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt
 @onready var ui_elements_to_hide = [$UserInterface/arrow, $UserInterface/emptyCircle, $UserInterface/fillCircle, $UserInterface/key, $UserInterface/key_count, $UserInterface/Stamina]
+@onready var flash_overlay:	ColorRect =	null # shitty ui
 
 # keys
 var	keys = 0
@@ -166,6 +167,7 @@ func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	ui_root.visible	= true
+	setup_flash_overlay()
 	
 	head_rotation_x	= -HEAD.rotation.x + 105
 	
@@ -634,6 +636,7 @@ func _on_reload_complete():
 func collect_key():
 	keys += 1
 	ui_key_count.text =	str(keys)+"/5"
+	play_arrow_pickup_flash()
 	print("Player %s now has %d keys" %	[name, keys])
 
 func check_door_interaction():
@@ -816,10 +819,35 @@ func update_animation(input_dir):
 	if new_animation != current_animation and is_multiplayer_authority():
 		change_animation.rpc(new_animation)
 
+# Creates and sets up the flash	overlay
+func setup_flash_overlay():
+	flash_overlay =	ColorRect.new()
+	flash_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	flash_overlay.color	= Color(234, 233, 144, 0)  # Yellow color	with alpha 0
+	flash_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Ignore mouse input
+	$UserInterface.add_child(flash_overlay)
+	flash_overlay.hide()
+
+# Plays	a yellow flash effect when an arrow	is picked up
+func play_arrow_pickup_flash():
+	if not is_multiplayer_authority():
+		return
+	
+	flash_overlay.show()
+	flash_overlay.color.a =	0  # Reset alpha
+	var	tween =	create_tween()
+	tween.set_parallel(true)  # Allow parallel animations
+	# Fade in quickly
+	tween.tween_property(flash_overlay,	"color:a", 0.3,	0.1)
+	# Fade out over	the	remaining time
+	tween.tween_property(flash_overlay,	"color:a", 0, 0.3).set_delay(0.1)
+	# Hide the overlay after the animation
+	tween.tween_callback(flash_overlay.hide).set_delay(1.0)
 
 func pickup_arrow():
 	arrow_count	+= 1
 	update_arrow_count_ui()
+	play_arrow_pickup_flash()
 
 @rpc("any_peer")
 func _do_pickup_arrow():

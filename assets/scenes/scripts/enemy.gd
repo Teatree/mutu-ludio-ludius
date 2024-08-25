@@ -361,6 +361,8 @@ func _on_attack_timer_timeout():
 		attack_timer.start()
 
 func shoot_arrow():
+	if not is_multiplayer_authority():
+		return
 	hugh_sound.play()
 	await get_tree().create_timer(1).timeout
 
