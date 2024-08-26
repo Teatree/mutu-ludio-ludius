@@ -35,7 +35,6 @@ var	last_hit_arrow_id: int = -1
 @onready var step_sounds = [$stepSound1, $stepSound2, $stepSound3, $stepSound4]
 @onready var w_step_sounds = [$w_stepSound1, $w_stepSound2,	$w_stepSound3, $w_stepSound4]
 @onready var surface_detector: RayCast3D = $SurfaceDetector
-@onready var splat_sound: AudioStreamPlayer3D =	$splat
 @onready var hugh_sound: AudioStreamPlayer3D =	$hugh
 @onready var crossbow_shoot_sound: AudioStreamPlayer3D = $crossbowShoot
 @onready var crossbow_reload_sound:	AudioStreamPlayer3D	= $crossbowReload
@@ -361,9 +360,10 @@ func _on_attack_timer_timeout():
 		attack_timer.start()
 
 func shoot_arrow():
+	hugh_sound.play()
 	if not is_multiplayer_authority():
 		return
-	hugh_sound.play()
+	
 	await get_tree().create_timer(1).timeout
 
 	rpc("spawn_arrow")
@@ -428,9 +428,9 @@ func receive_damage_request(damage:	int, arrow_id: int):
 	last_hit_arrow_id =	arrow_id
 	apply_damage(damage)
 
+
 func apply_damage(damage: int):
 	current_health -= damage
-	play_splat_sound()
 	# print("Enemy hit!	Current	health:	", current_health)
 	
 	rpc("update_health_and_die", current_health)
@@ -485,10 +485,6 @@ func is_on_water() -> bool:
 				return true
 	return false
 
-
-# Plays	the	splat sound	when hit
-func play_splat_sound():
-	splat_sound.play()
 
 # Plays	the	crossbow shoot sound
 func play_crossbow_shoot_sound():

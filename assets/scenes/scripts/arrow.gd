@@ -30,6 +30,7 @@ var	debug_trail_timer: float = 0
 @onready var trail_effect: GPUParticles3D =	$trail_particles
 @onready var light_spot: SpotLight3D = $SpotLight3D
 @onready var smack_sound: AudioStreamPlayer3D =	$smack
+@onready var splat_sound: AudioStreamPlayer3D =	$splat
 @onready var flying_sound: AudioStreamPlayer3D = $arrow_flight
 
 enum ArrowState	{ FLYING, STUCK, PICKED_UP }
@@ -87,14 +88,15 @@ func _physics_process(delta):
 		var	collider = collision.get_collider()
 		
 		if collider	is CharacterBody3D:
+			play_splat_sound()
 			if collider	is Enemy:
 				# Handle enemy hit
 				collider.receive_damage_request.rpc_id(1, damage, arrow_id)
-				print("enemy hit event,	arrow_shooter_id: "	+ str(arrow_id)	+ "	collider: "	+ str(collider))
+				#print("enemy hit event,	arrow_shooter_id: "	+ str(arrow_id)	+ "	collider: "	+ str(collider))
 			elif collider.name != str(shooter_id):
 				# Handle player	hit
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
-				print("player hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+				#print("player hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
 			
 			has_dealt_damage = true
 			spawn_blood_effect.rpc(global_position)
@@ -113,6 +115,18 @@ func _physics_process(delta):
 	# Update arrow rotation	to face	its	movement direction
 	look_at(global_position	+ velocity.normalized(), Vector3.UP)
 
+
+func play_splat_sound():
+	# Create and play a separate AudioStream3D for the splat sound
+	var splat_sound_instance = AudioStreamPlayer3D.new()
+	splat_sound_instance.stream = splat_sound.stream
+	splat_sound_instance.global_transform = global_transform # Set position to the arrow's position
+	splat_sound_instance.volume_db = -20
+	get_tree().root.get_node("World").add_child(splat_sound_instance)
+	splat_sound_instance.play()
+
+	# Connect the finished signal to remove the instance after playing
+	splat_sound_instance.connect("finished", Callable(splat_sound_instance, "queue_free"))
 
 # This function	sets up the	arrow for pickup after it's	stuck in a surface
 func setup_for_pickup():

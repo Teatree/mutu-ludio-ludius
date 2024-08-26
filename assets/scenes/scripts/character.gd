@@ -101,7 +101,6 @@ var	pose
 @onready var step_sounds = [$stepSound1, $stepSound2, $stepSound3, $stepSound4]
 @onready var w_step_sounds = [$w_stepSound1, $w_stepSound2,	$w_stepSound3, $w_stepSound4]
 @onready var surface_detector: RayCast3D = $SurfaceDetector
-@onready var splat_sound: AudioStreamPlayer3D =	$splat
 @onready var crossbowReload_sounds = $crossbowReload
 @onready var crossbowShoot_sounds =	$crossbowShoot
 var	current_step_sound = 0
@@ -133,6 +132,7 @@ var	current_speed :	float =	speed
 var	state :	String = "normal"
 var	low_ceiling	: bool = false # This is for when the cieling is too low and the player	needs to crouch.
 var	was_on_floor : bool	= true # Was the player	on the floor last frame	(for landing animation)
+var movement_enabled = false
 
 var	RETICLE	: Control
 var	gravity	: float	= ProjectSettings.get_setting("physics/3d/default_gravity")	# Don't	set	this as a const, see the gravity section in _physics_process
@@ -250,6 +250,9 @@ func _physics_process(delta):
 	
 	handle_head_rotation()
 	
+	if not movement_enabled:
+		return
+
 	if is_dead:	return
 	
 	current_speed =	Vector3.ZERO.distance_to(get_real_velocity())
@@ -477,6 +480,17 @@ func update_camera_fov():
 		CAMERA.fov = lerp(CAMERA.fov, 75.0,	0.3)
 
 
+# Disables player movement and shooting
+@rpc("call_local")
+func disable_movement():
+	movement_enabled = false
+
+# Enables player movement and shooting
+@rpc("call_local")
+func enable_movement():
+	movement_enabled = true
+
+
 func headbob_animation(moving):
 	if moving and is_on_floor():
 		var	use_headbob_animation :	String
@@ -561,7 +575,7 @@ func _unhandled_input(event):
 		mouseInput.x += event.relative.x
 		mouseInput.y += event.relative.y
 	
-	if is_dead:	return
+	if is_dead or not movement_enabled:	return
 	
 	if Input.is_action_just_pressed("interact"):  # Assuming "interact"	is mapped to "F"
 		check_door_interaction()
@@ -862,7 +876,6 @@ func receive_damage(damage_amount: int,	arrow_id: int):
 	
 	health -= damage_amount
 	last_hit_arrow_id =	arrow_id
-	splat_sound.play()
 	health_changed.emit(health)
 	
 	if health <= 0:

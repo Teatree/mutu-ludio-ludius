@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dqjgpd5h2vx3q"]
+[gd_scene load_steps=20 format=3 uid="uid://dqjgpd5h2vx3q"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/arrow.gd" id="1_n1vi5"]
 [ext_resource type="PackedScene" uid="uid://dw8en7ecjcevv" path="res://assets/scenes/blood2.tscn" id="2_a7e0k"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cjnyuxvwlerw6" path="res://assets/2d/Mat_Metal_Gray_01-128x128.png" id="3_03qoy"]
 [ext_resource type="AudioStream" uid="uid://0rrthnhqay78" path="res://assets/sounds/bolt_flying.mp3" id="3_m4v7g"]
 [ext_resource type="Texture2D" uid="uid://nsls3endjivr" path="res://assets/2d/Wood 6 - 128x128.png" id="4_bfkar"]
+[ext_resource type="AudioStream" uid="uid://13qum0s5ofku" path="res://assets/sounds/splat.mp3" id="6_hmf8n"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5sian"]
 resource_name = "metal"
@@ -153,6 +154,11 @@ light_energy = 0.5
 
 [node name="smack" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("2_yc4vx")
+volume_db = -15.0
+max_distance = 20.0
+
+[node name="splat" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_hmf8n")
 volume_db = -15.0
 max_distance = 20.0
 
