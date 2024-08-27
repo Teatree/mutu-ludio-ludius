@@ -40,8 +40,8 @@ void fragment() {
     wobble_uv.x += sin(wobble_uv.y * 10.0 + TIME * wobble_speed) * wobble_strength;
     wobble_uv.y += cos(wobble_uv.x * 10.0 + TIME * wobble_speed) * wobble_strength;
 
-    vec2 scaledUV1 = wobble_uv * scale1 * 2.0;
-    vec2 scaledUV2 = wobble_uv * scale2 * 2.0;
+    vec2 scaledUV1 = wobble_uv * scale1 * 1.0;
+    vec2 scaledUV2 = wobble_uv * scale2 * 1.0;
     vec2 scrolledUV1 = scaledUV1 + scroll_speed1 * TIME;
     vec2 scrolledUV2 = scaledUV2 + scroll_speed2 * TIME;
     scrolledUV1 = mod(scrolledUV1, vec2(1.0, 1.0));

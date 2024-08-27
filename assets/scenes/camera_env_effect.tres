@@ -1,0 +1,18 @@
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://dupaqpk1qlyvc"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f72yq"]
+
+[sub_resource type="Sky" id="Sky_270m7"]
+sky_material = SubResource("ProceduralSkyMaterial_f72yq")
+
+[resource]
+background_mode = 2
+sky = SubResource("Sky_270m7")
+ambient_light_color = Color(0.715694, 0.752682, 0.730156, 1)
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.6
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.470551, 0.705294, 0.555729, 1)
+fog_light_energy = 0.02
+fog_density = 0.35

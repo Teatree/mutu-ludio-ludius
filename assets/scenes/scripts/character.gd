@@ -118,7 +118,7 @@ var	distance_since_last_step = 0.0
 @onready var ui_door_hint_text2	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt2
 @onready var ui_door_hint_text1	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt
 @onready var ui_elements_to_hide = [$UserInterface/arrow, $UserInterface/emptyCircle, $UserInterface/fillCircle, $UserInterface/key, $UserInterface/key_count, $UserInterface/Stamina]
-@onready var flash_overlay:	ColorRect =	null # shitty ui
+@onready var flash_overlay:	ColorRect =	null # shitty ui 
 
 # keys
 var	keys = 0

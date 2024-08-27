@@ -8,6 +8,13 @@ extends	Node
 @onready var key_spawn_manager = $KeySpawnManager
 @onready var e_destination = $destination
 @onready var waiting_message = $CanvasLayer/HUD/WaitingMessage
+@onready var match_timer_label : Label = $CanvasLayer/HUD/HBoxContainer/MatchTimerLabel
+@onready var match_timer : Timer = $MatchTimer
+
+# Water
+@onready var water:	MeshInstance3D = $water	 # Make	sure this points to your water object
+const WATER_RISE_HEIGHT	= 4.0  # 4 meters
+const WATER_RISE_DURATION =	20.0  # 20 seconds
 
 const Enemy	= preload("res://assets/scenes/enemy.tscn")
 const Player = preload("res://assets/scenes/character.tscn")
@@ -23,6 +30,7 @@ var	players_needed = 3
 
 func _ready():
 	multiplayer.peer_connected.connect(_on_peer_connected)
+	match_timer.timeout.connect(_on_match_timer_timeout)
 
 func _unhandled_input(event):
 	if Input.is_action_just_pressed("quit"):
@@ -62,11 +70,54 @@ func _on_join_button_pressed():
 	
 	addPlayer(multiplayer.get_unique_id())
 
-
 func _physics_process(delta):
 	if multiplayer.is_server():
 		handle_enemy_behaviour()
 
+	update_match_timer_ui()
+
+func update_match_timer_ui():
+	var	time_left =	int(match_timer.time_left)
+	if time_left > 0:
+		var	minutes	= time_left	/ 60
+		var	seconds	= time_left	% 60
+		match_timer_label.text = "Time left: %d:%02d" %	[minutes, seconds]
+	else:
+		match_timer_label.text = "Time for a swim!"
+
+func _on_match_timer_timeout():
+	# Call update_match_timer_ui() one last	time to set	the	"Time for a	swim!" message
+	update_match_timer_ui()
+	
+	# Trigger any "swim	time" events here
+	start_swim_phase()
+
+func start_swim_phase():
+	print("Swim	phase started!")
+	
+	# Get the initial water	position
+	var	initial_water_position = water.position
+	
+	# Calculate	the	target position
+	var	target_position	= initial_water_position + Vector3(0, WATER_RISE_HEIGHT, 0)
+	
+	# Create a new Tween
+	var	tween =	create_tween()
+	
+	# Set up the tween to animate the water's position
+	tween.tween_property(water,	"position",	target_position, WATER_RISE_DURATION).set_trans(Tween.TRANS_LINEAR)
+	
+	# Optional:	Connect	to tween completion	signal if you want to trigger anything after the water finishes	rising
+	tween.connect("finished", _on_water_rise_completed)
+	
+	# Notify all players about the swim	phase
+	rpc("notify_swim_phase_start")
+
+@rpc func notify_swim_phase_start():
+	print("Swim phase notification received")
+
+func _on_water_rise_completed():
+	print("Water has finished rising")
 
 func handle_enemy_behaviour():
 	var	enemies	= get_tree().get_nodes_in_group("enemies")
@@ -223,6 +274,9 @@ func start_game():
 # Enables movement for all players
 func enable_player_movement():
 	waiting_message.hide()
+	match_timer_label.show()
+	match_timer.start()
+
 	for	player in get_tree().get_nodes_in_group("players"):
 		if player.has_method("enable_movement"):
 			player.enable_movement()
