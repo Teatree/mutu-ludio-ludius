@@ -1454,7 +1454,7 @@ bones/0/parent = -1
 bones/0/rest = Transform3D(0.999953, 0.00965959, 0.000274537, -0.00965622, 0.9999, -0.0103788, -0.000374764, 0.0103757, 0.999946, -0.00855852, 0, -0.0333334)
 bones/0/enabled = true
 bones/0/position = Vector3(-0.00855852, -0.00681511, -0.0878541)
-bones/0/rotation = Quaternion(0.0650437, 0.000451134, -0.00481069, 0.997871)
+bones/0/rotation = Quaternion(0.0647064, 0.000449509, -0.00481085, 0.997893)
 bones/0/scale = Vector3(1, 1, 1)
 bones/1/name = "head"
 bones/1/parent = 0
@@ -1468,7 +1468,7 @@ bones/2/parent = 0
 bones/2/rest = Transform3D(0.9951, 0.0645392, -0.0750171, 0.0596, -0.996017, -0.0663206, -0.0789986, 0.0615237, -0.994982, 0.221802, 0.532908, 0.0212949)
 bones/2/enabled = true
 bones/2/position = Vector3(0.221802, 0.532908, 0.0212949)
-bones/2/rotation = Quaternion(0.996546, 0.0297031, -0.0392961, 0.0668497)
+bones/2/rotation = Quaternion(0.996577, 0.0297218, -0.0392868, 0.0663868)
 bones/2/scale = Vector3(1.00001, 1, 1.00001)
 bones/3/name = "lowerarm.l"
 bones/3/parent = 2
@@ -1489,21 +1489,21 @@ bones/5/parent = 0
 bones/5/rest = Transform3D(0.998813, 0.0484946, 0.00571679, 0.0488047, -0.99523, -0.0844738, 0.00159298, 0.0846506, -0.996426, 0.0818405, -0.0233898, -0.0148483)
 bones/5/enabled = true
 bones/5/position = Vector3(0.0818405, -0.0233898, -0.0148483)
-bones/5/rotation = Quaternion(0.986987, 0.0297567, -0.0212971, 0.156584)
+bones/5/rotation = Quaternion(0.987092, 0.0298036, -0.0212838, 0.155912)
 bones/5/scale = Vector3(1.00002, 1, 1.00005)
 bones/6/name = "lowerleg.l"
 bones/6/parent = 5
 bones/6/rest = Transform3D(0.999106, -0.0416991, 0.00697399, 0.0422637, 0.980744, -0.190669, 0.00111103, 0.190793, 0.98163, 3.77077e-09, 0.416945, 5.41331e-09)
 bones/6/enabled = true
 bones/6/position = Vector3(3.77077e-09, 0.416945, 5.41331e-09)
-bones/6/rotation = Quaternion(0.139019, 0.00146493, 0.030599, 0.989816)
+bones/6/rotation = Quaternion(0.139353, 0.00146485, 0.0306726, 0.989767)
 bones/6/scale = Vector3(1, 1, 1)
 bones/7/name = "upperarm.r"
 bones/7/parent = 0
 bones/7/rest = Transform3D(0.996017, -0.0453194, 0.0768268, -0.0403655, -0.997078, -0.0648539, 0.0795412, 0.0614939, -0.994939, -0.214951, 0.528689, 0.0211749)
 bones/7/enabled = true
 bones/7/position = Vector3(-0.214951, 0.528689, 0.0211749)
-bones/7/rotation = Quaternion(0.998376, -0.0213102, 0.0392655, 0.0353352)
+bones/7/rotation = Quaternion(0.998438, -0.0213788, 0.0392104, 0.0335633)
 bones/7/scale = Vector3(1, 1, 1.00001)
 bones/8/name = "lowerarm.r"
 bones/8/parent = 7
@@ -1524,14 +1524,14 @@ bones/10/parent = 0
 bones/10/rest = Transform3D(0.999566, -0.0293058, -0.0035415, -0.0295004, -0.995982, -0.0845633, -0.00104907, 0.0846297, -0.996426, -0.064249, -0.0248011, -0.0148884)
 bones/10/enabled = true
 bones/10/position = Vector3(-0.064249, -0.0248011, -0.0148884)
-bones/10/rotation = Quaternion(0.987222, -0.020266, 0.0230723, 0.156364)
+bones/10/rotation = Quaternion(0.987328, -0.0203117, 0.0230525, 0.155691)
 bones/10/scale = Vector3(1, 1, 1.00004)
 bones/11/name = "lowerleg.r"
 bones/11/parent = 10
 bones/11/rest = Transform3D(0.999106, 0.0416992, -0.00697405, -0.0422638, 0.980744, -0.190669, -0.001111, 0.190793, 0.981629, -2.75395e-09, 0.416944, -7.27596e-09)
 bones/11/enabled = true
 bones/11/position = Vector3(-2.75395e-09, 0.416944, -7.27596e-09)
-bones/11/rotation = Quaternion(0.139018, -0.00146495, -0.0305989, 0.989816)
+bones/11/rotation = Quaternion(0.139353, -0.00146487, -0.0306726, 0.989767)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "ikleg.l"
 bones/12/parent = -1
@@ -1595,7 +1595,7 @@ mesh = SubResource("ArrayMesh_wwa0p")
 skin = SubResource("Skin_qrj4b")
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="enemy_skel/Armature/Skeleton3D"]
-transform = Transform3D(0.993292, 0.0991631, 0.0594839, 0.10233, -0.993349, -0.052779, 0.0538535, 0.0585135, -0.996843, -0.223796, -0.246626, -0.0442965)
+transform = Transform3D(0.993292, 0.0991631, 0.0594838, 0.102174, -0.993514, -0.0499137, 0.0541472, 0.0556581, -0.996991, -0.223796, -0.246429, -0.0468442)
 bone_name = "wrist.r"
 bone_idx = 9
 
@@ -1681,15 +1681,18 @@ replication_config = SubResource("SceneReplicationConfig_cn6mr")
 
 [node name="idleSkel1" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("5_8nmbj")
+volume_db = -10.0
 max_distance = 20.0
 
 [node name="idleSkel2" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.018064, 0.547871, -0.196659)
 stream = ExtResource("6_mjajn")
+volume_db = -10.0
 max_distance = 20.0
 
 [node name="idleSkel3" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("7_1aiwr")
+volume_db = -10.0
 max_distance = 20.0
 
 [node name="hugh" type="AudioStreamPlayer3D" parent="."]

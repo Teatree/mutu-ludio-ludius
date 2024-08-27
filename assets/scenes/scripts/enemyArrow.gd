@@ -48,7 +48,9 @@ func initialize(start_transform: Transform3D, initial_speed: float,	shooter: Ene
 	mesh_instance.rotate_x(deg_to_rad(270))
 	collision_shape.rotate_x(deg_to_rad(270))
 	
-	arrow_id = randi()	# Generate a unique	ID for each	arrow
+	if multiplayer.is_server():
+		arrow_id = randi()	# Generate a unique	ID for each	arrow
+		print(" initializing arrow with arrow ID: " + str(arrow_id))
 
 func _physics_process(delta):
 	time_alive += delta
@@ -86,9 +88,11 @@ func handle_collision(collision):
 			# print("enemy hit event, arrow_shooter_id:	" +	str(arrow_id) +	" collider:	" +	str(collider))
 		elif collider.name != str(shooter_id):
 			# Handle player	hit
-			if collider.has_method("receive_damage") and multiplayer.is_server():
+			if collider.has_method("receive_damage") and not arrow_id == 0:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
-				#print("player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+				print("player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+			elif collider.get_multiplayer_authority() == 1 and arrow_id == 0:
+				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 		
 		has_dealt_damage = true
 		spawn_blood_effect(global_position)

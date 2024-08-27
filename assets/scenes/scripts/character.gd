@@ -871,11 +871,14 @@ func _do_pickup_arrow():
 
 @rpc("any_peer")
 func receive_damage(damage_amount: int,	arrow_id: int):
-	if not is_multiplayer_authority() or arrow_id == last_hit_arrow_id:
+	if arrow_id == last_hit_arrow_id:
+		print("arrow id is clearly the same,  arrow_id: " + str(arrow_id) + " last_hit_arrow_id: " + str(last_hit_arrow_id))
 		return
-	
+
 	health -= damage_amount
+	print(name + " I am getting hit! ArroID: " + str(arrow_id) + " while the last_hit_arrow_id was: " + str(last_hit_arrow_id))
 	last_hit_arrow_id =	arrow_id
+	
 	health_changed.emit(health)
 	
 	if health <= 0:

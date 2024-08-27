@@ -110,6 +110,7 @@ func _ready():
 
 	if multiplayer.is_server():
 		enemy_id = randi()
+		print(" enemy spawned and I am assigning them an ID, it's: " + str(enemy_id))
 
 func actor_setup():
 	await get_tree().physics_frame
@@ -361,17 +362,17 @@ func _on_attack_timer_timeout():
 
 func shoot_arrow():
 	hugh_sound.play()
-	if not is_multiplayer_authority():
+	if not multiplayer.is_server():
 		return
 	
 	await get_tree().create_timer(1).timeout
 
-	rpc("spawn_arrow")
+	rpc("spawn_arrow", enemy_id)
 	play_crossbow_shoot_sound()
 
 
 @rpc("call_local")
-func spawn_arrow():
+func spawn_arrow(arr_id):
 	var	arrow =	EnemyArrow.instantiate()
 	arrow.global_transform = arrow_spawn_point.global_transform
 	get_tree().root.add_child(arrow)
