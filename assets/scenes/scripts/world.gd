@@ -22,6 +22,9 @@ const Player = preload("res://assets/scenes/character.tscn")
 const PORT = 9999
 var	enet_peer =	ENetMultiplayerPeer.new()
 
+var	dropped_keys = {}
+const KeyScene = preload("res://assets/scenes/key.tscn")
+
 var	spawned_enemies	= []
 var	connected_players =	[]
 var	game_started = false
@@ -114,7 +117,7 @@ func start_swim_phase():
 	rpc("notify_swim_phase_start")
 
 @rpc func notify_swim_phase_start():
-	print("Swim phase notification received")
+	print("Swim	phase notification received")
 
 func _on_water_rise_completed():
 	print("Water has finished rising")
@@ -165,6 +168,36 @@ func sync_keys(key_data):
 	if not multiplayer.is_server():
 		key_spawn_manager.spawn_keys_from_data(key_data)
 
+# Registers	a dropped key across the network
+@rpc("call_local")
+func register_dropped_key(key_path:	NodePath, key_position:	Vector3):
+	var	key_id = str(key_path)
+	dropped_keys[key_id] = key_position
+	
+	if not multiplayer.is_server():
+		return
+	
+	# If this is the server, sync the new key with all clients
+	rpc("sync_dropped_key",	key_id,	key_position)
+
+# Syncs a dropped key with all clients
+@rpc("call_local")
+func sync_dropped_key(key_id: String, key_position: Vector3):
+	if multiplayer.is_server():
+		return
+	
+	if not dropped_keys.has(key_id):
+		var key = KeyScene.instantiate()
+		add_child(key)
+		key.global_position = key_position
+		dropped_keys[key_id] = key_position
+
+# $$$ ADD $$$
+# Removes a collected key from the dropped keys list
+@rpc("call_local")
+func remove_dropped_key(key_id: String):
+	dropped_keys.erase(key_id)
+
 
 func addPlayer(peer_id):
 	var	spawn_data = spawn_manager.get_random_spawn_point()
@@ -213,6 +246,10 @@ func _on_peer_connected(peer_id):
 		update_waiting_message()
 
 		rpc_id(peer_id,	"sync_keys", key_spawn_manager.get_key_data())
+
+		# Sync dropped keys
+		for key_id in dropped_keys:
+			rpc_id(peer_id, "sync_dropped_key", key_id, dropped_keys[key_id])
 
 		# Inform the new peer about	existing enemies
 		for	enemy_data in spawned_enemies:

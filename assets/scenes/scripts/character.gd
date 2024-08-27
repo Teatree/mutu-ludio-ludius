@@ -125,8 +125,12 @@ var	distance_since_last_step = 0.0
 @onready var shared_environment: Environment = CAMERA.environment
 
 # Underwater effect	parameters
-const UNDERWATER_COLOR:	Color =	Color(54.0/255.0, 93.0/255.0, 108.0/255.0, 1.0)  # Blue	color
+const UNDERWATER_COLOR:	Color =	Color(54.0/255.0, 93.0/255.0, 108.0/255.0, 1.0)	 # Blue	color
 const UNDERWATER_FOG_DENSITY: float	= 0.98
+@export	var	drowning_time: float = 10.0	 # Time	before drowning	damage occurs
+@export	var	drowning_damage: int = 1  # Damage dealt by drowning
+
+var	underwater_timer: float	= 0.0
 
 # Store	original environment values
 var	original_fog_color:	Color
@@ -137,6 +141,8 @@ var	is_underwater: bool	= false
 # keys
 var	keys = 0
 @onready var interaction_ray = $Head/Camera/InteractionRay
+# Change this line:
+const KeyScene = preload("res://assets/scenes/key.tscn")
 
 var	current_animation =	"idle"
 
@@ -164,7 +170,7 @@ func _ready():
 	CAMERA.current = false
 	# Ensure both cameras use the same environment
 	CAMERA.environment = shared_environment
-	SPECTATING_CAMERA.environment = shared_environment
+	SPECTATING_CAMERA.environment =	shared_environment
 
 	# Store	original environment values
 	original_fog_color = shared_environment.fog_light_color
@@ -339,6 +345,15 @@ func _physics_process(delta):
 	update_animation(input_dir)
 
 	check_underwater_state()
+
+	# Handle drowning
+	if is_underwater:
+		underwater_timer += delta
+		if underwater_timer	>= drowning_time:
+			apply_drowning_damage()
+			underwater_timer = 0.0	# Reset	timer after	applying damage
+	else:
+		underwater_timer = 0.0	# Reset	timer when not underwater
 
 func handle_jumping():
 	if jumping_enabled:
@@ -674,7 +689,7 @@ func _on_reload_complete():
 func collect_key():
 	keys += 1
 	ui_key_count.text =	str(keys)+"/5"
-	play_arrow_pickup_flash()
+	play_flash_effect()
 	print("Player %s now has %d keys" %	[name, keys])
 
 func check_door_interaction():
@@ -866,12 +881,12 @@ func setup_flash_overlay():
 	$UserInterface.add_child(flash_overlay)
 	flash_overlay.hide()
 
-# Plays	a yellow flash effect when an arrow	is picked up
-func play_arrow_pickup_flash():
+func play_flash_effect(color: Color	= Color(1, 1, 0, 0.3)):	 # Default to yellow for pickup	flash
 	if not is_multiplayer_authority():
 		return
-	
+
 	flash_overlay.show()
+	flash_overlay.color	= color
 	flash_overlay.color.a =	0  # Reset alpha
 	var	tween =	create_tween()
 	tween.set_parallel(true)  # Allow parallel animations
@@ -880,12 +895,12 @@ func play_arrow_pickup_flash():
 	# Fade out over	the	remaining time
 	tween.tween_property(flash_overlay,	"color:a", 0, 0.3).set_delay(0.1)
 	# Hide the overlay after the animation
-	tween.tween_callback(flash_overlay.hide).set_delay(1.0)
+	tween.tween_callback(flash_overlay.hide).set_delay(0.4)
 
 func pickup_arrow():
 	arrow_count	+= 1
 	update_arrow_count_ui()
-	play_arrow_pickup_flash()
+	play_flash_effect(Color(212.0/255.0, 187.0/255.0, 115.0/255.0, 0.5))
 
 @rpc("any_peer")
 func _do_pickup_arrow():
@@ -895,7 +910,7 @@ func _do_pickup_arrow():
 
 @rpc("any_peer")
 func receive_damage(damage_amount: int,	arrow_id: int):
-	if arrow_id	== last_hit_arrow_id:
+	if arrow_id	== last_hit_arrow_id and not arrow_id == -28:
 		print("arrow id is clearly the same,  arrow_id:	" +	str(arrow_id) +	" last_hit_arrow_id: " + str(last_hit_arrow_id))
 		return
 
@@ -907,6 +922,9 @@ func receive_damage(damage_amount: int,	arrow_id: int):
 	
 	if health <= 0:
 		die()
+	else:
+		# Play red flash effect	for	normal damage
+		play_flash_effect(Color(1, 0, 0, 0.5))
 	
 	health_changed.emit(health)
 
@@ -920,6 +938,8 @@ func die():
 	# spawn	a dead body
 	spawn_death_model.rpc()
 	hide_player_mesh.rpc()
+	# Drop keys
+	drop_keys.rpc()
 	# animation	and	ui shit
 	HEADBOB_ANIMATION.play("die")
 	ui_AnimPlayer.play("DIED")
@@ -1066,3 +1086,29 @@ func apply_underwater_effect(underwater: bool):
 	else:
 		shared_environment.fog_light_color = original_fog_color
 		shared_environment.fog_density = original_fog_density
+
+# $$$ ADD $$$
+# Applies drowning damage to the player
+func apply_drowning_damage():
+	receive_damage(drowning_damage,	-28)	 # Use -128 as a special ID for drowning damage
+	play_flash_effect(Color(54.0/255.0, 93.0/255.0, 108.0/255.0, 0.5))	# Blue flash for drowning
+
+# Spawns keys around the player's body when	they die
+@rpc("call_local")
+func drop_keys():
+	var	keys_to_drop = keys
+	keys = 0  # Reset the player's key count
+	
+	for	i in range(keys_to_drop):
+		var	key	= KeyScene.instantiate()
+		get_parent().add_child(key)
+		
+		# Generate a random	position within	a 0.5 meter	radius
+		var	random_angle = randf() * 2 * PI
+		var	random_radius =	randf()	* 0.5
+		var	offset = Vector3(cos(random_angle) * random_radius,	0, sin(random_angle) * random_radius)
+		
+		key.global_position	= global_position +	offset
+		
+		# Notify the world about the new key
+		get_parent().register_dropped_key.rpc(key.get_path(), key.global_position)

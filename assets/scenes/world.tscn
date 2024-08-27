@@ -423,7 +423,7 @@ script = ExtResource("1_04dgn")
 environment = ExtResource("2_hb552")
 
 [node name="MatchTimer" type="Timer" parent="."]
-wait_time = 20.0
+wait_time = 10.0
 one_shot = true
 
 [node name="KeySpawnManager" type="Node" parent="."]
@@ -1336,7 +1336,6 @@ placeholder_text = "Enter Address to Join Here"
 alignment = 1
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
