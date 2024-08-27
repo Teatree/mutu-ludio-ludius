@@ -1,6 +1,7 @@
-[gd_scene load_steps=67 format=3 uid="uid://b64fy6e8f0w5d"]
+[gd_scene load_steps=68 format=3 uid="uid://b64fy6e8f0w5d"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/world.gd" id="1_04dgn"]
+[ext_resource type="Environment" uid="uid://dupaqpk1qlyvc" path="res://assets/scenes/camera_env_effect.tres" id="2_hb552"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/KeySpawnManager.gd" id="2_pd1c8"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/SpawnManager.gd" id="2_unp3n"]
 [ext_resource type="MeshLibrary" uid="uid://chv80uhw8anfg" path="res://assets/3d/tilesSet/tileset.tres" id="3_osyca"]
@@ -417,6 +418,9 @@ size = Vector3(12, 1, 12)
 
 [node name="World" type="Node"]
 script = ExtResource("1_04dgn")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_hb552")
 
 [node name="MatchTimer" type="Timer" parent="."]
 wait_time = 20.0

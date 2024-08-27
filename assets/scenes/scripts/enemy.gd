@@ -110,7 +110,7 @@ func _ready():
 
 	if multiplayer.is_server():
 		enemy_id = randi()
-		print(" enemy spawned and I am assigning them an ID, it's: " + str(enemy_id))
+		#print(" enemy spawned and I am assigning them an ID, it's: " + str(enemy_id))
 
 func actor_setup():
 	await get_tree().physics_frame

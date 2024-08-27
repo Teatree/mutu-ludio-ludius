@@ -101,6 +101,7 @@ var	pose
 @onready var step_sounds = [$stepSound1, $stepSound2, $stepSound3, $stepSound4]
 @onready var w_step_sounds = [$w_stepSound1, $w_stepSound2,	$w_stepSound3, $w_stepSound4]
 @onready var surface_detector: RayCast3D = $SurfaceDetector
+@onready var water_level_detector: RayCast3D = $Head/WaterLevelDetector
 @onready var crossbowReload_sounds = $crossbowReload
 @onready var crossbowShoot_sounds =	$crossbowShoot
 var	current_step_sound = 0
@@ -118,7 +119,20 @@ var	distance_since_last_step = 0.0
 @onready var ui_door_hint_text2	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt2
 @onready var ui_door_hint_text1	: Label	=	$UserInterface/DoorOpenHint/DoorOpentxt
 @onready var ui_elements_to_hide = [$UserInterface/arrow, $UserInterface/emptyCircle, $UserInterface/fillCircle, $UserInterface/key, $UserInterface/key_count, $UserInterface/Stamina]
-@onready var flash_overlay:	ColorRect =	null # shitty ui 
+@onready var flash_overlay:	ColorRect =	null # shitty ui	
+
+# Reference	to the shared environment
+@onready var shared_environment: Environment = CAMERA.environment
+
+# Underwater effect	parameters
+const UNDERWATER_COLOR:	Color =	Color(54.0/255.0, 93.0/255.0, 108.0/255.0, 1.0)  # Blue	color
+const UNDERWATER_FOG_DENSITY: float	= 0.98
+
+# Store	original environment values
+var	original_fog_color:	Color
+var	original_fog_density: float
+
+var	is_underwater: bool	= false
 
 # keys
 var	keys = 0
@@ -132,7 +146,7 @@ var	current_speed :	float =	speed
 var	state :	String = "normal"
 var	low_ceiling	: bool = false # This is for when the cieling is too low and the player	needs to crouch.
 var	was_on_floor : bool	= true # Was the player	on the floor last frame	(for landing animation)
-var movement_enabled = false
+var	movement_enabled = false
 
 var	RETICLE	: Control
 var	gravity	: float	= ProjectSettings.get_setting("physics/3d/default_gravity")	# Don't	set	this as a const, see the gravity section in _physics_process
@@ -148,6 +162,14 @@ func _enter_tree():
 
 func _ready():
 	CAMERA.current = false
+	# Ensure both cameras use the same environment
+	CAMERA.environment = shared_environment
+	SPECTATING_CAMERA.environment = shared_environment
+
+	# Store	original environment values
+	original_fog_color = shared_environment.fog_light_color
+	original_fog_density = shared_environment.fog_density
+
 	SPECTATING_CAMERA.current =	false
 	if not is_multiplayer_authority():
 		PlayerMesh.set_layer_mask_value(1, 1)
@@ -315,6 +337,8 @@ func _physics_process(delta):
 	was_on_floor = is_on_floor() # This	must always	be at the end of physics_process
 	
 	update_animation(input_dir)
+
+	check_underwater_state()
 
 func handle_jumping():
 	if jumping_enabled:
@@ -837,7 +861,7 @@ func update_animation(input_dir):
 func setup_flash_overlay():
 	flash_overlay =	ColorRect.new()
 	flash_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	flash_overlay.color	= Color(234, 233, 144, 0)  # Yellow color	with alpha 0
+	flash_overlay.color	= Color(234, 233, 144, 0)  # Yellow	color	with alpha 0
 	flash_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Ignore mouse input
 	$UserInterface.add_child(flash_overlay)
 	flash_overlay.hide()
@@ -871,12 +895,12 @@ func _do_pickup_arrow():
 
 @rpc("any_peer")
 func receive_damage(damage_amount: int,	arrow_id: int):
-	if arrow_id == last_hit_arrow_id:
-		print("arrow id is clearly the same,  arrow_id: " + str(arrow_id) + " last_hit_arrow_id: " + str(last_hit_arrow_id))
+	if arrow_id	== last_hit_arrow_id:
+		print("arrow id is clearly the same,  arrow_id:	" +	str(arrow_id) +	" last_hit_arrow_id: " + str(last_hit_arrow_id))
 		return
 
 	health -= damage_amount
-	print(name + " I am getting hit! ArroID: " + str(arrow_id) + " while the last_hit_arrow_id was: " + str(last_hit_arrow_id))
+	print(name + " I am getting	hit! ArroID: " + str(arrow_id) + " while the last_hit_arrow_id was:	" +	str(last_hit_arrow_id))
 	last_hit_arrow_id =	arrow_id
 	
 	health_changed.emit(health)
@@ -1024,3 +1048,21 @@ func set_player_escaped():
 	visible	= false
 	if is_multiplayer_authority():
 		switch_to_spectator_mode()
+
+# Water
+# Checks if the	player is underwater and applies the appropriate effect
+func check_underwater_state():
+	var	new_underwater_state = water_level_detector.is_colliding()
+	
+	if new_underwater_state	!= is_underwater:
+		is_underwater =	new_underwater_state
+		apply_underwater_effect(is_underwater)
+
+# Applies or removes the underwater	effect
+func apply_underwater_effect(underwater: bool):
+	if underwater:
+		shared_environment.fog_light_color = UNDERWATER_COLOR
+		shared_environment.fog_density = UNDERWATER_FOG_DENSITY
+	else:
+		shared_environment.fog_light_color = original_fog_color
+		shared_environment.fog_density = original_fog_density

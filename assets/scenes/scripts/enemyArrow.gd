@@ -50,7 +50,14 @@ func initialize(start_transform: Transform3D, initial_speed: float,	shooter: Ene
 	
 	if multiplayer.is_server():
 		arrow_id = randi()	# Generate a unique	ID for each	arrow
+		rpc("set_enemy_id", arrow_id)
 		print(" initializing arrow with arrow ID: " + str(arrow_id))
+	if multiplayer.get_unique_id() == 1:
+		set_enemy_id(arrow_id)
+		print("for HOST initializing arrow with arrow ID: " + str(arrow_id))
+
+@rpc func set_enemy_id(id):
+	arrow_id = id
 
 func _physics_process(delta):
 	time_alive += delta
@@ -91,8 +98,9 @@ func handle_collision(collision):
 			if collider.has_method("receive_damage") and not arrow_id == 0:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 				print("player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
-			elif collider.get_multiplayer_authority() == 1 and arrow_id == 0:
+			elif collider.get_unique_id() == 1:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
+				print("HOST(?) player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
 		
 		has_dealt_damage = true
 		spawn_blood_effect(global_position)
