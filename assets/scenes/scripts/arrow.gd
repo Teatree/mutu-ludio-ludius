@@ -139,9 +139,9 @@ func setup_for_pickup():
 
 # This function	is called when a player	enters the pickup area
 func _on_pickup_area_body_entered(body):
-	print("Body	entered	pickup area: ", body.name)
-	print("Body	is CharacterBody3D:	", body	is CharacterBody3D)
-	print("Body	has	pickup_arrow method: ", body.has_method("pickup_arrow"))
+	# print("Body	entered	pickup area: ", body.name)
+	# print("Body	is CharacterBody3D:	", body	is CharacterBody3D)
+	# print("Body	has	pickup_arrow method: ", body.has_method("pickup_arrow"))
 	
 	if current_state == ArrowState.STUCK and body is CharacterBody3D and body.has_method("pickup_arrow"):
 		body.pickup_arrow()

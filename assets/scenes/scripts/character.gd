@@ -277,7 +277,7 @@ func _physics_process(delta):
 	if not is_multiplayer_authority(): return
 	
 	handle_head_rotation()
-	
+
 	if not movement_enabled:
 		return
 
@@ -310,13 +310,13 @@ func _physics_process(delta):
 	if !immobile: #	Immobility works by interrupting user input, so other forces can still be applied to the player
 		input_dir =	Input.get_vector(LEFT, RIGHT, FORWARD, BACKWARD)
 
-	# Transform input direction based on Head rotation
-	var head_basis = HEAD.global_transform.basis
-	var direction = head_basis * Vector3(input_dir.x, 0, input_dir.y)
+	# Transform	input direction	based on Head rotation
+	var	head_basis = HEAD.global_transform.basis
+	var	direction =	head_basis * Vector3(input_dir.x, 0, input_dir.y)
 
-	# Remove any vertical component to keep movement horizontal
-	direction.y = 0
-	direction = direction.normalized()
+	# Remove any vertical component	to keep	movement horizontal
+	direction.y	= 0
+	direction =	direction.normalized()
 
 	handle_movement(delta, direction)
 	
@@ -364,6 +364,7 @@ func _physics_process(delta):
 	else:
 		underwater_timer = 0.0	# Reset	timer when not underwater
 
+
 func handle_jumping():
 	if jumping_enabled:
 		
@@ -385,7 +386,7 @@ func handle_jumping():
 
 func handle_movement(delta,	direction):
 	# var	direction =	input_dir.rotated(Vector3.UP, -HEAD.rotation.y)
-	# direction =	Vector3(direction.x, 0, direction.y)
+	# direction	=	Vector3(direction.x, 0, direction.y)
 	#print("speed: " + str(speed))
 
 	if in_air_momentum:
@@ -1099,8 +1100,8 @@ func apply_underwater_effect(underwater: bool):
 # $$$ ADD $$$
 # Applies drowning damage to the player
 func apply_drowning_damage():
-	receive_damage(drowning_damage,	-28)	 # Use -128 as a special ID for drowning damage
-	play_flash_effect(Color(54.0/255.0, 93.0/255.0, 108.0/255.0, 0.5))	# Blue flash for drowning
+	receive_damage(drowning_damage,	-28)	 # Use -128	as a special ID for	drowning damage
+	play_flash_effect(Color(54.0/255.0,	93.0/255.0,	108.0/255.0, 0.5))	# Blue flash for drowning
 
 # Spawns keys around the player's body when	they die
 @rpc("call_local")
