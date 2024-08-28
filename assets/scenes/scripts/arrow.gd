@@ -96,7 +96,7 @@ func _physics_process(delta):
 			elif collider.name != str(shooter_id):
 				# Handle player	hit
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
-				#print("player hit event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
+				#print("player hit event, arrow_shooter_id:	" +	str(arrow_id) +	" collider:	" +	str(collider))
 			
 			has_dealt_damage = true
 			spawn_blood_effect.rpc(global_position)
@@ -117,16 +117,16 @@ func _physics_process(delta):
 
 
 func play_splat_sound():
-	# Create and play a separate AudioStream3D for the splat sound
-	var splat_sound_instance = AudioStreamPlayer3D.new()
-	splat_sound_instance.stream = splat_sound.stream
-	splat_sound_instance.global_transform = global_transform # Set position to the arrow's position
+	# Create and play a	separate AudioStream3D for the splat sound
+	var	splat_sound_instance = AudioStreamPlayer3D.new()
+	splat_sound_instance.stream	= splat_sound.stream
+	splat_sound_instance.global_transform =	global_transform # Set position	to the arrow's position
 	splat_sound_instance.volume_db = -20
 	get_tree().root.get_node("World").add_child(splat_sound_instance)
 	splat_sound_instance.play()
 
-	# Connect the finished signal to remove the instance after playing
-	splat_sound_instance.connect("finished", Callable(splat_sound_instance, "queue_free"))
+	# Connect the finished signal to remove	the	instance after playing
+	splat_sound_instance.connect("finished", Callable(splat_sound_instance,	"queue_free"))
 
 # This function	sets up the	arrow for pickup after it's	stuck in a surface
 func setup_for_pickup():

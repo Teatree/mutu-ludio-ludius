@@ -191,7 +191,7 @@ func _ready():
 		return
 	
 	add_to_group("players")
-	print("Player added	to 'players' group")
+	#print("Player added	to 'players' group")
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	ui_root.visible	= true
@@ -309,7 +309,16 @@ func _physics_process(delta):
 	var	input_dir =	Vector2.ZERO
 	if !immobile: #	Immobility works by interrupting user input, so other forces can still be applied to the player
 		input_dir =	Input.get_vector(LEFT, RIGHT, FORWARD, BACKWARD)
-	handle_movement(delta, input_dir)
+
+	# Transform input direction based on Head rotation
+	var head_basis = HEAD.global_transform.basis
+	var direction = head_basis * Vector3(input_dir.x, 0, input_dir.y)
+
+	# Remove any vertical component to keep movement horizontal
+	direction.y = 0
+	direction = direction.normalized()
+
+	handle_movement(delta, direction)
 	
 	if is_on_floor() and (velocity.x != 0 or velocity.z	!= 0) and Input.is_action_pressed("sprint")	!= true:
 		distance_since_last_step += velocity.length() *	delta
@@ -374,11 +383,9 @@ func handle_jumping():
 				velocity.y += jump_velocity
 
 
-func handle_movement(delta,	input_dir):
-	var	direction =	input_dir.rotated(-HEAD.rotation.y)
-	direction =	Vector3(direction.x, 0, direction.y)
-	move_and_slide()
-	
+func handle_movement(delta,	direction):
+	# var	direction =	input_dir.rotated(Vector3.UP, -HEAD.rotation.y)
+	# direction =	Vector3(direction.x, 0, direction.y)
 	#print("speed: " + str(speed))
 
 	if in_air_momentum:
@@ -396,6 +403,8 @@ func handle_movement(delta,	input_dir):
 		else:
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
+
+	move_and_slide()
 
 func handle_head_rotation():
 	HEAD.rotation_degrees.y	-= mouseInput.x	* mouse_sensitivity

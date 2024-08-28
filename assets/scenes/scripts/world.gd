@@ -70,7 +70,7 @@ func _on_join_button_pressed():
 	
 	enet_peer.create_client("localhost", PORT)
 	multiplayer.multiplayer_peer = enet_peer
-	
+
 	addPlayer(multiplayer.get_unique_id())
 
 func _physics_process(delta):
@@ -180,22 +180,22 @@ func register_dropped_key(key_path:	NodePath, key_position:	Vector3):
 	# If this is the server, sync the new key with all clients
 	rpc("sync_dropped_key",	key_id,	key_position)
 
-# Syncs a dropped key with all clients
+# Syncs	a dropped key with all clients
 @rpc("call_local")
-func sync_dropped_key(key_id: String, key_position: Vector3):
+func sync_dropped_key(key_id: String, key_position:	Vector3):
 	if multiplayer.is_server():
 		return
 	
 	if not dropped_keys.has(key_id):
-		var key = KeyScene.instantiate()
+		var	key	= KeyScene.instantiate()
 		add_child(key)
-		key.global_position = key_position
+		key.global_position	= key_position
 		dropped_keys[key_id] = key_position
 
 # $$$ ADD $$$
-# Removes a collected key from the dropped keys list
+# Removes a	collected key from the dropped keys	list
 @rpc("call_local")
-func remove_dropped_key(key_id: String):
+func remove_dropped_key(key_id:	String):
 	dropped_keys.erase(key_id)
 
 
@@ -204,16 +204,18 @@ func addPlayer(peer_id):
 	var	player = Player.instantiate()
 	player.name	= str(peer_id)
 	add_child(player)
-	player.global_position = spawn_data.position
-	if player.is_multiplayer_authority():
-		player.tree_exiting.connect(func():	spawn_manager.release_spawn_point(spawn_data.position))
-		player.health_changed.connect(show_blood_splat)
 	
+	if player.is_multiplayer_authority():
+		player.health_changed.connect(show_blood_splat)
+
 	player.disable_movement()
 
+	player.global_position = spawn_data.position
+	player.global_rotation = spawn_data.rotation
+	player.head_rotation_x = spawn_data.rotation.x
+	
 	# Inform all clients about the new player
-	rpc("sync_new_player", peer_id,	spawn_data.position)
-
+	rpc("sync_new_player", peer_id,	spawn_data)
 
 func removePlayer(peer_id):
 	var	player = get_node_or_null(str(peer_id))
@@ -221,15 +223,14 @@ func removePlayer(peer_id):
 		player.queue_free()
 
 @rpc("call_local")
-func sync_new_player(peer_id, position):
+func sync_new_player(peer_id, position,	rotation):
 	if not has_node(str(peer_id)):
 		var	player = Player.instantiate()
 		player.name	= str(peer_id)
 		add_child(player)
 		player.global_position = position
+		player.global_rotation = rotation
 		print("New player added: ", peer_id)
-	else:
-		print("Player already exists: ", peer_id)
 
 func show_blood_splat(health_value):
 	# health value is not needed but I keep	it anyway in case I	want to display	a health bar in the	future
@@ -248,8 +249,8 @@ func _on_peer_connected(peer_id):
 		rpc_id(peer_id,	"sync_keys", key_spawn_manager.get_key_data())
 
 		# Sync dropped keys
-		for key_id in dropped_keys:
-			rpc_id(peer_id, "sync_dropped_key", key_id, dropped_keys[key_id])
+		for	key_id in dropped_keys:
+			rpc_id(peer_id,	"sync_dropped_key",	key_id,	dropped_keys[key_id])
 
 		# Inform the new peer about	existing enemies
 		for	enemy_data in spawned_enemies:
