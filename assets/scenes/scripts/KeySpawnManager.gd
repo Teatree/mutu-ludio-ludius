@@ -43,6 +43,19 @@ func spawn_key(position: Vector3):
 	active_keys.append(key)
 	key.tree_exiting.connect(func(): on_key_collected(key))
 
+func spawn_key_by_name(name: String):
+	var	key	= Key.instantiate()
+	var pos = Vector3(0,0,0)
+
+	for key_spawn_point in get_tree().root.get_node("World").get_node("KeySpawnManager").get_children():
+		if key_spawn_point.name == name:
+			pos = key_spawn_point.global_position
+
+	key.global_position	= pos
+	add_child(key)
+	active_keys.append(key)
+	key.tree_exiting.connect(func(): on_key_collected(key))
+
 func on_key_collected(key: Node3D):
 	active_keys.erase(key)
 	# We don't automatically respawn keys in this version
@@ -56,20 +69,3 @@ func get_key_data():
 func spawn_keys_from_data(key_data):
 	for	pos	in key_data:
 		spawn_key(pos)
-
-# This function	can	be called if you want to try respawning	keys after some	have been collected
-func respawn_keys():
-	var	keys_to_spawn =	max_keys - active_keys.size()
-	var	available_points = spawn_points.filter(func(point):	
-		return not used_spawn_points.has(point)	or (used_spawn_points.has(point) and active_keys.all(func(key):	key.global_position.distance_to(point.global_position) > 1.0))
-	)
-	available_points.shuffle()
-	
-	for	point in available_points:
-		if keys_to_spawn <= 0:
-			break
-		if randf() <= spawn_chance:
-			spawn_key(point.global_position)
-			if not used_spawn_points.has(point):
-				used_spawn_points.append(point)
-			keys_to_spawn -= 1

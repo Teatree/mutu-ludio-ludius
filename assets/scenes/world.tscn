@@ -829,6 +829,8 @@ transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.303
 layers = 2
 mesh = SubResource("BoxMesh_t1hbv")
 
+[node name="Players" type="Node" parent="."]
+
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.053479, 0.044693, -0.0209255)
 navigation_mesh = SubResource("NavigationMesh_kdo87")
