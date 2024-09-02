@@ -68,6 +68,7 @@ func _on_join_button_pressed():
 	waiting_message.show()
 	waiting_message.text = "Connecting..."
 	
+	# enet_peer.create_client("38.180.57.198", PORT)
 	enet_peer.create_client("localhost", PORT)
 	multiplayer.multiplayer_peer = enet_peer
 

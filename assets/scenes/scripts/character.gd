@@ -59,6 +59,7 @@ var	arrow_shooter_id: int =	0
 @export	var	respawn_time : float = 15.0	# Time before respawn after	death
 @onready var respawn_timer : Timer = Timer.new()
 var	is_dead	: bool = false
+var spectating_state : bool = false
 
 @export	var	Arrow: PackedScene
 @export	var	arrow_speed	= 20
@@ -624,13 +625,18 @@ func _unhandled_input(event):
 		mouseInput.x += event.relative.x
 		mouseInput.y += event.relative.y
 	
+	if Input.is_action_just_pressed("shoot") and is_loaded and crossBow_AnimPlayer.current_animation != "SHOOT_ARROW":
+		shoot()
+	elif Input.is_action_just_pressed("shoot") and spectating_state:
+		switch_to_spectator_mode()
+
 	if is_dead or not movement_enabled:	return
 	
 	if Input.is_action_just_pressed("interact"):  # Assuming "interact"	is mapped to "F"
 		check_door_interaction()
 		
-	if Input.is_action_just_pressed("shoot") and is_loaded and crossBow_AnimPlayer.current_animation != "SHOOT_ARROW":
-		shoot()
+	# if Input.is_action_just_pressed("shoot") and is_loaded and crossBow_AnimPlayer.current_animation != "SHOOT_ARROW":
+	# 	shoot()
 	
 	if Input.is_action_just_pressed("reload"):
 		start_reload()
@@ -959,6 +965,8 @@ func die():
 	PlayerModel.visible	= false
 	crossbow_fps.visible = false
 	arrow_fps.visible =	false
+	ui_arrow_count.visible = false
+	RETICLE.visible = false
 
 	#respawn_timer.start()
 	await get_tree().create_timer(6).timeout
@@ -1045,7 +1053,7 @@ func switch_to_spectator_mode():
 	
 	var	players	= get_tree().get_nodes_in_group("players")
 	print("All players:	" +	str(players))
-	var	available_players =	players.filter(func(p):	return p != self and not p.has_escaped)
+	var	available_players =	players.filter(func(p):	return p != self and not p.has_escaped and not p.is_dead)
 	
 	if available_players.is_empty():
 		print("No available	players	to spectate")
@@ -1053,6 +1061,8 @@ func switch_to_spectator_mode():
 	
 	var	random_player =	available_players[randi() %	available_players.size()]
 	set_spectator_mode(random_player.name)
+
+	spectating_state = true
 
 # Add a	new	RPC	function to handle spectator mode switching
 func set_spectator_mode(target_player_name):

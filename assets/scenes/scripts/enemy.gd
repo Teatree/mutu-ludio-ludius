@@ -35,7 +35,7 @@ var	last_hit_arrow_id: int = -1
 @onready var step_sounds = [$stepSound1, $stepSound2, $stepSound3, $stepSound4]
 @onready var w_step_sounds = [$w_stepSound1, $w_stepSound2,	$w_stepSound3, $w_stepSound4]
 @onready var surface_detector: RayCast3D = $SurfaceDetector
-@onready var hugh_sound: AudioStreamPlayer3D =	$hugh
+@onready var hugh_sound: AudioStreamPlayer3D =  $hugh
 @onready var crossbow_shoot_sound: AudioStreamPlayer3D = $crossbowShoot
 @onready var crossbow_reload_sound:	AudioStreamPlayer3D	= $crossbowReload
 
@@ -108,9 +108,16 @@ func _ready():
 	los_check_timer.timeout.connect(_on_los_check_timer_timeout)
 	add_child(los_check_timer)
 
+	var	idle_target_check_timer	= Timer.new()
+	idle_target_check_timer.set_wait_time(2.0)	# Check	every 2	seconds
+	idle_target_check_timer.set_one_shot(false)
+	idle_target_check_timer.connect("timeout", Callable(self, "_on_idle_target_check_timeout"))
+	add_child(idle_target_check_timer)
+	idle_target_check_timer.start()
+
 	if multiplayer.is_server():
 		enemy_id = randi()
-		#print(" enemy spawned and I am assigning them an ID, it's: " + str(enemy_id))
+		#print(" enemy spawned and I am assigning them an ID, it's:	" +	str(enemy_id))
 
 func actor_setup():
 	await get_tree().physics_frame
@@ -190,14 +197,14 @@ func handle_pursue_state():
 		velocity = (next_position -	global_position).normalized() *	run_speed
 		look_at(global_position	+ velocity,	Vector3.UP)
 		
-		# print_once("PURSUE: Moving towards player")
-		
 		if players_in_attack.has(target_player):
-			# print("PURSUE: Player	in attack range")
 			enter_attack_state()
 	else:
-		# print("PURSUE: Lost player, entering idle	state")
-		enter_idle_state()
+		# Check	if there are other players in detection	range
+		if not players_in_detection.is_empty():
+			set_target_player(players_in_detection[0])
+		else:
+			enter_idle_state()
 
 func handle_attack_state():
 	if target_player and players_in_attack.has(target_player) and players_in_detection.has(target_player):
@@ -225,7 +232,7 @@ func enter_pursue_state(player:	CharacterBody3D):
 	current_state =	State.PURSUE
 	target_player =	player
 	set_detection_radius(detection_radius*3)
-	attack_timer.wait_time = attack_interval # resetting of the hacky way of making a quick initial attack
+	attack_timer.wait_time = attack_interval # resetting of the	hacky way of making	a quick	initial	attack
 	#set_attack_radius(attack_radius)
 	# print_once("ENTER	STATE: Pursue")
 	# print("Target	player position: " + str(player.global_position))
@@ -289,7 +296,7 @@ func has_line_of_sight(target: CharacterBody3D)	-> bool:
 	query.exclude =	[self, target]	# Exclude the enemy	itself and the target from the check
 
 	var	result = space_state.intersect_ray(query)
-	#print("has line	of sight: "	+ str(result))
+	#print("has	line	of sight: "	+ str(result))
 
 	return result.is_empty()  # If the result is empty,	there's	a clear	line of sight
 
@@ -301,14 +308,17 @@ func set_target_player(player: CharacterBody3D):
 func _on_idle_timer_timeout():
 	set_random_idle_target()
 
+func _on_idle_target_check_timeout():
+	if current_state == State.IDLE and not players_in_detection.is_empty():
+		set_target_player(players_in_detection[0])
+
 func _on_detection_area_body_entered(body):
 	if body	is CharacterBody3D and body.name.is_valid_int():
 		if has_line_of_sight(body):
 			players_in_detection.append(body)
-			if current_state == State.IDLE:
-				enter_pursue_state(body)
+			if current_state == State.IDLE or target_player	== null:
+				set_target_player(body)
 		else:
-			# Start	a timer	to periodically	check for line of sight
 			start_los_check_timer(body)
 
 # Starts the timer for checking	line of sight
@@ -334,8 +344,8 @@ func _on_detection_area_body_exited(body):
 		players_in_detection.erase(body)
 		if players_in_detection.is_empty() and players_in_attack.is_empty():
 			enter_idle_state()
+			target_player =	null  # Clear the target
 		
-		# Stop the LOS check timer if it's running for this	body
 		if los_check_timer.is_stopped()	== false and los_check_timer.get_meta("target_body") == body:
 			los_check_timer.stop()
 
@@ -357,7 +367,7 @@ func _on_attack_area_body_exited(body):
 func _on_attack_timer_timeout():
 	if current_state == State.ATTACK and target_player and players_in_attack.has(target_player)	and	players_in_detection.has(target_player):
 		shoot_arrow()
-		attack_timer.wait_time = attack_interval * 5 # Don't be alarmed, this is so you can get that initial fast attack
+		attack_timer.wait_time = attack_interval * 5 # Don't be alarmed, this is so you	can	get	that initial fast attack
 		attack_timer.start()
 
 func shoot_arrow():

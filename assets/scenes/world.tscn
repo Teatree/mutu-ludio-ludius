@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=3 uid="uid://b64fy6e8f0w5d"]
+[gd_scene load_steps=70 format=3 uid="uid://b64fy6e8f0w5d"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/world.gd" id="1_04dgn"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/KeySpawnManager.gd" id="2_pd1c8"]
@@ -305,9 +305,15 @@ size = Vector3(2.37689, 4.14328, 3.15527)
 [sub_resource type="BoxShape3D" id="BoxShape3D_kydi0"]
 size = Vector3(1.99121, 1, 2.90332)
 
+[sub_resource type="Theme" id="Theme_l8uxc"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_xq76y"]
 font = ExtResource("12_lrnaq")
-font_size = 20
+font_size = 53
+font_color = Color(0.102817, 0.140475, 0.0597771, 1)
+outline_size = 5
+outline_color = Color(0.0353462, 0.0353462, 0.0353462, 1)
+shadow_size = 2
 
 [sub_resource type="LabelSettings" id="LabelSettings_44h11"]
 font = ExtResource("12_lrnaq")
@@ -1402,15 +1408,15 @@ shape = SubResource("BoxShape3D_kydi0")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainMenu" type="PanelContainer" parent="CanvasLayer"]
+modulate = Color(0.876463, 0.989171, 0.889878, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 49.0
-offset_top = 72.0
-offset_right = -296.0
-offset_bottom = -56.0
+offset_right = 1.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_l8uxc")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
@@ -1425,7 +1431,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Main Menu"
+text = "Sewer and Sewer"
 label_settings = SubResource("LabelSettings_xq76y")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1439,12 +1445,6 @@ text = "Host"
 layout_mode = 2
 theme_override_fonts/font = ExtResource("12_lrnaq")
 text = "Join"
-
-[node name="AddressEntry" type="LineEdit" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("12_lrnaq")
-placeholder_text = "Enter Address to Join Here"
-alignment = 1
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
