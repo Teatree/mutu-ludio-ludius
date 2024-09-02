@@ -949,7 +949,7 @@ func die():
 	spawn_death_model.rpc()
 	hide_player_mesh.rpc()
 	# Drop keys
-	drop_keys.rpc()
+	# drop_keys.rpc()
 	# animation	and	ui shit
 	HEADBOB_ANIMATION.play("die")
 	ui_AnimPlayer.play("DIED")
@@ -963,6 +963,7 @@ func die():
 	#respawn_timer.start()
 	await get_tree().create_timer(6).timeout
 	switch_to_spectator_mode()
+
 
 @rpc("call_local")
 func hide_player_mesh():

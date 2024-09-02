@@ -74,143 +74,119 @@ func _on_join_button_pressed():
 	multiplayer.multiplayer_peer = enet_peer
 
 # func _physics_process(delta):
-# 	pass
-# 	# if multiplayer.is_server():
-# 	#	handle_enemy_behaviour()
+#	pass
+#	# if multiplayer.is_server():
+#	#	handle_enemy_behaviour()
 
-# 	update_match_timer_ui()
+#	update_match_timer_ui()
 
 # func update_match_timer_ui():
-# 	var	time_left =	int(match_timer.time_left)
-# 	if time_left > 0:
-# 		var	minutes	= time_left	/ 60
-# 		var	seconds	= time_left	% 60
-# 		match_timer_label.text = "Time left: %d:%02d" %	[minutes, seconds]
-# 	else:
-# 		match_timer_label.text = "Time for a swim!"
+#	var	time_left =	int(match_timer.time_left)
+#	if time_left > 0:
+#		var	minutes	= time_left	/ 60
+#		var	seconds	= time_left	% 60
+#		match_timer_label.text = "Time left: %d:%02d" %	[minutes, seconds]
+#	else:
+#		match_timer_label.text = "Time for a swim!"
 
 # func _on_match_timer_timeout():
-# 	update_match_timer_ui()
-# 	start_swim_phase()
+#	update_match_timer_ui()
+#	start_swim_phase()
 
 # func start_swim_phase():
-# 	print("Swim	phase started!")
+#	print("Swim	phase started!")
 	
-# 	var	initial_water_position = water.position
-# 	var	target_position	= initial_water_position + Vector3(0, WATER_RISE_HEIGHT, 0)
-# 	var	tween =	create_tween()
-# 	tween.tween_property(water,	"position",	target_position, WATER_RISE_DURATION).set_trans(Tween.TRANS_LINEAR)
+#	var	initial_water_position = water.position
+#	var	target_position	= initial_water_position + Vector3(0, WATER_RISE_HEIGHT, 0)
+#	var	tween =	create_tween()
+#	tween.tween_property(water,	"position",	target_position, WATER_RISE_DURATION).set_trans(Tween.TRANS_LINEAR)
 
 
 # func handle_enemy_behaviour():
-# 	var	enemies	= get_tree().get_nodes_in_group("enemies")
-# 	var	players	= get_tree().get_nodes_in_group("players")
+#	var	enemies	= get_tree().get_nodes_in_group("enemies")
+#	var	players	= get_tree().get_nodes_in_group("players")
 	
-# 	for	enemy in enemies:
-# 		if enemy.has_method("get_current_state"):
-# 			match enemy.get_current_state():
-# 				0:	# IDLE
-# 					# No action	needed,	enemy handles its own idle behavior
-# 					pass
-# 				1:	# PURSUE
-# 					var	nearest_player = find_nearest_player(enemy,	players)
-# 					if nearest_player:
-# 						enemy.set_target_player(nearest_player)
-# 					else:
-# 						enemy.enter_idle_state()
-# 				2:	# ATTACK
-# 					# No action	needed,	enemy handles its own attack behavior
-# 					pass
+#	for	enemy in enemies:
+#		if enemy.has_method("get_current_state"):
+#			match enemy.get_current_state():
+#				0:	# IDLE
+#					# No action	needed,	enemy handles its own idle behavior
+#					pass
+#				1:	# PURSUE
+#					var	nearest_player = find_nearest_player(enemy,	players)
+#					if nearest_player:
+#						enemy.set_target_player(nearest_player)
+#					else:
+#						enemy.enter_idle_state()
+#				2:	# ATTACK
+#					# No action	needed,	enemy handles its own attack behavior
+#					pass
 
 # func find_nearest_player(enemy,	players: Array):
-# 	var	nearest_player = null
-# 	var	min_distance = INF
+#	var	nearest_player = null
+#	var	min_distance = INF
 	
-# 	for	player in players:
-# 		var	distance = enemy.global_position.distance_to(player.global_position)
-# 		if distance	< min_distance:
-# 			min_distance = distance
-# 			nearest_player = player
+#	for	player in players:
+#		var	distance = enemy.global_position.distance_to(player.global_position)
+#		if distance	< min_distance:
+#			min_distance = distance
+#			nearest_player = player
 	
-# 	return nearest_player
+#	return nearest_player
 
 # Keys Section
+# @rpc("any_peer", "call_remote")
+# func emit_spawn_keys(key_spawn_points):
+# 	pass # server
+
 @rpc("authority")
-func s_spawn_keys(key_spawn_point_names):
-	print("s_spawn_keys")
-	spawn_keys(key_spawn_point_names)
+func s_spawn_keys(key_spawn_point_names: Array[String]):
+	print("s_spawn_keys, key_spawn_point_names:" + str(key_spawn_point_names))
+	if key_spawn_point_names:
+		spawn_keys(key_spawn_point_names)
 
 func spawn_keys(key_spawn_point_names):
-	print("s_spawn_keys: spawning some keys")
-	for key_spawn_name in key_spawn_point_names:
+	for	key_spawn_name in key_spawn_point_names:
+		print("s_spawing_ley: " + str(key_spawn_name))
 		key_spawn_manager.spawn_key_by_name(key_spawn_name)
-	# if multiplayer.is_server():
-	# 	key_spawn_manager.spawn_keys()
-	# 	# Sync the spawned keys	with all clients
-	# 	rpc("sync_keys", key_spawn_manager.get_key_data())
-
-# @rpc("call_local")
-# func sync_keys(key_data):
-# 	if not multiplayer.is_server():
-# 		key_spawn_manager.spawn_keys_from_data(key_data)
-
-# # Registers	a dropped key across the network
-# @rpc("call_local")
-# func register_dropped_key(key_path:	NodePath, key_position:	Vector3):
-# 	var	key_id = str(key_path)
-# 	dropped_keys[key_id] = key_position
-	
-# 	if not multiplayer.is_server():
-# 		return
-	
-# 	# If this is the server, sync the new key with all clients
-# 	rpc("sync_dropped_key",	key_id,	key_position)
-
-# # Syncs	a dropped key with all clients
-# @rpc("call_local")
-# func sync_dropped_key(key_id: String, key_position:	Vector3):
-# 	if multiplayer.is_server():
-# 		return
-	
-# 	if not dropped_keys.has(key_id):
-# 		var	key	= KeyScene.instantiate()
-# 		add_child(key)
-# 		key.global_position	= key_position
-# 		dropped_keys[key_id] = key_position
-
-# # $$$ ADD $$$
-# # Removes a	collected key from the dropped keys	list
-# @rpc("call_local")
-# func remove_dropped_key(key_id:	String):
-# 	dropped_keys.erase(key_id)
-
 
 @rpc("authority", "call_local")
-func s_spawn_player(peer_id):
+func s_spawn_player(peer_id: int):
 	print("s_spawn_player")
 	if not get_node("Players").has_node(str(peer_id)):
-		print("s_spawn_player: spawning a Player")
+		print("s_spawn_player: spawning	a Player")
 		spawn_player(peer_id)
 
 func spawn_player(peer_id):
 	var	spawn_data = spawn_manager.get_random_spawn_point()
 	var	player	= Player.instantiate()
-	player.name = str(peer_id)
+	player.name	= str(peer_id)
 	var	playerS_node = get_node("Players")
 	playerS_node.add_child(player)
 	
 	if player.is_multiplayer_authority():
 		player.health_changed.connect(show_blood_splat)
-
 	# player.disable_movement()
 	player.enable_movement() # has to happen later
-
 	player.global_position = spawn_data.position
 	player.global_rotation = spawn_data.rotation
 	player.head_rotation_x = spawn_data.rotation.x
-	
-	# Inform all clients about the new player
-	rpc("request_sync_player", peer_id,	spawn_data)
+	# call_deferred("separate_method")
+
+
+# func separate_method():
+# 	rpc_id(1, "s_another_title", multiplayer.get_unique_id(), 7)
+# 	print("s_separate_method")
+
+# @rpc("any_peer")
+# func s_another_title(peer_id, random_Var):
+# 	# if not has_node(str(peer_id)):
+# 	print("s_another_title")
+
+# @rpc("any_peer", "call_local")
+# func emit_remove_player(peer_id):
+# 	print("emit_remove_player")
+# 	pass # server
 
 @rpc("authority", "call_local")
 func s_remove_player(peer_id):
@@ -223,21 +199,6 @@ func removePlayer(peer_id):
 	if player:
 		player.queue_free()
 
-@rpc("authority", "call_local")
-func s_sync_player(peer_id, spawn_data):
-	print("s_sync_player")
-	if not has_node(str(peer_id)):
-		sync_new_player(peer_id, spawn_data.position, spawn_data.rotation)
-
-func sync_new_player(peer_id, position,	rotation):
-	if not has_node(str(peer_id)):
-		var	player = Player.instantiate()
-		player.name	= str(peer_id)
-		add_child(player)
-		player.global_position = position
-		player.global_rotation = rotation
-		print("New player added: ", peer_id)
-
 
 func show_blood_splat(health_value):
 	# health value is not needed but I keep	it anyway in case I	want to display	a health bar in the	future
@@ -247,75 +208,54 @@ func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
 		node.health_changed.connect(show_blood_splat)
 
-func _on_peer_connected(peer_id):
-	print("_on_peer_connected")
-	# if multiplayer.is_server():
-	# 	connected_players.append(peer_id)
-	# 	players_needed -= 1
-	# 	update_waiting_message()
-
-	# 	rpc_id(peer_id,	"sync_keys", key_spawn_manager.get_key_data())
-
-	# 	# Sync dropped keys
-	# 	for	key_id in dropped_keys:
-	# 		rpc_id(peer_id,	"sync_dropped_key",	key_id,	dropped_keys[key_id])
-
-	# 	# Inform the new peer about	existing enemies
-	# 	for	enemy_data in spawned_enemies:
-	# 		rpc_id(peer_id,	"spawn_enemy", enemy_data)
-		
-	# 	spawn_player(peer_id)
-		
-	# 	if players_needed == 0:
-	# 		start_game()
 
 # func update_waiting_message():
-# 	var	message	= ""
-# 	if players_needed >	0:
-# 		message	= "Waiting for %d more Player%s" % [players_needed,	"s"	if players_needed >	1 else ""]
-# 	else:
-# 		message	= "Match starting..."
+#	var	message	= ""
+#	if players_needed >	0:
+#		message	= "Waiting for %d more Player%s" % [players_needed,	"s"	if players_needed >	1 else ""]
+#	else:
+#		message	= "Match starting..."
 	
-# 	# for host
-# 	waiting_message.text = message
+#	# for host
+#	waiting_message.text = message
 
-# 	# for clients
-# 	rpc("set_waiting_message", message)
+#	# for clients
+#	rpc("set_waiting_message", message)
 
-# @rpc func set_waiting_message(message: String):
-# 	waiting_message.text = message
+# @rpc func	set_waiting_message(message: String):
+#	waiting_message.text = message
 
 # func spawn_enemies():
-# 	# Spawn	enemies	at predefined positions	or randomly	on the NavMesh
-# 	if multiplayer.is_server():
-# 		for	spawn_point	in $EnemySpawnManager.get_children():
-# 			var	enemy_data = {
-# 				"position":	spawn_point.global_position,
-# 				"id": randi()  # Generate a	unique ID for each enemy
-# 			}
-# 			spawned_enemies.append(enemy_data)
-# 			rpc("spawn_enemy", enemy_data)
+#	# Spawn	enemies	at predefined positions	or randomly	on the NavMesh
+#	if multiplayer.is_server():
+#		for	spawn_point	in $EnemySpawnManager.get_children():
+#			var	enemy_data = {
+#				"position":	spawn_point.global_position,
+#				"id": randi()  # Generate a	unique ID for each enemy
+#			}
+#			spawned_enemies.append(enemy_data)
+#			rpc("spawn_enemy", enemy_data)
 
 # @rpc("call_local")
 # func spawn_enemy(enemy_data: Dictionary):
-# 	var	enemy =	Enemy.instantiate()
-# 	enemy.name = str(enemy_data["id"])
-# 	enemy.global_position =	enemy_data["position"]
-# 	add_child(enemy)
-# 	enemy.enter_idle_state()  # Set	initial	state to IDLE
+#	var	enemy =	Enemy.instantiate()
+#	enemy.name = str(enemy_data["id"])
+#	enemy.global_position =	enemy_data["position"]
+#	add_child(enemy)
+#	enemy.enter_idle_state()  # Set	initial	state to IDLE
 
 # func start_game():
-# 	# for host
-# 	waiting_message.text = "Match starting..."
-# 	get_tree().create_timer(3.0).timeout.connect(enable_player_movement)
+#	# for host
+#	waiting_message.text = "Match starting..."
+#	get_tree().create_timer(3.0).timeout.connect(enable_player_movement)
 
-# 	# for clients
-# 	rpc("begin_match")
+#	# for clients
+#	rpc("begin_match")
 
-# # Begins the match for all clients
-# @rpc func begin_match():
-# 	waiting_message.text = "Match starting..."
-# 	get_tree().create_timer(3.0).timeout.connect(enable_player_movement)
+# #	Begins the match for all clients
+# @rpc func	begin_match():
+#	waiting_message.text = "Match starting..."
+#	get_tree().create_timer(3.0).timeout.connect(enable_player_movement)
 
 # Enables movement for all players
 func enable_player_movement():
@@ -331,19 +271,19 @@ func enable_player_movement():
 # End Game
 # Checks if all	players	have escaped or died
 # func check_game_end():
-# 	var	players	= get_tree().get_nodes_in_group("players")
-# 	var	all_escaped_or_dead	= true
+#	var	players	= get_tree().get_nodes_in_group("players")
+#	var	all_escaped_or_dead	= true
 	
-# 	for	player in players:
-# 		if not player.has_escaped and player.health	> 0:
-# 			all_escaped_or_dead	= false
-# 			break
+#	for	player in players:
+#		if not player.has_escaped and player.health	> 0:
+#			all_escaped_or_dead	= false
+#			break
 	
-# 	if all_escaped_or_dead:
-# 		end_game()
+#	if all_escaped_or_dead:
+#		end_game()
 
-# # Ends the game	and	shows the result screen
+# #	Ends the game	and	shows the result screen
 # func end_game():
-# 	# Implement	game end logic here
-# 	print("Game	Over - All players have	escaped	or died")
-# 	# You can add a	game over screen or restart	the	game here
+#	# Implement	game end logic here
+#	print("Game	Over - All players have	escaped	or died")
+#	# You can add a	game over screen or restart	the	game here
