@@ -1,5 +1,7 @@
 extends	CharacterBody3D
 
+class_name EnemyArrow
+
 var	initial_velocity: Vector3
 var	current_velocity: Vector3
 var	gravity: float = -69.8
@@ -93,7 +95,7 @@ func handle_collision(collision):
 			# Handle enemy hit
 			collider.receive_damage_request.rpc_id(1, damage, arrow_id)
 			# print("enemy hit event, arrow_shooter_id:	" +	str(arrow_id) +	" collider:	" +	str(collider))
-		elif collider.name != str(shooter_id):
+		elif collider.name != str(shooter_id) and not collider is Enemy:
 			# Handle player	hit
 			if collider.has_method("receive_damage") and not arrow_id == 0:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)

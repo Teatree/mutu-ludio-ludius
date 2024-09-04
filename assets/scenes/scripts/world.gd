@@ -29,7 +29,7 @@ var	spawned_enemies	= []
 var	connected_players =	[]
 var	game_started = false
 # Players needed to spawn
-var	players_needed = 3
+var	players_needed = 4
 
 func _ready():
 	multiplayer.peer_connected.connect(_on_peer_connected)
