@@ -1,5 +1,7 @@
 extends	CharacterBody3D
 
+class_name Player
+
 signal health_changed(health_value)
 signal player_animation_changed(animation_name)
 
@@ -9,7 +11,7 @@ signal player_animation_changed(animation_name)
 @export	var	crouch_speed : float = 1.0
 
 @export	var	acceleration : float = 10.0
-@export	var	jump_velocity :	float =	4.5
+@export	var	jump_velocity :	float =	5.5
 @export	var	mouse_sensitivity :	float =	0.1
 @export	var	immobile : bool	= false
 @export_file var default_reticle
@@ -509,7 +511,7 @@ func enter_normal_state():
 
 
 func enter_crouch_state():
-	#print("entering crouch	state")
+	#print("entering crouch state, collision cylinder y location is: " + str(COLLISION_MESH.global_position.y))
 	state =	"crouching"
 	speed =	crouch_speed
 	CROUCH_ANIMATION.play("crouch")

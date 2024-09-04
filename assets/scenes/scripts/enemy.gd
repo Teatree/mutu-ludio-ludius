@@ -6,7 +6,7 @@ signal enemy_animation_changed(animation_name)
 
 @export	var	move_speed := 1.5
 @export	var	run_speed := 2
-@export	var	attack_interval	:= 1
+@export	var	attack_interval	:= 5
 @export	var	max_health := 1
 @export	var	idle_wait_time := 6.0
 
@@ -239,7 +239,7 @@ func enter_pursue_state(player:	CharacterBody3D):
 
 func enter_attack_state():
 	current_state =	State.ATTACK
-	attack_timer.start()
+	#attack_timer.start()
 	set_attack_radius(attack_radius*2)
 	play_add_aim_animation.rpc()
 	# print_once("ENTER	STATE: Attack")
@@ -365,20 +365,24 @@ func _on_attack_area_body_exited(body):
 				enter_idle_state()
 
 func _on_attack_timer_timeout():
-	if current_state == State.ATTACK and target_player and players_in_attack.has(target_player)	and	players_in_detection.has(target_player) and not isDead:
+	if current_state == State.ATTACK and target_player and players_in_attack.has(target_player)	and	players_in_detection.has(target_player):
 		shoot_arrow()
-		attack_timer.wait_time = attack_interval * 5 # Don't be alarmed, this is so you	can	get	that initial fast attack
-		attack_timer.start()
+		# attack_timer.wait_time = attack_interval * 5 # Don't be alarmed, this is so you	can	get	that initial fast attack
+		# attack_timer.start()
 
 func shoot_arrow():
-	hugh_sound.play()
+	rpc("play_hugh_sound")
 	if not multiplayer.is_server():
 		return
 	
 	await get_tree().create_timer(1).timeout
 
 	rpc("spawn_arrow", enemy_id)
-	play_crossbow_shoot_sound()
+	rpc("play_crossbow_shoot_sound")
+
+@rpc("call_local")
+func play_hugh_sound():
+	hugh_sound.play()
 
 
 @rpc("call_local")
@@ -391,7 +395,7 @@ func spawn_arrow(arr_id):
 	# Play Reload Animation
 	enemyAnimationTree.set("parameters/reloadTrigger/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	enemyAnimationTree.set("parameters/reloadTrigger/active", true)
-	play_crossbow_reload_sound()
+	rpc("play_crossbow_reload_sound")
 	
 	if target_player:
 		var	direction =	(target_player.global_position - arrow_spawn_point.global_position).normalized()
@@ -498,10 +502,12 @@ func is_on_water() -> bool:
 
 
 # Plays	the	crossbow shoot sound
+@rpc("call_local")
 func play_crossbow_shoot_sound():
 	crossbow_shoot_sound.play()
 
 # Plays	the	crossbow reload	sound
+@rpc("call_local")
 func play_crossbow_reload_sound():
 	crossbow_reload_sound.play()
 

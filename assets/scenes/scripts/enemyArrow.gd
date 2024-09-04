@@ -95,17 +95,19 @@ func handle_collision(collision):
 			# Handle enemy hit
 			collider.receive_damage_request.rpc_id(1, damage, arrow_id)
 			# print("enemy hit event, arrow_shooter_id:	" +	str(arrow_id) +	" collider:	" +	str(collider))
-		elif collider.name != str(shooter_id) and not collider is Enemy:
+		elif collider.name != str(shooter_id) and collider is Player:
 			# Handle player	hit
 			if collider.has_method("receive_damage") and not arrow_id == 0:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 				print("player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
-			elif collider.get_unique_id() and collider.get_unique_id() == 1:
+			elif collider.has_method("receive_damage") and not arrow_id == 0 and collider.name == 1:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 				print("HOST(?) player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
 		
+		if collider.name != str(shooter_id):
+			spawn_blood_effect(global_position)
+		
 		has_dealt_damage = true
-		spawn_blood_effect(global_position)
 		queue_free()
 	else:
 		# Stick	the	arrow to non-character objects
