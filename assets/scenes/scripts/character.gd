@@ -59,7 +59,7 @@ var	arrow_shooter_id: int =	0
 @export	var	respawn_time : float = 15.0	# Time before respawn after	death
 @onready var respawn_timer : Timer = Timer.new()
 var	is_dead	: bool = false
-var spectating_state : bool = false
+var	spectating_state : bool	= false
 
 @export	var	Arrow: PackedScene
 @export	var	arrow_speed	= 20
@@ -157,6 +157,11 @@ var	movement_enabled = false
 
 var	RETICLE	: Control
 var	gravity	: float	= ProjectSettings.get_setting("physics/3d/default_gravity")	# Don't	set	this as a const, see the gravity section in _physics_process
+
+var	is_strafing_left = false
+var	is_strafing_right =	false
+var	spine_lower_rotation = 0.0
+var	spine_upper_rotation = 0.0
 
 var	mouseInput : Vector2 = Vector2(0,0)
 
@@ -529,7 +534,6 @@ func update_camera_fov():
 	else:
 		CAMERA.fov = lerp(CAMERA.fov, 75.0,	0.3)
 
-
 # Disables player movement and shooting
 @rpc("call_local")
 func disable_movement():
@@ -636,7 +640,7 @@ func _unhandled_input(event):
 		check_door_interaction()
 		
 	# if Input.is_action_just_pressed("shoot") and is_loaded and crossBow_AnimPlayer.current_animation != "SHOOT_ARROW":
-	# 	shoot()
+	#	shoot()
 	
 	if Input.is_action_just_pressed("reload"):
 		start_reload()
@@ -966,7 +970,7 @@ func die():
 	crossbow_fps.visible = false
 	arrow_fps.visible =	false
 	ui_arrow_count.visible = false
-	RETICLE.visible = false
+	RETICLE.visible	= false
 
 	#respawn_timer.start()
 	await get_tree().create_timer(6).timeout

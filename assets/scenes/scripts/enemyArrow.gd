@@ -98,7 +98,7 @@ func handle_collision(collision):
 			if collider.has_method("receive_damage") and not arrow_id == 0:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 				print("player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
-			elif collider.get_unique_id() == 1:
+			elif collider.get_unique_id() and collider.get_unique_id() == 1:
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 				print("HOST(?) player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
 		
