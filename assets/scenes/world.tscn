@@ -604,7 +604,7 @@ script = ExtResource("2_unp3n")
 transform = Transform3D(-0.0866026, 0, -0.05, 0, 0.1, 0, 0.05, 0, -0.0866026, -13.9022, 0.166067, -9.17386)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SpawnManager/SpawnPoint1"]
-transform = Transform3D(2.00073, 0, 0, 0, -9.84093e-08, 1.12973, 0, -2.25134, -4.93823e-08, 0, -0.248817, 0)
+transform = Transform3D(2.00073, 5.96046e-08, 0, 0, -9.84093e-08, 1.12973, 5.96046e-08, -2.25134, -4.93823e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("PrismMesh_treqn")
 
@@ -614,13 +614,14 @@ collision_mask = 3
 script = ExtResource("5_skf3u")
 
 [node name="CollisionPlayerDetectionHack" type="CollisionShape3D" parent="SpawnManager/SpawnPoint1/Area3DPlayerDetectionCheese"]
+transform = Transform3D(1, 0, -5.96046e-08, 0, 1, 0, 5.96046e-08, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_7vqp6")
 
 [node name="SpawnPoint2" type="Node3D" parent="SpawnManager"]
 transform = Transform3D(0.0866026, 0, 0.05, 0, 0.1, 0, -0.05, 0, 0.0866026, 3.54606, 0.16086, 12.5847)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SpawnManager/SpawnPoint2"]
-transform = Transform3D(2.00073, 0, 0, 0, -9.84093e-08, 1.12973, 0, -2.25134, -4.93823e-08, 0, -0.248817, 0)
+transform = Transform3D(2.00073, 5.96046e-08, 0, 0, -9.84093e-08, 1.12973, 5.96046e-08, -2.25134, -4.93823e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("PrismMesh_treqn")
 
@@ -630,13 +631,14 @@ collision_mask = 3
 script = ExtResource("5_skf3u")
 
 [node name="CollisionPlayerDetectionHack" type="CollisionShape3D" parent="SpawnManager/SpawnPoint2/Area3DPlayerDetectionCheese"]
+transform = Transform3D(1, 0, -5.96046e-08, 0, 1, 0, 5.96046e-08, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_7vqp6")
 
 [node name="SpawnPoint4" type="Node3D" parent="SpawnManager"]
 transform = Transform3D(0.1, 0, 1.11759e-08, 0, 0.1, 0, -1.11759e-08, 0, 0.1, -19.6073, 0.161655, 39.1802)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SpawnManager/SpawnPoint4"]
-transform = Transform3D(2.00073, 0, 0, 0, -9.84093e-08, 1.12973, 0, -2.25134, -4.93823e-08, 0, -0.248817, 0)
+transform = Transform3D(2.00073, 0, -4.23516e-22, 0, -9.84093e-08, 1.12973, -1.42109e-14, -2.25134, -4.93823e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("PrismMesh_treqn")
 
@@ -646,13 +648,14 @@ collision_mask = 3
 script = ExtResource("5_skf3u")
 
 [node name="CollisionPlayerDetectionHack" type="CollisionShape3D" parent="SpawnManager/SpawnPoint4/Area3DPlayerDetectionCheese"]
+transform = Transform3D(1, 0, 7.10543e-15, 0, 1, 0, -7.10543e-15, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_7vqp6")
 
 [node name="SpawnPoint5" type="Node3D" parent="SpawnManager"]
 transform = Transform3D(-4.37114e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, -4.37114e-09, -10.3458, 0, 51.0794)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SpawnManager/SpawnPoint5"]
-transform = Transform3D(2.00073, 0, 0, 0, -9.84093e-08, 1.12973, 0, -2.25134, -4.93823e-08, 0, -0.248817, 0)
+transform = Transform3D(2.00073, 7.10543e-15, 0, 0, -9.84093e-08, 1.12973, 7.10543e-15, -2.25134, -4.93823e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("PrismMesh_treqn")
 
@@ -662,13 +665,14 @@ collision_mask = 3
 script = ExtResource("5_skf3u")
 
 [node name="CollisionPlayerDetectionHack" type="CollisionShape3D" parent="SpawnManager/SpawnPoint5/Area3DPlayerDetectionCheese"]
+transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 0, 3.55271e-15, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_7vqp6")
 
 [node name="SpawnPoint6" type="Node3D" parent="SpawnManager"]
 transform = Transform3D(-0.0866026, 0, 0.05, 0, 0.1, 0, -0.05, 0, -0.0866026, 6.58939, 0.340351, 23.7156)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SpawnManager/SpawnPoint6"]
-transform = Transform3D(2.00073, 0, 0, 0, -9.84093e-08, 1.12973, 0, -2.25134, -4.93823e-08, 0, -0.248817, 0)
+transform = Transform3D(2.00073, -5.96046e-08, 0, 0, -9.84093e-08, 1.12973, -5.96046e-08, -2.25134, -4.93823e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("PrismMesh_treqn")
 
@@ -678,13 +682,14 @@ collision_mask = 3
 script = ExtResource("5_skf3u")
 
 [node name="CollisionPlayerDetectionHack" type="CollisionShape3D" parent="SpawnManager/SpawnPoint6/Area3DPlayerDetectionCheese"]
+transform = Transform3D(1, 0, 5.96046e-08, 0, 1, 0, -5.96046e-08, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_7vqp6")
 
 [node name="SpawnPoint7" type="Node3D" parent="SpawnManager"]
 transform = Transform3D(-4.37114e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, -4.37114e-09, -0.790266, 0.192005, -17.8055)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SpawnManager/SpawnPoint7"]
-transform = Transform3D(2.00073, 0, 0, 0, -9.84093e-08, 1.12973, 0, -2.25134, -4.93823e-08, 0, -0.248817, 0)
+transform = Transform3D(2.00073, 7.10543e-15, 0, 0, -9.84093e-08, 1.12973, 7.10543e-15, -2.25134, -4.93823e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("PrismMesh_treqn")
 
@@ -694,6 +699,7 @@ collision_mask = 3
 script = ExtResource("5_skf3u")
 
 [node name="CollisionPlayerDetectionHack" type="CollisionShape3D" parent="SpawnManager/SpawnPoint7/Area3DPlayerDetectionCheese"]
+transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 0, 3.55271e-15, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_7vqp6")
 
 [node name="SpawnPoint8" type="Node3D" parent="SpawnManager"]
@@ -732,7 +738,7 @@ shape = SubResource("SphereShape3D_7vqp6")
 transform = Transform3D(-0.1, 0, -8.74228e-09, 0, 0.1, 0, 8.74228e-09, 0, -0.1, 27.2322, 0.340351, -14.9603)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SpawnManager/SpawnPoint10"]
-transform = Transform3D(2.00073, 0, 0, 0, -9.84093e-08, 1.12973, 0, -2.25134, -4.93823e-08, 0, -0.248817, 0)
+transform = Transform3D(2.00073, -1.42109e-14, 0, 0, -9.84093e-08, 1.12973, -1.42109e-14, -2.25134, -4.93823e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("PrismMesh_treqn")
 
@@ -742,6 +748,7 @@ collision_mask = 3
 script = ExtResource("5_skf3u")
 
 [node name="CollisionPlayerDetectionHack" type="CollisionShape3D" parent="SpawnManager/SpawnPoint10/Area3DPlayerDetectionCheese"]
+transform = Transform3D(1, 0, 7.10543e-15, 0, 1, 0, -7.10543e-15, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_7vqp6")
 
 [node name="SpawnPoint11" type="Node3D" parent="SpawnManager"]
@@ -764,7 +771,7 @@ shape = SubResource("SphereShape3D_7vqp6")
 script = ExtResource("2_unp3n")
 
 [node name="EnemySpawnPoint1" type="Node3D" parent="EnemySpawnManager"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.08, -0.646127, -2.757)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 8.71006, -0.646127, -5.49238)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint1"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
@@ -831,6 +838,14 @@ mesh = SubResource("BoxMesh_t1hbv")
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 20.5869, 0.25, -2.42972)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint9"]
+transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
+layers = 2
+mesh = SubResource("BoxMesh_t1hbv")
+
+[node name="EnemySpawnPoint10" type="Node3D" parent="EnemySpawnManager"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.48453, -0.646127, 1.04416)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EnemySpawnManager/EnemySpawnPoint10"]
 transform = Transform3D(-2.00073, -1.19209e-07, 4.47035e-08, -2.86607e-07, 1.30385e-06, -1.12973, 4.16862e-07, -2.25134, 7.45058e-08, 0, -0.248817, 0)
 layers = 2
 mesh = SubResource("BoxMesh_t1hbv")

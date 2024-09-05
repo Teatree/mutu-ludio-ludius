@@ -377,8 +377,9 @@ func shoot_arrow():
 	
 	await get_tree().create_timer(1).timeout
 
-	rpc("spawn_arrow", enemy_id)
-	rpc("play_crossbow_shoot_sound")
+	if not isDead:
+		rpc("spawn_arrow", enemy_id)
+		rpc("play_crossbow_shoot_sound")
 
 @rpc("call_local")
 func play_hugh_sound():

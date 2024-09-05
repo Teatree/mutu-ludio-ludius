@@ -214,6 +214,7 @@ func addPlayer(peer_id):
 	if multiplayer.is_server():
 		var	spawn_data = spawn_manager.get_random_spawn_point()
 		rpc("set_player_spawn",	peer_id, spawn_data.position, spawn_data.rotation)
+		#rpc("set_player_spawn",	1, Vector3(222,220,222), spawn_data.rotation)
 	
 	# Inform all clients about the new player
 	rpc("sync_new_player", peer_id)
@@ -221,8 +222,12 @@ func addPlayer(peer_id):
 @rpc("authority")
 func set_player_spawn(peer_id: int,	position: Vector3, rotation: Vector3):
 	var	player = get_node_or_null(str(peer_id))
-	if player:
+	if player and not peer_id == 1:
 		player.global_position = position
+		player.global_rotation = rotation
+		print("	__ Player ", peer_id, "	spawned	at position: ", position)
+	elif peer_id == 1:
+		player.global_position = Vector3(0,22,0)
 		player.global_rotation = rotation
 		print("	__ Player ", peer_id, "	spawned	at position: ", position)
 
@@ -309,12 +314,19 @@ func start_game():
 	# for host
 	waiting_message.text = "Match starting..."
 	get_tree().create_timer(3.0).timeout.connect(enable_player_movement)
-
 	# for clients
 	rpc("begin_match")
 
 # Begins the match for all clients
 @rpc func begin_match():
+	# Find player with ID 1	and	deal 2 damage
+	var	host_player	= get_node_or_null("1")
+	if host_player and host_player is Player:
+		print("	__ Dealing 2 damage	to host	player")
+		host_player.receive_damage.rpc_id(1, 2, -1)	 # -1 as arrow_id to indicate it's not from	an arrow
+	else:
+		print("	__ Host	player not found or not	of type	Player")
+
 	waiting_message.text = "Match starting..."
 	get_tree().create_timer(3.0).timeout.connect(enable_player_movement)
 

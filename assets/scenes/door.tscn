@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://k1a675rcue17"]
+[gd_scene load_steps=10 format=3 uid="uid://k1a675rcue17"]
 
 [ext_resource type="PackedScene" uid="uid://cgmitpr37fcp0" path="res://assets/3d/environment/door.glb" id="1_y3p2v"]
 [ext_resource type="PackedScene" uid="uid://c0dogmcn3m0p" path="res://assets/3d/environment/silent_hill_key.glb" id="2_quo1j"]
@@ -51,9 +51,9 @@ tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(2, 2.5),
-"transitions": PackedFloat32Array(1, 1),
+"transitions": PackedFloat32Array(5.27803, 5.27803),
 "update": 0,
-"values": [Vector3(-1.5708, 0, 0), Vector3(-1.5708, 0.261799, 0)]
+"values": [Vector3(-1.5708, 0, 0), Vector3(-3.55271e-15, 0, 0)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -68,8 +68,12 @@ tracks/4/keys = {
 "values": [false, true, true, false]
 }
 
+[sub_resource type="Animation" id="Animation_xc0iy"]
+resource_name = "RESET"
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5631s"]
 _data = {
+"RESET": SubResource("Animation_xc0iy"),
 "open": SubResource("Animation_21skl")
 }
 

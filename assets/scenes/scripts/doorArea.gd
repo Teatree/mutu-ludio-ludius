@@ -17,7 +17,11 @@ func try_open(player):
 	else:
 		print("Player %s doesn't have enough keys. Current keys: %d" % [player.name, player.keys])
 		
-@rpc("call_local")
+@rpc("any_peer", "call_local")
 func open_door():
 	print("Opening door")
+	animation_player.stop()
 	animation_player.play("open")
+
+	await get_tree().create_timer(4).timeout
+	queue_free()

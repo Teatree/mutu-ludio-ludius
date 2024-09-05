@@ -11,7 +11,7 @@ signal player_animation_changed(animation_name)
 @export	var	crouch_speed : float = 1.0
 
 @export	var	acceleration : float = 10.0
-@export	var	jump_velocity :	float =	5.5
+@export	var	jump_velocity :	float =	5
 @export	var	mouse_sensitivity :	float =	0.1
 @export	var	immobile : bool	= false
 @export_file var default_reticle
@@ -1037,10 +1037,31 @@ func initiate_escape():
 	if not is_multiplayer_authority():
 		return
 	
+	hide_player_mesh.rpc()
+	default_reticle	= null
+	for	a in ui_elements_to_hide:
+		a.visible =	false
+	PlayerModel.visible	= false
+	crossbow_fps.visible = false
+	arrow_fps.visible =	false
+	ui_arrow_count.visible = false
+	RETICLE.visible	= false
+
 	has_escaped	= true
-	rpc("set_player_escaped")
 	disable_player_controls()
 	play_escape_animation()
+
+	await get_tree().create_timer(4).timeout
+	switch_to_spectator_mode()
+	rpc("set_player_escaped")
+
+
+@rpc("call_local")
+func set_player_escaped():
+	has_escaped	= true
+	visible	= false
+	if is_multiplayer_authority():
+		switch_to_spectator_mode()
 
 # Disables player controls when	escaping
 func disable_player_controls():
@@ -1090,13 +1111,6 @@ func find_new_spectating_target():
 		if player != self and not player.has_escaped:
 			SPECTATING_CAMERA.global_transform = player.CAMERA.global_transform
 			break
-
-@rpc("call_local")
-func set_player_escaped():
-	has_escaped	= true
-	visible	= false
-	if is_multiplayer_authority():
-		switch_to_spectator_mode()
 
 # Water
 # Checks if the	player is underwater and applies the appropriate effect
