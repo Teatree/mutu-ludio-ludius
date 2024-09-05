@@ -30,6 +30,7 @@ var	connected_players =	[]
 var	game_started = false
 # Players needed to spawn
 var	players_needed = 4
+var	player_spawn_points	= {}
 
 func _ready():
 	multiplayer.peer_connected.connect(_on_peer_connected)
@@ -199,9 +200,7 @@ func sync_dropped_key(key_id: String, key_position:	Vector3):
 func remove_dropped_key(key_id:	String):
 	dropped_keys.erase(key_id)
 
-
 func addPlayer(peer_id):
-	var	spawn_data = spawn_manager.get_random_spawn_point()
 	var	player = Player.instantiate()
 	player.name	= str(peer_id)
 	add_child(player)
@@ -210,13 +209,22 @@ func addPlayer(peer_id):
 		player.health_changed.connect(show_blood_splat)
 
 	player.disable_movement()
-
-	player.global_position = spawn_data.position
-	player.global_rotation = spawn_data.rotation
-	player.head_rotation_x = spawn_data.rotation.x
+	
+	# Server decides spawn point for all players
+	if multiplayer.is_server():
+		var	spawn_data = spawn_manager.get_random_spawn_point()
+		rpc("set_player_spawn",	peer_id, spawn_data.position, spawn_data.rotation)
 	
 	# Inform all clients about the new player
-	rpc("sync_new_player", peer_id,	spawn_data)
+	rpc("sync_new_player", peer_id)
+
+@rpc("authority")
+func set_player_spawn(peer_id: int,	position: Vector3, rotation: Vector3):
+	var	player = get_node_or_null(str(peer_id))
+	if player:
+		player.global_position = position
+		player.global_rotation = rotation
+		print("	__ Player ", peer_id, "	spawned	at position: ", position)
 
 func removePlayer(peer_id):
 	var	player = get_node_or_null(str(peer_id))
@@ -224,13 +232,13 @@ func removePlayer(peer_id):
 		player.queue_free()
 
 @rpc("call_local")
-func sync_new_player(peer_id, position,	rotation):
+func sync_new_player(peer_id):
 	if not has_node(str(peer_id)):
 		var	player = Player.instantiate()
 		player.name	= str(peer_id)
 		add_child(player)
-		player.global_position = position
-		player.global_rotation = rotation
+		# player.global_position = position
+		# player.global_rotation = rotation
 		print("New player added: ", peer_id)
 
 func show_blood_splat(health_value):

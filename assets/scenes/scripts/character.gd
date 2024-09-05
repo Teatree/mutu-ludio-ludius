@@ -243,6 +243,9 @@ func _ready():
 
 	update_arrow_count_ui()
 
+	if is_multiplayer_authority():
+		print("	__ Player ", name, " is ready. Position: ", global_position)
+
 func check_controls(): # If you	add	a control, you might want to add a check for it here.
 	# The actions are being	disabled so the	engine doesn't halt	the	entire project in debug	mode
 	if !InputMap.has_action(JUMP):
@@ -511,7 +514,7 @@ func enter_normal_state():
 
 
 func enter_crouch_state():
-	#print("entering crouch state, collision cylinder y location is: " + str(COLLISION_MESH.global_position.y))
+	#print("entering crouch	state, collision cylinder y	location is: " + str(COLLISION_MESH.global_position.y))
 	state =	"crouching"
 	speed =	crouch_speed
 	CROUCH_ANIMATION.play("crouch")

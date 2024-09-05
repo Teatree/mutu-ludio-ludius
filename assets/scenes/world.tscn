@@ -1,4 +1,4 @@
-[gd_scene load_steps=72 format=3 uid="uid://b64fy6e8f0w5d"]
+[gd_scene load_steps=70 format=3 uid="uid://b64fy6e8f0w5d"]
 
 [ext_resource type="Script" path="res://assets/scenes/scripts/world.gd" id="1_04dgn"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/KeySpawnManager.gd" id="2_pd1c8"]
@@ -304,10 +304,6 @@ size = Vector3(2.37689, 4.14328, 3.15527)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kydi0"]
 size = Vector3(1.99121, 1, 2.90332)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_e35wg"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_0j7q6"]
 
 [sub_resource type="Theme" id="Theme_l8uxc"]
 
@@ -1408,15 +1404,6 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/slopeManualFix3"]
 transform = Transform3D(1, 2.70212e-15, 0, 2.70212e-15, 1, 0, 0, 0, 1, 0, -0.499399, 0)
 shape = SubResource("BoxShape3D_kydi0")
-
-[node name="static box" type="StaticBody3D" parent="NavigationRegion3D"]
-transform = Transform3D(1.6, 0, 0, 0, 1.4, 0, 0, 0, 1.8, 3.29574, 0.112017, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/static box"]
-shape = SubResource("BoxShape3D_e35wg")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/static box"]
-mesh = SubResource("BoxMesh_0j7q6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
