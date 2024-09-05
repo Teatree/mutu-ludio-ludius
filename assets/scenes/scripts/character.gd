@@ -171,6 +171,14 @@ var	accumulated_rotation_x = 0.0
 
 var	head_rotation_x
 
+# Pause	Menu
+@export	var	base_mouse_sensitivity:	float =	0.1
+var	current_mouse_sensitivity: float = base_mouse_sensitivity
+
+@onready var pause_menu	= $PauseMenu
+
+var	is_menu_open: bool	= false
+
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
 
@@ -245,6 +253,10 @@ func _ready():
 
 	if is_multiplayer_authority():
 		print("	__ Player ", name, " is ready. Position: ", global_position)
+	
+	pause_menu.hide()
+	pause_menu.sensitivity_changed.connect(_on_sensitivity_changed)
+	pause_menu.request_quit.connect(_on_request_quit)  # Connect the new signal
 
 func check_controls(): # If you	add	a control, you might want to add a check for it here.
 	# The actions are being	disabled so the	engine doesn't halt	the	entire project in debug	mode
@@ -630,9 +642,14 @@ func _on_stamina_cooldown_complete():
 
 func _unhandled_input(event):
 	if not is_multiplayer_authority(): return
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		mouseInput.x += event.relative.x
-		mouseInput.y += event.relative.y
+
+	if event.is_action_pressed("pause"):
+		toggle_menu()
+	elif not is_menu_open:
+		if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			rotate_y(deg_to_rad(-event.relative.x *	current_mouse_sensitivity))
+			HEAD.rotate_x(deg_to_rad(-event.relative.y * current_mouse_sensitivity))
+			HEAD.rotation.x	= clamp(HEAD.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 	
 	if Input.is_action_just_pressed("shoot") and is_loaded and crossBow_AnimPlayer.current_animation != "SHOOT_ARROW":
 		shoot()
@@ -1155,3 +1172,37 @@ func drop_keys():
 		
 		# Notify the world about the new key
 		get_parent().register_dropped_key.rpc(key.get_path(), key.global_position)
+
+# Pause
+# Toggles the pause	state
+func toggle_menu():
+	is_menu_open = !is_menu_open
+	if is_menu_open:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		pause_menu.show()
+		disable_player_input()
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		pause_menu.hide()
+		enable_player_input()
+
+# Disables player input	when menu is open
+func disable_player_input():
+	set_process_input(false)
+	set_physics_process(false)
+
+# Enables player input when	menu is closed
+func enable_player_input():
+	set_process_input(true)
+	set_physics_process(true)
+
+# Updates the mouse	sensitivity
+func _on_sensitivity_changed(value:	float):
+	current_mouse_sensitivity =	base_mouse_sensitivity * value
+
+# $$$ ADD $$$
+# Handle quit request from the pause menu
+func _on_request_quit():
+	if is_multiplayer_authority():
+		# Call the quit	handling function in the world script
+		get_parent().handle_quit_request(get_multiplayer_authority())

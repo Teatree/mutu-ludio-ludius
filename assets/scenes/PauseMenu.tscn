@@ -1,0 +1,67 @@
+[gd_scene load_steps=6 format=3 uid="uid://dpdf6ym1jhcx6"]
+
+[ext_resource type="Script" path="res://assets/scenes/scripts/PauseMenu.gd" id="1_ywrw0"]
+[ext_resource type="FontFile" uid="uid://chkm0ks7oxx0k" path="res://assets/fonts/Cambria-Font-For-Windows.ttf" id="2_mh6b6"]
+
+[sub_resource type="Theme" id="Theme_wnrds"]
+default_font = ExtResource("2_mh6b6")
+
+[sub_resource type="LabelSettings" id="LabelSettings_iyifq"]
+font = ExtResource("2_mh6b6")
+font_size = 28
+
+[sub_resource type="LabelSettings" id="LabelSettings_o1uuc"]
+font = ExtResource("2_mh6b6")
+
+[node name="PauseMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = 95.0
+offset_right = -100.0
+offset_bottom = -95.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_wnrds")
+script = ExtResource("1_ywrw0")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = -9.0
+offset_top = 28.0
+offset_right = 292.0
+offset_bottom = 148.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "MENU"
+label_settings = SubResource("LabelSettings_iyifq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Mouse Sensitivity:"
+label_settings = SubResource("LabelSettings_o1uuc")
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+min_value = -2.0
+max_value = 2.0
+
+[node name="ExitButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_mh6b6")
+text = "Exit Game"

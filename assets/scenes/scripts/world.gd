@@ -37,11 +37,13 @@ var	player_spawn_points	= {}
 
 func _ready():
 	multiplayer.peer_connected.connect(_on_peer_connected)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	match_timer.timeout.connect(_on_match_timer_timeout)
 
 func _unhandled_input(event):
-	if Input.is_action_just_pressed("quit"):
-		get_tree().quit()
+	pass
+	# if Input.is_action_just_pressed("quit"):
+	#	get_tree().quit()
 
 func _on_host_button_pressed():
 	main_menu.hide()
@@ -71,7 +73,7 @@ func _on_join_button_pressed():
 	waiting_message.text = "No Servers Up, you gotta restart!"
 	
 	# enet_peer.create_client("38.180.57.198", PORT)
-	enet_peer.create_client("38.180.57.198", PORT)
+	enet_peer.create_client("localhost", PORT)
 	multiplayer.multiplayer_peer = enet_peer
 
 	addPlayer(multiplayer.get_unique_id())
@@ -336,6 +338,10 @@ func _on_peer_connected(peer_id):
 		if players_needed == 0:
 			start_game()
 
+func _on_peer_disconnected(id):
+	if has_node(str(id)):
+		get_node(str(id)).queue_free()
+
 func update_waiting_message():
 	var	message	= ""
 	if players_needed >	0:
@@ -421,3 +427,8 @@ func end_game():
 	# Implement	game end logic here
 	print("Game	Over - All players have	escaped	or died")
 	# You can add a	game over screen or restart	the	game here
+
+# $$$ ADD $$$
+# Handle quit request from a player
+func handle_quit_request(player_id):
+	get_tree().quit()
