@@ -31,9 +31,9 @@ script = ExtResource("1_ywrw0")
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 0
 offset_left = -9.0
-offset_top = 28.0
+offset_top = 9.0
 offset_right = 292.0
-offset_bottom = 148.0
+offset_bottom = 153.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
@@ -41,25 +41,39 @@ alignment = 1
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
-text = "MENU"
+text = "SEWER MENU"
 label_settings = SubResource("LabelSettings_iyifq")
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Mouse Sensitivity:"
+text = "  Mouse Sensitivity:"
 label_settings = SubResource("LabelSettings_o1uuc")
 
 [node name="HSlider" type="HSlider" parent="PanelContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(150, 50)
+custom_minimum_size = Vector2(150, 35)
 layout_mode = 2
 min_value = -2.0
 max_value = 2.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "  Master Volume:     "
+label_settings = SubResource("LabelSettings_o1uuc")
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+value = 100.0
 
 [node name="ExitButton" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2

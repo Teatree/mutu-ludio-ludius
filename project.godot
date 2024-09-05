@@ -14,6 +14,10 @@ config/name="multiplayerFPStest"
 run/main_scene="res://assets/scenes/world.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 
+[audio]
+
+buses/default_bus_layout="res://assets/sounds/Master.tres"
+
 [display]
 
 window/size/viewport_width=480

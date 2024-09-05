@@ -1418,6 +1418,42 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 2.70212e-15, 0, 2.70212e-15, 1, 0, 0, 0, 1, 0, -0.499399, 0)
 shape = SubResource("BoxShape3D_kydi0")
 
+[node name="slopeManualFix5" type="RigidBody3D" parent="NavigationRegion3D"]
+transform = Transform3D(1.19718e-07, 5.32944e-08, -1, -0.453866, 0.89107, -6.84693e-09, 0.89107, 0.453866, 1.30866e-07, 22.3893, -0.462905, 38.4526)
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+
+[node name="slopeFix" type="MeshInstance3D" parent="NavigationRegion3D/slopeManualFix5"]
+visible = false
+mesh = SubResource("PlaneMesh_3oayx")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/slopeManualFix5"]
+transform = Transform3D(1, 2.70212e-15, 0, 2.70212e-15, 1, 0, 0, 0, 1, 0, -0.499399, 0)
+shape = SubResource("BoxShape3D_kydi0")
+
+[node name="slopeManualFix6" type="RigidBody3D" parent="NavigationRegion3D"]
+transform = Transform3D(0.89107, 0.453866, 1.74577e-07, -0.453866, 0.89107, -6.84694e-09, -1.58668e-07, -7.31335e-08, 1, 18.9472, -0.462905, 40.5919)
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+
+[node name="slopeFix" type="MeshInstance3D" parent="NavigationRegion3D/slopeManualFix6"]
+visible = false
+mesh = SubResource("PlaneMesh_3oayx")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/slopeManualFix6"]
+transform = Transform3D(1, 2.70212e-15, 0, 2.70212e-15, 1, 0, 0, 0, 1, 0, -0.499399, 0)
+shape = SubResource("BoxShape3D_kydi0")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainMenu" type="PanelContainer" parent="CanvasLayer"]

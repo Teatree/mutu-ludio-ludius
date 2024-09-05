@@ -32,7 +32,6 @@ var	current_state: ArrowState =	ArrowState.FLYING
 
 @onready var pickup_area: Area3D = $PickupArea
 
-
 func _ready():
 	set_physics_process(true)
 
@@ -57,6 +56,7 @@ func initialize(start_transform: Transform3D, initial_speed: float,	shooter: Ene
 	if multiplayer.get_unique_id() == 1:
 		set_enemy_id(arrow_id)
 		print("for HOST initializing arrow with arrow ID: " + str(arrow_id))
+
 
 @rpc func set_enemy_id(id):
 	arrow_id = id
@@ -104,7 +104,7 @@ func handle_collision(collision):
 				collider.receive_damage.rpc_id(collider.get_multiplayer_authority(), damage, arrow_id)
 				print("HOST(?) player	hit	event, arrow_shooter_id: " + str(arrow_id) + " collider: " + str(collider))
 		
-		if collider.name != str(shooter_id):
+		if collider.name != str(shooter_id) and collider is Enemy or collider is Player:
 			spawn_blood_effect(global_position)
 		
 		has_dealt_damage = true

@@ -177,6 +177,9 @@ var	current_mouse_sensitivity: float = base_mouse_sensitivity
 
 @onready var pause_menu	= $PauseMenu
 
+const MASTER_BUS_PATH =	"res://assets/sounds/Master.tres"
+var	master_bus:	AudioBusLayout
+
 var	is_menu_open: bool	= false
 
 func _enter_tree():
@@ -256,7 +259,18 @@ func _ready():
 	
 	pause_menu.hide()
 	pause_menu.sensitivity_changed.connect(_on_sensitivity_changed)
+	pause_menu.volume_changed.connect(_on_volume_changed)
 	pause_menu.request_quit.connect(_on_request_quit)  # Connect the new signal
+
+	ensure_master_bus_exists()
+
+# Ensure the Master	bus	exists in the AudioServer
+func ensure_master_bus_exists():
+	if AudioServer.get_bus_index("Master") == -1:
+		AudioServer.add_bus(0)	# Add at index 0 to make it the	main bus
+		AudioServer.set_bus_name(0,	"Master")
+		print("Added Master	audio bus to AudioServer")
+
 
 func check_controls(): # If you	add	a control, you might want to add a check for it here.
 	# The actions are being	disabled so the	engine doesn't halt	the	entire project in debug	mode
@@ -1206,3 +1220,11 @@ func _on_request_quit():
 	if is_multiplayer_authority():
 		# Call the quit	handling function in the world script
 		get_parent().handle_quit_request(get_multiplayer_authority())
+
+func _on_volume_changed(value: float):
+	var	volume_db =	linear_to_db(value)
+	var	master_bus_index = AudioServer.get_bus_index("Master")
+	if master_bus_index	!= -1:
+		AudioServer.set_bus_volume_db(master_bus_index,	volume_db)
+	else:
+		push_error("Master audio bus not found in AudioServer")

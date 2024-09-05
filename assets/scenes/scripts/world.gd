@@ -73,7 +73,7 @@ func _on_join_button_pressed():
 	waiting_message.text = "No Servers Up, you gotta restart!"
 	
 	# enet_peer.create_client("38.180.57.198", PORT)
-	enet_peer.create_client("localhost", PORT)
+	enet_peer.create_client("38.180.57.198", PORT)
 	multiplayer.multiplayer_peer = enet_peer
 
 	addPlayer(multiplayer.get_unique_id())
@@ -319,6 +319,9 @@ func _on_multiplayer_spawner_spawned(node):
 
 func _on_peer_connected(peer_id):
 	if multiplayer.is_server():
+		# var	ip = multiplayer.multiplayer_peer.get_peer_address(peer_id)
+		# print("~ IP: ", ip,	" Connected")
+
 		connected_players.append(peer_id)
 		players_needed -= 1
 		update_waiting_message()
