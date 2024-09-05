@@ -1,11 +1,10 @@
-[gd_scene load_steps=70 format=3 uid="uid://b64fy6e8f0w5d"]
+[gd_scene load_steps=69 format=3 uid="uid://b64fy6e8f0w5d"]
 
-[ext_resource type="Script" path="res://assets/scenes/scripts/world.gd" id="1_04dgn"]
+[ext_resource type="Script" path="res://assets/scenes/scripts/world.gd" id="1_q1bv6"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/KeySpawnManager.gd" id="2_pd1c8"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/SpawnManager.gd" id="2_unp3n"]
 [ext_resource type="MeshLibrary" uid="uid://chv80uhw8anfg" path="res://assets/3d/tilesSet/tileset.tres" id="3_osyca"]
 [ext_resource type="Texture2D" uid="uid://cx5yxqhlpqf1b" path="res://assets/2d/pentogram.png" id="5_jkruf"]
-[ext_resource type="PackedScene" uid="uid://bi1qnoqelk4hy" path="res://assets/scenes/key.tscn" id="5_m52ye"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/Area3DPlayerDetectionCheese.gd" id="5_skf3u"]
 [ext_resource type="Texture2D" uid="uid://bvi43rcbi0nwc" path="res://assets/2d/blood_splatter_1.png" id="6_1kxs0"]
 [ext_resource type="Texture2D" uid="uid://cw3fihokvf8m7" path="res://assets/2d/cage_texture.png" id="6_cubcd"]
@@ -427,7 +426,7 @@ material = SubResource("ShaderMaterial_mt8gu")
 size = Vector3(12, 1, 12)
 
 [node name="World" type="Node"]
-script = ExtResource("1_04dgn")
+script = ExtResource("1_q1bv6")
 
 [node name="MatchTimer" type="Timer" parent="."]
 wait_time = 180.0
@@ -435,7 +434,6 @@ one_shot = true
 
 [node name="KeySpawnManager" type="Node" parent="."]
 script = ExtResource("2_pd1c8")
-Key = ExtResource("5_m52ye")
 
 [node name="KeySpawnPoint1" type="Node3D" parent="KeySpawnManager"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -13.5249, 0.264082, 4.93247)
@@ -1452,6 +1450,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HostButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_fonts/font = ExtResource("12_lrnaq")
 text = "Host"

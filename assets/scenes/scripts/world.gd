@@ -25,6 +25,9 @@ var	enet_peer =	ENetMultiplayerPeer.new()
 var	dropped_keys = {}
 const KeyScene = preload("res://assets/scenes/key.tscn")
 
+var	spawned_keys: Array[Dictionary]	= []
+
+
 var	spawned_enemies	= []
 var	connected_players =	[]
 var	game_started = false
@@ -44,7 +47,7 @@ func _on_host_button_pressed():
 	main_menu.hide()
 	hud.show()
 	waiting_message.show()
-	waiting_message.text = "Waiting	for	2 more Players"
+	waiting_message.text = "Waiting	for	3 more Players"
 	
 	enet_peer.create_server(PORT)
 	multiplayer.multiplayer_peer = enet_peer
@@ -57,20 +60,18 @@ func _on_host_button_pressed():
 	update_waiting_message()
 	addPlayer(host_id)
 	
-	# Spawn	keys when the game starts
-	spawn_keys.rpc()
-	
 	if multiplayer.is_server():
 		spawn_enemies()
+		spawn_keys()
 
 func _on_join_button_pressed():
 	main_menu.hide()
 	hud.show()
 	waiting_message.show()
-	waiting_message.text = "Connecting..."
+	waiting_message.text = "No Servers Up, you gotta restart!"
 	
 	# enet_peer.create_client("38.180.57.198", PORT)
-	enet_peer.create_client("localhost", PORT)
+	enet_peer.create_client("38.180.57.198", PORT)
 	multiplayer.multiplayer_peer = enet_peer
 
 	addPlayer(multiplayer.get_unique_id())
@@ -157,18 +158,78 @@ func find_nearest_player(enemy,	players: Array):
 	
 	return nearest_player
 
+# New function to handle key collection
+func _on_key_collected(key_id: int):
+	print("Key collected: ", key_id)
+	# Implement	any	game logic for key collection here
 
-@rpc("call_local")
+# In _ready() or wherever you set up the KeySpawnManager
+func setup_key_manager():
+	key_spawn_manager.key_collected.connect(_on_key_collected)
+
+
+# Modified to handle key spawning in the world script
 func spawn_keys():
-	if multiplayer.is_server():
-		key_spawn_manager.spawn_keys()
-		# Sync the spawned keys	with all clients
-		rpc("sync_keys", key_spawn_manager.get_key_data())
-
-@rpc("call_local")
-func sync_keys(key_data):
 	if not multiplayer.is_server():
-		key_spawn_manager.spawn_keys_from_data(key_data)
+		return
+
+	spawned_keys.clear()
+	var	spawn_points = key_spawn_manager.get_spawn_points()
+
+	for	point in spawn_points:
+		var	key_data = {
+			"position":	point.global_position,
+			"id": randi()  # Generate a	unique ID for each key
+		}
+		spawned_keys.append(key_data)
+
+	# Sync keys	with all clients
+	rpc("sync_keys", spawned_keys)
+
+
+# Modified to instantiate keys in the world
+@rpc("call_local")
+func sync_keys(key_data: Array):
+	# Remove existing keys
+	for	child in get_children():
+		if child.is_in_group("keys"):
+			child.queue_free()
+
+	# Spawn	new	keys
+	for	data in key_data:
+		spawn_key(data)
+	print("Synced ", key_data.size(), "	keys")
+
+# $$$ ADD $$$
+# New function to spawn	a single key
+func spawn_key(key_data: Dictionary):
+	var	key	= KeyScene.instantiate()
+	if key:
+		key.global_position	= key_data["position"]
+		key.add_to_group("keys")
+		add_child(key)
+		print("Key instantiated	at:	", key_data["position"])
+	else:
+		print("Failed to instantiate key")
+
+# $$$ ADD $$$
+# Function to handle key collection
+func on_key_collected(key_node:	Node):
+	if multiplayer.is_server():
+		var	key_id = spawned_keys.find(func(k):	return k["position"] == key_node.global_position)
+		if key_id != -1:
+			spawned_keys.remove_at(key_id)
+		key_node.queue_free()
+		rpc("remove_key", key_node.get_path())
+
+# $$$ ADD $$$
+# RPC to remove	a key on all clients
+@rpc("call_local")
+func remove_key(key_path: NodePath):
+	var	key_node = get_node_or_null(key_path)
+	if key_node:
+		key_node.queue_free()
+
 
 # Registers	a dropped key across the network
 @rpc("call_local")
@@ -260,7 +321,7 @@ func _on_peer_connected(peer_id):
 		players_needed -= 1
 		update_waiting_message()
 
-		rpc_id(peer_id,	"sync_keys", key_spawn_manager.get_key_data())
+		rpc_id(peer_id,	"sync_keys", spawned_keys)
 
 		# Sync dropped keys
 		for	key_id in dropped_keys:

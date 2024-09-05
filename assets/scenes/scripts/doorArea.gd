@@ -1,7 +1,7 @@
 extends StaticBody3D
 
 @onready var animation_player = $"../keyanim/AnimationPlayer"
-const KEYS_REQUIRED = 1
+const KEYS_REQUIRED = 5
 
 func _ready():
 	add_to_group("doors")

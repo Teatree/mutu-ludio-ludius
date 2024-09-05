@@ -4,6 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://c0dogmcn3m0p" path="res://assets/3d/environment/silent_hill_key.glb" id="2_quo1j"]
 [ext_resource type="Script" path="res://assets/scenes/scripts/doorArea.gd" id="3_85aty"]
 
+[sub_resource type="Animation" id="Animation_xc0iy"]
+resource_name = "RESET"
+
 [sub_resource type="Animation" id="Animation_21skl"]
 resource_name = "open"
 length = 2.5
@@ -67,9 +70,6 @@ tracks/4/keys = {
 "update": 1,
 "values": [false, true, true, false]
 }
-
-[sub_resource type="Animation" id="Animation_xc0iy"]
-resource_name = "RESET"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5631s"]
 _data = {
